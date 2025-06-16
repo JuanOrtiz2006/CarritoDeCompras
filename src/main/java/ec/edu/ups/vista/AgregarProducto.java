@@ -16,5 +16,4 @@ public class AgregarProducto {
     private JLabel lblCantidad;
     private JButton btnAgregar;
     private JLabel lblRespuesta;
-    private JButton btnActualizar;
 }

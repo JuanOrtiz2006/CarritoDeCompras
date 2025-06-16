@@ -10,8 +10,11 @@ public class Main {
             public void run() {
 
                 CrearProductoView crearProductoView = new CrearProductoView();
+                BuscarProducto buscarProducto = new BuscarProducto();
+                EliminarProducto eliminarProducto = new EliminarProducto();
+                ListaProducto listaProducto = new ListaProducto();
                 ProductoDAO productoDAO = new ProductoDAOMemoria();
-                new ProductoController(productoDAO, crearProductoView);
+                new ProductoController(productoDAO, crearProductoView,buscarProducto,eliminarProducto,listaProducto);
             }
         });
     }
