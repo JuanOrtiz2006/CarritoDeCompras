@@ -9,6 +9,7 @@ public class MenuView extends JFrame {
     private JPanel panelGeneral;
 
     private JMenu menuProducto;
+    private JMenu menuCarrito;
     private JMenuBar menuBar;
     private JMenuItem menuCrearProducto;
     private JMenuItem menuBuscarProducto;
@@ -21,14 +22,15 @@ public class MenuView extends JFrame {
 
     public MenuView(){
         setTitle("Ejemplo de Menú");
-        setSize(400, 300);
+        setSize(520, 560);
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         jDesktopPane = new JDesktopPane();
         menuProducto = new JMenu("Producto");
         menuBar = new JMenuBar();
         menuCrearProducto = new JMenuItem("Crear Producto");
-        menuBuscarProducto = new JMenuItem("BUscar Producto");
+        menuBuscarProducto = new JMenuItem("Buscar Producto");
         menuActualizarProducto = new JMenuItem("Actualizar Producto");
         menuEliminarProducto = new JMenuItem("Eliminar Producto");
         menuListarProductos = new JMenuItem("Listar Producto");
@@ -44,21 +46,6 @@ public class MenuView extends JFrame {
         setContentPane(jDesktopPane);
         setVisible(true);
 
-        menuCrearProducto.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                crearProductoView = new CrearProductoView();
-                jDesktopPane.add(crearProductoView);
-            }
-        });
-
-        menuBuscarProducto.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buscarProducto = new BuscarProducto();
-                jDesktopPane.add(buscarProducto);
-            }
-        });
     }
 
     public JMenuItem getMenuCrearProducto() {

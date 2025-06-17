@@ -1,26 +1,23 @@
 package ec.edu.ups.vista;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class EliminarProducto extends JInternalFrame {
+public class ActualizarProducto extends JInternalFrame{
     private JPanel panelGeneral;
     private JPanel panelCentral;
-    private JTextField txtCodigo;
-    private JLabel lblCodigo;
-    private JButton btnEliminar;
     private JPanel panelDatos;
-    private JTextField txtNombre;
-    private JTextField txtPrecio;
+    private JLabel lblCodigo;
+    private JTextField txtCodigo;
     private JLabel lblNombre;
-    private JButton btnSeleccionar;
+    private JTextField txtNombre;
     private JLabel lblPrecio;
+    private JTextField txtPrecio;
+    private JButton btnSeleccionar;
+    private JButton btnActualizar;
 
-
-    public EliminarProducto(){
+    public ActualizarProducto(){
         setContentPane(panelGeneral);
-        setTitle("Eliminar Producto");
+        setTitle("Actualizar Producto");
         setSize(500, 500);
         //setResizable(false);
         setClosable(true);
@@ -28,16 +25,14 @@ public class EliminarProducto extends JInternalFrame {
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
 
-        txtNombre.setEnabled(false);
-        txtPrecio.setEnabled(false);
     }
 
     public JPanel getPanelGeneral() {
         return panelGeneral;
     }
 
-    public JPanel getPanelCentral() {
-        return panelCentral;
+    public JTextField getTxtCodigo() {
+        return txtCodigo;
     }
 
     public JTextField getTxtNombre() {
@@ -48,56 +43,20 @@ public class EliminarProducto extends JInternalFrame {
         return txtPrecio;
     }
 
-    public JLabel getLblNombre() {
-        return lblNombre;
-    }
-
     public JButton getBtnSeleccionar() {
         return btnSeleccionar;
     }
 
-    public JLabel getLblPrecio() {
-        return lblPrecio;
-    }
-
-    public JTextField getTxtCodigo() {
-        return txtCodigo;
-    }
-
-    public JLabel getLblCodigo() {
-        return lblCodigo;
-    }
-
-    public JButton getBtnEliminar() {
-        return btnEliminar;
-    }
-
-    public JPanel getPanelDatos() {
-        return panelDatos;
+    public JButton getBtnActualizar() {
+        return btnActualizar;
     }
 
     public void setPanelGeneral(JPanel panelGeneral) {
         this.panelGeneral = panelGeneral;
     }
 
-    public void setPanelCentral(JPanel panelCentral) {
-        this.panelCentral = panelCentral;
-    }
-
     public void setTxtCodigo(JTextField txtCodigo) {
         this.txtCodigo = txtCodigo;
-    }
-
-    public void setLblCodigo(JLabel lblCodigo) {
-        this.lblCodigo = lblCodigo;
-    }
-
-    public void setBtnEliminar(JButton btnEliminar) {
-        this.btnEliminar = btnEliminar;
-    }
-
-    public void setPanelDatos(JPanel panelDatos) {
-        this.panelDatos = panelDatos;
     }
 
     public void setTxtNombre(JTextField txtNombre) {
@@ -108,16 +67,12 @@ public class EliminarProducto extends JInternalFrame {
         this.txtPrecio = txtPrecio;
     }
 
-    public void setLblNombre(JLabel lblNombre) {
-        this.lblNombre = lblNombre;
-    }
-
     public void setBtnSeleccionar(JButton btnSeleccionar) {
         this.btnSeleccionar = btnSeleccionar;
     }
 
-    public void setLblPrecio(JLabel lblPrecio) {
-        this.lblPrecio = lblPrecio;
+    public void setBtnActualizar(JButton btnActualizar) {
+        this.btnActualizar = btnActualizar;
     }
 
     public int mostrarMensaje(String mensaje) {

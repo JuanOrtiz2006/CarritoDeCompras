@@ -10,7 +10,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.List;
 
-public class BuscarProducto extends JFrame {
+public class BuscarProducto extends JInternalFrame {
     private JPanel panelGeneral;
     private JPanel panelCentral;
     private JTextField txtBusqueda;
@@ -25,10 +25,12 @@ public class BuscarProducto extends JFrame {
     public BuscarProducto() {
         setContentPane(panelGeneral);
         setTitle("Buscar Producto");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 500);
-        setLocationRelativeTo(null);
+        setClosable(true);
+        setMaximizable(true);
+        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
+
         modelo = new DefaultTableModel();
         Object[] columnas={"ID","NOMBRE","PRECIO"};
         modelo.setColumnIdentifiers(columnas);
@@ -36,6 +38,7 @@ public class BuscarProducto extends JFrame {
         cmbBusqueda.addItem("");
         cmbBusqueda.addItem("Codigo");
         cmbBusqueda.addItem("Nombre");
+        setVisible(true);
 
         cmbBusqueda.addItemListener(new ItemListener() {
             @Override

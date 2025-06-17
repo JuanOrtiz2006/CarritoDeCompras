@@ -12,26 +12,68 @@ public class Main {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
 
-                //CrearProductoView crearProductoView = new CrearProductoView();
-                //BuscarProducto buscarProducto = new BuscarProducto();
-                //EliminarProducto eliminarProducto = new EliminarProducto();
-                //ListaProducto listaProducto = new ListaProducto();
-                //ProductoDAO productoDAO = new ProductoDAOMemoria();
-                //new ProductoController(productoDAO, crearProductoView,buscarProducto,eliminarProducto,listaProducto);
                 MenuView menu = new MenuView();
                 ProductoDAO productoDAO = new ProductoDAOMemoria();
                 ProductoController productoController = new ProductoController(productoDAO);
-                CrearProductoView crearProductoView = new CrearProductoView();
 
+                menu.setVisible(true);
 
                 menu.getMenuCrearProducto().addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        CrearProductoView crearProductoView = new CrearProductoView();
                         productoController.setCrearProductoView(crearProductoView);
-                        
+                        productoController.eventoCrearProducto();
                         menu.getjDesktopPane().add(crearProductoView);
                     }
                 });
+
+
+                menu.getMenuBuscarProducto().addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        BuscarProducto buscarProducto = new BuscarProducto();
+                        productoController.setBuscarProducto(buscarProducto);
+                        productoController.eventoBuscarProducto();
+                        menu.getjDesktopPane().add(buscarProducto);
+                        buscarProducto.setVisible(true);
+                    }
+                });
+
+                menu.getMenuActualizarProducto().addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        ActualizarProducto actualizarProducto = new ActualizarProducto();
+                        productoController.setActualizarProducto(actualizarProducto);
+                        productoController.eventoActualizarProducto();
+                        menu.getjDesktopPane().add(actualizarProducto);
+                        actualizarProducto.setVisible(true);
+                    }
+                });
+
+                menu.getMenuEliminarProducto().addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        EliminarProducto eliminarProducto = new EliminarProducto();
+                        productoController.setEliminarProducto(eliminarProducto);
+                        productoController.eventoEliminarProducto();
+                        menu.getjDesktopPane().add(eliminarProducto);
+                        eliminarProducto.setVisible(true);
+                    }
+                });
+
+                menu.getMenuListarProductos().addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        ListaProducto listaProducto = new ListaProducto();
+                        productoController.setListaProducto(listaProducto);
+                        productoController.eventoListarProductos();
+                        menu.getjDesktopPane().add(listaProducto);
+                        listaProducto.setVisible(true);
+                    }
+                });
+
+
             }
         });
     }

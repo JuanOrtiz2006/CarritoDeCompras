@@ -2,15 +2,12 @@ package ec.edu.ups.controlador;
 
 import ec.edu.ups.dao.ProductoDAO;
 import ec.edu.ups.modelo.Producto;
-import ec.edu.ups.vista.ProductoView;
-import ec.edu.ups.vista.CrearProductoView;
-import ec.edu.ups.vista.BuscarProducto;
-import ec.edu.ups.vista.EliminarProducto;
-import ec.edu.ups.vista.ListaProducto;
+import ec.edu.ups.vista.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -18,8 +15,10 @@ public class ProductoController {
 
     private  CrearProductoView crearProductoView;
     private BuscarProducto buscarProducto;
+    private ActualizarProducto actualizarProducto;
     private EliminarProducto eliminarProducto;
     private ListaProducto listaProducto;
+
     private final ProductoDAO productoDAO;
 
     public ProductoController(ProductoDAO productoDAO) {
@@ -46,6 +45,10 @@ public class ProductoController {
         return productoDAO;
     }
 
+    public ActualizarProducto getActualizarProducto() {
+        return actualizarProducto;
+    }
+
     public void setCrearProductoView(CrearProductoView crearProductoView) {
         this.crearProductoView = crearProductoView;
     }
@@ -62,7 +65,18 @@ public class ProductoController {
         this.listaProducto = listaProducto;
     }
 
+    public void setActualizarProducto(ActualizarProducto actualizarProducto) {
+        this.actualizarProducto = actualizarProducto;
+    }
 
+    public void eventoCrearProducto(){
+        crearProductoView.getBtnAceptar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                crearProducto();
+            }
+        });
+    }
     private void crearProducto() {
         int codigo = Integer.parseInt(crearProductoView.getTxtCodigo().getText());
         String nombre = crearProductoView.getTxtNombre().getText();
@@ -74,7 +88,16 @@ public class ProductoController {
 
     }
 
-    public void buscarProducto(){
+    public void eventoBuscarProducto(){
+        buscarProducto.getBtnBuscar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                buscarProducto();
+            }
+        });
+    }
+
+    private void buscarProducto(){
         String tipoBusqueda = (String) buscarProducto.getCmbBusqueda().getSelectedItem();
         String valorBuscado = buscarProducto.getTxtBusqueda().getText();
 
@@ -103,26 +126,84 @@ public class ProductoController {
         }
     }
 
+    public void eventoActualizarProducto(){
+        actualizarProducto.getBtnSeleccionar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int codigo = Integer.parseInt(actualizarProducto.getTxtCodigo().getText());
+                Producto producto = productoDAO.buscarPorCodigo(codigo);
+                actualizarProducto.productoEncontrado(producto.getNombre(),producto.getPrecio());
+            }
+        });
+        actualizarProducto.getBtnActualizar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actualizarProducto();
+            }
+        });
+    }
     public void actualizarProducto(){
-        int codigo = Integer.parseInt(crearProductoView.getTxtCodigo().getText());
-        String nombre = crearProductoView.getTxtNombre().getText();
-        double precio = Double.parseDouble(crearProductoView.getTxtPrecio().getText());
+        int opcion = actualizarProducto.mostrarMensaje("Desea actualizar el producto ?");
+        if (opcion == JOptionPane.YES_OPTION){
+            int codigo = Integer.parseInt(actualizarProducto.getTxtCodigo().getText());
+            String nombre = actualizarProducto.getTxtNombre().getText();
+            double precio = Double.parseDouble(actualizarProducto.getTxtPrecio().getText());
 
-        productoDAO.actualizar(new Producto(codigo,nombre,precio));
-        crearProductoView.limpiarCampos();
-        crearProductoView.mostrarMensaje("Producto " + nombre + " actualizado correctamente");
+            productoDAO.actualizar(new Producto(codigo,nombre,precio));
+            actualizarProducto.limpiarCampos();
+            JOptionPane.showMessageDialog(null,"Producto actualizado");
+        }
     }
 
-    public void eliminarProducto(){
-        int codigo = Integer.parseInt(eliminarProducto.getTxtCodigo().getText());
+    public void eventoEliminarProducto(){
+        eliminarProducto.getBtnSeleccionar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int codigo = Integer.parseInt(eliminarProducto.getTxtCodigo().getText());
+                Producto producto = productoDAO.buscarPorCodigo(codigo);
+                eliminarProducto.productoEncontrado(producto.getNombre(),producto.getPrecio());
+            }
+        });
 
-        productoDAO.eliminar(codigo);
-        eliminarProducto.limpiarCampos();
-        JOptionPane.showMessageDialog(null, "Producto con codigo " + codigo + "eliminado");
+        eliminarProducto.getBtnEliminar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                eliminarProducto();
+            }
+        });
     }
 
+    private void eliminarProducto(){
+        int opcion = eliminarProducto.mostrarMensaje("Desea eliminar este producto?");
+
+        if (opcion == JOptionPane.YES_OPTION){
+            int codigo = Integer.parseInt(eliminarProducto.getTxtCodigo().getText());
+            productoDAO.eliminar(codigo);
+            eliminarProducto.limpiarCampos();
+            JOptionPane.showMessageDialog(null, "Producto Eliminado");
+        }
+    }
+
+    public void eventoListarProductos(){
+        listaProducto.getBtnListar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                listarProductos();
+            }
+        });
+    }
     public void listarProductos(){
+        String tipoOrden = (String) listaProducto.getCmbTipo().getSelectedItem();
         List<Producto> productos = productoDAO.listarTodos();
+
+        if (tipoOrden != null) {
+            if (tipoOrden.equalsIgnoreCase("Código")) {
+                productos.sort(Comparator.comparingInt(Producto::getCodigo));
+            } else if (tipoOrden.equalsIgnoreCase("Nombre")) {
+                productos.sort(Comparator.comparing(Producto::getNombre, String.CASE_INSENSITIVE_ORDER));
+            }
+        }
+
         listaProducto.cargarProductos(productos);
     }
 

@@ -6,24 +6,33 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
-public class ListaProducto extends JFrame{
+public class ListaProducto extends JInternalFrame{
     private JTable tblProductos;
     private JPanel panelLista;
     private JPanel panelGeneral;
+    private JComboBox cmbTipo;
+    private JButton btnListar;
+    private JPanel panelOpcion;
+    private JLabel lblTipo;
     private DefaultTableModel modelo;
 
 
     public ListaProducto(){
         setContentPane(panelGeneral);
         setTitle("Buscar Producto");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 500);
-        setLocationRelativeTo(null);
+        setClosable(true);
+        setMaximizable(true);
+        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
         modelo = new DefaultTableModel();
         Object[] columnas={"ID","NOMBRE","PRECIO"};
         modelo.setColumnIdentifiers(columnas);
         tblProductos.setModel(modelo);
+
+        cmbTipo.addItem("");
+        cmbTipo.addItem("Codigo");
+        cmbTipo.addItem("Nombre");
     }
 
     public JTable getTblProductos() {
@@ -42,6 +51,14 @@ public class ListaProducto extends JFrame{
         return modelo;
     }
 
+    public JComboBox getCmbTipo() {
+        return cmbTipo;
+    }
+
+    public JButton getBtnListar() {
+        return btnListar;
+    }
+
     public void setTblProductos(JTable tblProductos) {
         this.tblProductos = tblProductos;
     }
@@ -56,6 +73,14 @@ public class ListaProducto extends JFrame{
 
     public void setModelo(DefaultTableModel modelo) {
         this.modelo = modelo;
+    }
+
+    public void setCmbTipo(JComboBox cmbTipo) {
+        this.cmbTipo = cmbTipo;
+    }
+
+    public void setBtnListar(JButton btnListar) {
+        this.btnListar = btnListar;
     }
 
     public void cargarProductos(List<Producto> productos) {
