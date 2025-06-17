@@ -7,6 +7,8 @@ import ec.edu.ups.vista.CrearProductoView;
 import ec.edu.ups.vista.BuscarProducto;
 import ec.edu.ups.vista.EliminarProducto;
 import ec.edu.ups.vista.ListaProducto;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -20,14 +22,8 @@ public class ProductoController {
     private ListaProducto listaProducto;
     private final ProductoDAO productoDAO;
 
-    public ProductoController(ProductoDAO productoDAO, CrearProductoView crearProductoView, BuscarProducto buscarProducto, EliminarProducto eliminarProducto, ListaProducto listaProducto) {
+    public ProductoController(ProductoDAO productoDAO) {
         this.productoDAO = productoDAO;
-        this.crearProductoView = crearProductoView;
-        this.buscarProducto = buscarProducto;
-        this.eliminarProducto=eliminarProducto;
-        this.listaProducto = listaProducto;
-
-        configurarEventos();
     }
 
     public CrearProductoView getCrearProductoView() {
@@ -66,36 +62,6 @@ public class ProductoController {
         this.listaProducto = listaProducto;
     }
 
-    private void configurarEventos() {
-        crearProductoView.getBtnAceptar().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                crearProducto();
-            }
-        });
-
-        buscarProducto.getBtnBuscar().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buscarProducto();
-            }
-        });
-
-        crearProductoView.getBtnActualizar().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actualizarProducto();
-            }
-        });
-
-        eliminarProducto.getBtnEliminar().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                eliminarProducto();
-            }
-        });
-
-    }
 
     private void crearProducto() {
         int codigo = Integer.parseInt(crearProductoView.getTxtCodigo().getText());
@@ -108,7 +74,7 @@ public class ProductoController {
 
     }
 
-    private void buscarProducto(){
+    public void buscarProducto(){
         String tipoBusqueda = (String) buscarProducto.getCmbBusqueda().getSelectedItem();
         String valorBuscado = buscarProducto.getTxtBusqueda().getText();
 
@@ -137,7 +103,7 @@ public class ProductoController {
         }
     }
 
-    private void actualizarProducto(){
+    public void actualizarProducto(){
         int codigo = Integer.parseInt(crearProductoView.getTxtCodigo().getText());
         String nombre = crearProductoView.getTxtNombre().getText();
         double precio = Double.parseDouble(crearProductoView.getTxtPrecio().getText());
@@ -147,15 +113,15 @@ public class ProductoController {
         crearProductoView.mostrarMensaje("Producto " + nombre + " actualizado correctamente");
     }
 
-    private void eliminarProducto(){
+    public void eliminarProducto(){
         int codigo = Integer.parseInt(eliminarProducto.getTxtCodigo().getText());
 
         productoDAO.eliminar(codigo);
         eliminarProducto.limpiarCampos();
-        eliminarProducto.mostrarMensaje("Producto con codigo " + codigo + "eliminado");
+        JOptionPane.showMessageDialog(null, "Producto con codigo " + codigo + "eliminado");
     }
 
-    private void listarProductos(){
+    public void listarProductos(){
         List<Producto> productos = productoDAO.listarTodos();
         listaProducto.cargarProductos(productos);
     }

@@ -11,6 +11,11 @@ public class EliminarProducto extends JFrame {
     private JLabel lblCodigo;
     private JButton btnEliminar;
     private JPanel panelDatos;
+    private JTextField txtNombre;
+    private JTextField txtPrecio;
+    private JLabel lblNombre;
+    private JButton btnSeleccionar;
+    private JLabel lblPrecio;
 
 
     public EliminarProducto(){
@@ -21,13 +26,8 @@ public class EliminarProducto extends JFrame {
         //setResizable(false);
         setLocationRelativeTo(null);
         setVisible(true);
-
-        btnEliminar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                limpiarCampos();
-            }
-        });
+        txtNombre.setEnabled(false);
+        txtPrecio.setEnabled(false);
     }
 
     public JPanel getPanelGeneral() {
@@ -36,6 +36,26 @@ public class EliminarProducto extends JFrame {
 
     public JPanel getPanelCentral() {
         return panelCentral;
+    }
+
+    public JTextField getTxtNombre() {
+        return txtNombre;
+    }
+
+    public JTextField getTxtPrecio() {
+        return txtPrecio;
+    }
+
+    public JLabel getLblNombre() {
+        return lblNombre;
+    }
+
+    public JButton getBtnSeleccionar() {
+        return btnSeleccionar;
+    }
+
+    public JLabel getLblPrecio() {
+        return lblPrecio;
     }
 
     public JTextField getTxtCodigo() {
@@ -78,8 +98,34 @@ public class EliminarProducto extends JFrame {
         this.panelDatos = panelDatos;
     }
 
-    public void mostrarMensaje(String mensaje) {
-        JOptionPane.showMessageDialog(this, mensaje);
+    public void setTxtNombre(JTextField txtNombre) {
+        this.txtNombre = txtNombre;
+    }
+
+    public void setTxtPrecio(JTextField txtPrecio) {
+        this.txtPrecio = txtPrecio;
+    }
+
+    public void setLblNombre(JLabel lblNombre) {
+        this.lblNombre = lblNombre;
+    }
+
+    public void setBtnSeleccionar(JButton btnSeleccionar) {
+        this.btnSeleccionar = btnSeleccionar;
+    }
+
+    public void setLblPrecio(JLabel lblPrecio) {
+        this.lblPrecio = lblPrecio;
+    }
+
+    public int mostrarMensaje(String mensaje) {
+        int opcion = JOptionPane.showConfirmDialog(this, mensaje);
+        return opcion;
+    }
+
+    public void productoEncontrado(String nombre, double precio){
+        txtNombre.setText(nombre);
+        txtPrecio.setText(Double.toString(precio));
     }
 
     public void limpiarCampos() {
