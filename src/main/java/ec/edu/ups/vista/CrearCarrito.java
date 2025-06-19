@@ -47,12 +47,12 @@ public class CrearCarrito extends JInternalFrame{
 
     public CrearCarrito(){
         setContentPane(panelGeneral);
-        setTitle("Agregar Producto");
+        setTitle("Crear Carrito");
         setSize(800, 500);
         setClosable(true);
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setVisible(true);
+
         modelo = new DefaultTableModel();
         Object[] columnasLista={"ID","NOMBRE","PRECIO", "CANTIDAD"};
         modelo.setColumnIdentifiers(columnasLista);
@@ -65,16 +65,8 @@ public class CrearCarrito extends JInternalFrame{
         txtNombre.setEnabled(false);
         txtPrecio.setEnabled(false);
 
-        carritoActual = new Carrito(0, new GregorianCalendar()); // el código real se asignará después
-
-    }
-
-    public JTextField getTxtCodigoCarrito() {
-        return txtCodigoCarrito;
-    }
-
-    public JTextField getTxtFecha() {
-        return txtFecha;
+        carritoActual = new Carrito(0, new GregorianCalendar());
+        setVisible(true);
     }
 
     public JTextField getTxtCodigo() {
@@ -101,10 +93,6 @@ public class CrearCarrito extends JInternalFrame{
         return btnAgregar;
     }
 
-    public JTable getTblProductos() {
-        return tblProductos;
-    }
-
     public JButton getBtnGuardar() {
         return btnGuardar;
     }
@@ -113,48 +101,8 @@ public class CrearCarrito extends JInternalFrame{
         return tblTotal;
     }
 
-    public void setTxtCodigoCarrito(JTextField txtCodigoCarrito) {
-        this.txtCodigoCarrito = txtCodigoCarrito;
-    }
-
-    public void setTxtFecha(JTextField txtFecha) {
-        this.txtFecha = txtFecha;
-    }
-
     public void setTxtCodigo(JTextField txtCodigo) {
         this.txtCodigo = txtCodigo;
-    }
-
-    public void setTxtNombre(JTextField txtNombre) {
-        this.txtNombre = txtNombre;
-    }
-
-    public void setTxtPrecio(JTextField txtPrecio) {
-        this.txtPrecio = txtPrecio;
-    }
-
-    public void setBtnSeleccionar(JButton btnSeleccionar) {
-        this.btnSeleccionar = btnSeleccionar;
-    }
-
-    public void setTxtCantidad(JTextField txtCantidad) {
-        this.txtCantidad = txtCantidad;
-    }
-
-    public void setBtnAgregar(JButton btnAgregar) {
-        this.btnAgregar = btnAgregar;
-    }
-
-    public void setTblProductos(JTable tblProductos) {
-        this.tblProductos = tblProductos;
-    }
-
-    public void setBtnGuardar(JButton btnGuardar) {
-        this.btnGuardar = btnGuardar;
-    }
-
-    public void setTblTotal(JTable tblTotal) {
-        this.tblTotal = tblTotal;
     }
 
     public void productoEncontrado(String nombre, double precio){
@@ -192,7 +140,7 @@ public class CrearCarrito extends JInternalFrame{
     public Carrito obtenerCarrito() {
         int codigo = Integer.parseInt(txtCodigoCarrito.getText());
         carritoActual.setCodigo(codigo);
-        carritoActual.setFecha(obtenerFechaDesdeTxt());
+        carritoActual.setFecha(obtenerFecha());
         return carritoActual;
     }
 
@@ -212,7 +160,7 @@ public class CrearCarrito extends JInternalFrame{
         carritoActual = new Carrito(0, new GregorianCalendar());
     }
 
-    public GregorianCalendar obtenerFechaDesdeTxt() {
+    public GregorianCalendar obtenerFecha() {
         String fechaTexto = txtFecha.getText().trim();
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         try {

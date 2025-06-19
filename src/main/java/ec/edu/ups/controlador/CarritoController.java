@@ -2,8 +2,6 @@ package ec.edu.ups.controlador;
 
 import ec.edu.ups.dao.CarritoDAO;
 import ec.edu.ups.modelo.Carrito;
-
-import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.vista.*;
 
 import java.awt.event.ActionEvent;

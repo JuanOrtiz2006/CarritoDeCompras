@@ -25,8 +25,6 @@ public class ProductoController {
         this.productoDAO = productoDAO;
     }
 
-
-
     public void setCrearProductoView(CrearProductoView crearProductoView) {
         this.crearProductoView = crearProductoView;
     }
