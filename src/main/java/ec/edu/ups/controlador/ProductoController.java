@@ -74,7 +74,6 @@ public class ProductoController {
             }
         });
     }
-
     private void buscarProducto(){
         String tipoBusqueda = (String) buscarProducto.getCmbBusqueda().getSelectedItem();
         String valorBuscado = buscarProducto.getTxtBusqueda().getText();
@@ -150,7 +149,6 @@ public class ProductoController {
             }
         });
     }
-
     private void eliminarProducto(){
         int opcion = eliminarProducto.mostrarMensaje("Desea eliminar este producto?");
 

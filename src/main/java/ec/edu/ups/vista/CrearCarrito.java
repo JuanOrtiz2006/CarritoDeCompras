@@ -2,13 +2,15 @@ package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.Carrito;
 import ec.edu.ups.modelo.ItemCarrito;
-import ec.edu.ups.modelo.Producto;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 public class CrearCarrito extends JInternalFrame{
     private JPanel panelGeneral;
@@ -39,6 +41,8 @@ public class CrearCarrito extends JInternalFrame{
     private DefaultTableModel modelo;
     private DefaultTableModel modelo2;
     private Carrito carritoActual;
+    private List<ItemCarrito> items;
+
 
 
     public CrearCarrito(){
@@ -188,8 +192,37 @@ public class CrearCarrito extends JInternalFrame{
     public Carrito obtenerCarrito() {
         int codigo = Integer.parseInt(txtCodigoCarrito.getText());
         carritoActual.setCodigo(codigo);
-        // La fecha podrías parsearla desde el campo txtFecha si lo deseas
-        carritoActual.setFecha(new GregorianCalendar()); // simplificado
+        carritoActual.setFecha(obtenerFechaDesdeTxt());
         return carritoActual;
+    }
+
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
+    }
+
+    public void limpiarFormulario() {
+        txtCodigoCarrito.setText("");
+        txtFecha.setText("");
+        txtCodigo.setText("");
+        txtNombre.setText("");
+        txtPrecio.setText("");
+        txtCantidad.setText("");
+        modelo.setRowCount(0);
+        modelo2.setRowCount(0);
+        carritoActual = new Carrito(0, new GregorianCalendar());
+    }
+
+    public GregorianCalendar obtenerFechaDesdeTxt() {
+        String fechaTexto = txtFecha.getText().trim();
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date fecha = formato.parse(fechaTexto);
+            GregorianCalendar calendario = new GregorianCalendar();
+            calendario.setTime(fecha);
+            return calendario;
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(this, "Formato de fecha inválido. Debe ser dd/MM/yyyy", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
     }
 }

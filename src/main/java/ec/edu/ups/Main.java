@@ -1,7 +1,10 @@
 package ec.edu.ups;
 
+import ec.edu.ups.controlador.CarritoController;
 import ec.edu.ups.controlador.ProductoController;
+import ec.edu.ups.dao.CarritoDAO;
 import ec.edu.ups.dao.ProductoDAO;
+import ec.edu.ups.dao.impl.CarritoDAOMemoria;
 import ec.edu.ups.dao.impl.ProductoDAOMemoria;
 import ec.edu.ups.modelo.ItemCarrito;
 import ec.edu.ups.modelo.*  ;
@@ -21,8 +24,10 @@ public class Main {
                 MenuView menu = new MenuView();
                 //instanciamos (Singleton)
                 ProductoDAO productoDAO = new ProductoDAOMemoria();
-                ProductoController productoController = new ProductoController(productoDAO);
+                CarritoDAO carritoDAO = new CarritoDAOMemoria();
 
+                ProductoController productoController = new ProductoController(productoDAO);
+                CarritoController carritoController = new CarritoController(carritoDAO);
                 List<Carrito> listaCarritos = new ArrayList<>();
 
                 menu.setVisible(true);
@@ -36,7 +41,6 @@ public class Main {
                         menu.getjDesktopPane().add(crearProductoView);
                     }
                 });
-
 
                 menu.getMenuBuscarProducto().addActionListener(new ActionListener() {
                     @Override
@@ -86,6 +90,9 @@ public class Main {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         CrearCarrito crearCarrito = new CrearCarrito();
+                        carritoController.setCrearCarrito(crearCarrito);
+                        carritoController.eventoCrearCarrito();
+
                         crearCarrito.getBtnSeleccionar().addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -109,15 +116,6 @@ public class Main {
                             }
                         });
 
-                        crearCarrito.getBtnGuardar().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                Carrito carrito = crearCarrito.obtenerCarrito();
-                                listaCarritos.add(carrito);
-                                JOptionPane.showMessageDialog(crearCarrito, "Carrito guardado. Total: $" + carrito.calcularTotal());
-
-                            }
-                        });
                         menu.getjDesktopPane().add(crearCarrito);
                     }
 
