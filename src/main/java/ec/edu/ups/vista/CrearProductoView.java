@@ -35,13 +35,6 @@ public class CrearProductoView extends JInternalFrame {
         setVisible(true);
         //pack();
 
-        btnLimpiar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                limpiarCampos();
-            }
-        });
-
     }
 
     public JPanel getPanelPrincipal() {

@@ -63,6 +63,7 @@
                 </constraints>
                 <properties>
                   <font name="Courier New" size="12" style="0"/>
+                  <foreground color="-67073"/>
                   <text value="Nombre:"/>
                 </properties>
               </component>
@@ -72,7 +73,9 @@
                     <preferred-size width="150" height="-1"/>
                   </grid>
                 </constraints>
-                <properties/>
+                <properties>
+                  <foreground color="-16184830"/>
+                </properties>
               </component>
               <component id="fb315" class="javax.swing.JLabel" binding="lblPrecio">
                 <constraints>
@@ -80,6 +83,7 @@
                 </constraints>
                 <properties>
                   <font name="Courier New" size="12" style="0"/>
+                  <foreground color="-67073"/>
                   <text value="Precio: "/>
                 </properties>
               </component>
@@ -91,6 +95,7 @@
                 </constraints>
                 <properties>
                   <font name="Courier New" size="12" style="0"/>
+                  <foreground color="-16184830"/>
                 </properties>
               </component>
               <component id="18387" class="javax.swing.JButton" binding="btnSeleccionar">

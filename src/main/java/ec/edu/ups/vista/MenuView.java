@@ -11,14 +11,17 @@ public class MenuView extends JFrame {
     private JMenu menuProducto;
     private JMenu menuCarrito;
     private JMenuBar menuBar;
+
     private JMenuItem menuCrearProducto;
     private JMenuItem menuBuscarProducto;
     private JMenuItem menuActualizarProducto;
     private JMenuItem menuEliminarProducto;
     private JMenuItem menuListarProductos;
+    private JMenuItem menuAgregarProducto;
+    private JMenuItem menuEliminarItem;
+    private JMenuItem menuListarItems;
+
     private JDesktopPane jDesktopPane;
-    private CrearProductoView crearProductoView;
-    private BuscarProducto buscarProducto;
 
     public MenuView(){
         setTitle("Ejemplo de Menú");
@@ -35,12 +38,23 @@ public class MenuView extends JFrame {
         menuEliminarProducto = new JMenuItem("Eliminar Producto");
         menuListarProductos = new JMenuItem("Listar Producto");
 
+        menuCarrito = new JMenu("Carrito");
+        menuAgregarProducto = new JMenuItem("Agregar Producto");
+        menuEliminarItem = new JMenuItem("Eliminar Producto");
+        menuListarItems = new JMenuItem("Listar Productos");
+
         menuBar.add(menuProducto);
+        menuBar.add(menuCarrito);
+
         menuProducto.add(menuCrearProducto);
         menuProducto.add(menuBuscarProducto);
         menuProducto.add(menuActualizarProducto);
         menuProducto.add(menuEliminarProducto);
         menuProducto.add(menuListarProductos);
+
+        menuCarrito.add(menuAgregarProducto);
+        menuCarrito.add(menuEliminarItem);
+        menuCarrito.add(menuListarItems);
 
         setJMenuBar(menuBar);
         setContentPane(jDesktopPane);
@@ -72,6 +86,20 @@ public class MenuView extends JFrame {
         return jDesktopPane;
     }
 
+    public JMenuItem getMenuAgregarProducto() {
+        return menuAgregarProducto;
+    }
+
+    public JMenuItem getMenuEliminarItem() {
+        return menuEliminarItem;
+    }
+
+    public JMenuItem getMenuListarItems() {
+        return menuListarItems;
+    }
+
+
+
     public void setMenuCrearProducto(JMenuItem menuCrearProducto) {
         this.menuCrearProducto = menuCrearProducto;
     }
@@ -94,5 +122,17 @@ public class MenuView extends JFrame {
 
     public void setjDesktopPane(JDesktopPane jDesktopPane) {
         this.jDesktopPane = jDesktopPane;
+    }
+
+    public void setMenuAgregarProducto(JMenuItem menuAgregarProducto) {
+        this.menuAgregarProducto = menuAgregarProducto;
+    }
+
+    public void setMenuEliminarItem(JMenuItem menuEliminarItem) {
+        this.menuEliminarItem = menuEliminarItem;
+    }
+
+    public void setMenuListarItems(JMenuItem menuListarItems) {
+        this.menuListarItems = menuListarItems;
     }
 }

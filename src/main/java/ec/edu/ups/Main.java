@@ -1,11 +1,17 @@
-package ec.edu.ups.vista;
+package ec.edu.ups;
 
 import ec.edu.ups.controlador.ProductoController;
 import ec.edu.ups.dao.ProductoDAO;
 import ec.edu.ups.dao.impl.ProductoDAOMemoria;
+import ec.edu.ups.modelo.ItemCarrito;
+import ec.edu.ups.modelo.*  ;
+import ec.edu.ups.vista.*;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -13,8 +19,11 @@ public class Main {
             public void run() {
 
                 MenuView menu = new MenuView();
+                //instanciamos (Singleton)
                 ProductoDAO productoDAO = new ProductoDAOMemoria();
                 ProductoController productoController = new ProductoController(productoDAO);
+
+                List<Carrito> listaCarritos = new ArrayList<>();
 
                 menu.setVisible(true);
 
@@ -73,7 +82,46 @@ public class Main {
                     }
                 });
 
+                menu.getMenuAgregarProducto().addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        CrearCarrito crearCarrito = new CrearCarrito();
+                        crearCarrito.getBtnSeleccionar().addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                int codigo = Integer.parseInt(crearCarrito.getTxtCodigo().getText());
+                                Producto producto = productoDAO.buscarPorCodigo(codigo);
+                                crearCarrito.productoEncontrado(producto.getNombre(),producto.getPrecio());
+                            }
+                        });
 
+                        crearCarrito.getBtnAgregar().addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                int codigo = Integer.parseInt(crearCarrito.getTxtCodigo().getText());
+                                String nombre = crearCarrito.getTxtNombre().getText();
+                                double precio = Double.parseDouble(crearCarrito.getTxtPrecio().getText());
+                                int cantidad = Integer.parseInt(crearCarrito.getTxtCantidad().getText());
+
+                                Producto producto = new Producto(codigo,nombre,precio);
+                                ItemCarrito itemCarrito = new ItemCarrito(producto, cantidad);
+                                crearCarrito.cargarItem(itemCarrito);
+                            }
+                        });
+
+                        crearCarrito.getBtnGuardar().addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                Carrito carrito = crearCarrito.obtenerCarrito();
+                                listaCarritos.add(carrito);
+                                JOptionPane.showMessageDialog(crearCarrito, "Carrito guardado. Total: $" + carrito.calcularTotal());
+
+                            }
+                        });
+                        menu.getjDesktopPane().add(crearCarrito);
+                    }
+
+                });
             }
         });
     }

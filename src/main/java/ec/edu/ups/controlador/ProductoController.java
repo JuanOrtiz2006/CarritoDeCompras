@@ -25,29 +25,7 @@ public class ProductoController {
         this.productoDAO = productoDAO;
     }
 
-    public CrearProductoView getCrearProductoView() {
-        return crearProductoView;
-    }
 
-    public BuscarProducto getBuscarProducto() {
-        return buscarProducto;
-    }
-
-    public EliminarProducto getEliminarProducto() {
-        return eliminarProducto;
-    }
-
-    public ListaProducto getListaProducto() {
-        return listaProducto;
-    }
-
-    public ProductoDAO getProductoDAO() {
-        return productoDAO;
-    }
-
-    public ActualizarProducto getActualizarProducto() {
-        return actualizarProducto;
-    }
 
     public void setCrearProductoView(CrearProductoView crearProductoView) {
         this.crearProductoView = crearProductoView;
@@ -192,7 +170,7 @@ public class ProductoController {
             }
         });
     }
-    public void listarProductos(){
+    private void listarProductos(){
         String tipoOrden = (String) listaProducto.getCmbTipo().getSelectedItem();
         List<Producto> productos = productoDAO.listarTodos();
 

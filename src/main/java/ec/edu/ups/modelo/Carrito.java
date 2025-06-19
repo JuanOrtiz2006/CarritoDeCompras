@@ -1,26 +1,49 @@
-package ec.edu.ups.servicio;
-
-import ec.edu.ups.modelo.ItemCarrito;
-import ec.edu.ups.modelo.Producto;
+package ec.edu.ups.modelo;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
-public class CarritoServiceImpl implements CarritoService {
+public class Carrito {
+    private int codigo;
+    private GregorianCalendar fecha;
+    private List<ItemCarrito> items;
 
-    private final List<ItemCarrito> items;
-
-    public CarritoServiceImpl() {
+    public Carrito(int codigo, GregorianCalendar fecha) {
+        this.codigo = codigo;
+        this.fecha=fecha;
         items = new ArrayList<>();
     }
 
-    @Override
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public GregorianCalendar getFecha() {
+        return fecha;
+    }
+
+    public List<ItemCarrito> getItems() {
+        return items;
+    }
+
+    public void setFecha(GregorianCalendar fecha) {
+        this.fecha = fecha;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
+    }
+
+    public void setItems(List<ItemCarrito> items) {
+        this.items = items;
+    }
+
     public void agregarProducto(Producto producto, int cantidad) {
         items.add(new ItemCarrito(producto, cantidad));
     }
 
-    @Override
     public void eliminarProducto(int codigoProducto) {
         Iterator<ItemCarrito> it = items.iterator();
         while (it.hasNext()) {
@@ -31,12 +54,10 @@ public class CarritoServiceImpl implements CarritoService {
         }
     }
 
-    @Override
     public void vaciarCarrito() {
         items.clear();
     }
 
-    @Override
     public double calcularTotal() {
         double total = 0;
         for (ItemCarrito item : items) {
@@ -45,12 +66,10 @@ public class CarritoServiceImpl implements CarritoService {
         return total;
     }
 
-    @Override
     public List<ItemCarrito> obtenerItems() {
         return items;
     }
 
-    @Override
     public boolean estaVacio() {
         return items.isEmpty();
     }
