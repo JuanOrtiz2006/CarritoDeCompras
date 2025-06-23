@@ -41,8 +41,6 @@ public class CrearCarrito extends JInternalFrame{
     private JButton btnVaciar;
     private DefaultTableModel modelo;
     private DefaultTableModel modelo2;
-    private Carrito carritoActual;
-    private List<ItemCarrito> items;
 
 
 
@@ -55,18 +53,29 @@ public class CrearCarrito extends JInternalFrame{
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 
         modelo = new DefaultTableModel();
-        Object[] columnasLista = {"ID", "NOMBRE", "PRECIO", "CANTIDAD", "EDITAR", "ELIMINAR"};
+        Object[] columnasLista = {"ID", "NOMBRE", "PRECIO", "CANTIDAD","TOTAL", "EDITAR", "ELIMINAR"};
         modelo.setColumnIdentifiers(columnasLista);
         tblProductos.setModel(modelo);
+
 
         modelo2 = new DefaultTableModel();
         Object[] columnasTotales={"SubTotal","IVA","Total"};
         modelo2.setColumnIdentifiers(columnasTotales);
         tblTotal.setModel(modelo2);
+        txtCodigoCarrito.setEnabled(false);
         txtNombre.setEnabled(false);
         txtPrecio.setEnabled(false);
 
         setVisible(true);
+    }
+
+    // Este método configura los renderers y editors para botones, pasando el controlador
+    public void setController(ec.edu.ups.controlador.CarritoController controller) {
+        tblProductos.getColumn("EDITAR").setCellRenderer(new Boton("EDITAR"));
+        tblProductos.getColumn("ELIMINAR").setCellRenderer(new Boton("ELIMINAR"));
+
+        tblProductos.getColumn("EDITAR").setCellEditor(new BotonEditor(tblProductos, controller));
+        tblProductos.getColumn("ELIMINAR").setCellEditor(new BotonEditor(tblProductos, controller));
     }
 
     public JTextField getTxtCodigo() {
@@ -105,18 +114,13 @@ public class CrearCarrito extends JInternalFrame{
         return txtCodigoCarrito;
     }
 
-    public JTextField getTxtFecha() {
-        return txtFecha;
+    public JButton getBtnVaciar() {
+        return btnVaciar;
     }
 
     public JTable getTblProductos() {
         return tblProductos;
     }
-
-    public void setTxtCodigo(JTextField txtCodigo) {
-        this.txtCodigo = txtCodigo;
-    }
-
 
     public void productoEncontrado(String nombre, double precio){
         txtNombre.setText(nombre);
@@ -151,7 +155,5 @@ public class CrearCarrito extends JInternalFrame{
         JOptionPane.showMessageDialog(this, mensaje);
     }
 
-    private void botonEdicion(){
 
-    }
 }

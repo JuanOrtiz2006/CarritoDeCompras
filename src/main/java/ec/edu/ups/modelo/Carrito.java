@@ -61,6 +61,16 @@ public class Carrito {
         }
     }
 
+    public void actualizarProducto(ItemCarrito item) {
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).getProducto().getCodigo() == item.getProducto().getCodigo()) {
+                // Actualiza la cantidad del item encontrado
+                items.get(i).setCantidad(item.getCantidad());
+                break;
+            }
+        }
+    }
+
     public void vaciarCarrito() {
         items.clear();
     }

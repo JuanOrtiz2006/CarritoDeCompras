@@ -6,6 +6,7 @@ import ec.edu.ups.modelo.ItemCarrito;
 import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.vista.*;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,6 +48,16 @@ public class CarritoController {
                 guardarCarrito();
             }
         });
+
+        crearCarrito.getBtnVaciar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vaciarCarrito();
+            }
+        });
+        crearCarrito.getTblProductos().getColumn("EDITAR").setCellEditor(new ec.edu.ups.vista.BotonEditor(crearCarrito.getTblProductos(), this));
+        crearCarrito.getTblProductos().getColumn("ELIMINAR").setCellEditor(new ec.edu.ups.vista.BotonEditor(crearCarrito.getTblProductos(), this));
+
     }
 
     public CrearCarrito getCrearCarrito() {
@@ -81,17 +92,20 @@ public class CarritoController {
 
     }
 
-    private void cargarProductos(){
-
+    private void cargarProductos() {
         List<ItemCarrito> items = carrito.obtenerItems();
         DefaultTableModel modelo = (DefaultTableModel) crearCarrito.getTblProductos().getModel();
         modelo.setNumRows(0);
         for (ItemCarrito item : items) {
-            modelo.addRow(new Object[]{ item.getProducto().getCodigo(),
+            modelo.addRow(new Object[]{
+                    item.getProducto().getCodigo(),
                     item.getProducto().getNombre(),
                     item.getProducto().getPrecio(),
                     item.getCantidad(),
-                    item.getProducto().getPrecio() * item.getCantidad() });
+                    item.getProducto().getPrecio() * item.getCantidad(),
+                    "EDITAR",
+                    "ELIMINAR"
+            });
         }
     }
 
@@ -130,4 +144,75 @@ public class CarritoController {
         carrito = new Carrito();
         crearCarrito.getTxtCodigoCarrito().setText(String.valueOf(carrito.getCodigo()));
     }
+
+    public void eliminarItem(int fila) {
+        if (fila >= 0 && fila < carrito.getItems().size()) {
+            int opcion = JOptionPane.showConfirmDialog(
+                    crearCarrito,
+                    "¿Está seguro que desea eliminar el item seleccionado?",
+                    "Confirmar eliminación",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (opcion == JOptionPane.YES_OPTION) {
+                // Eliminar producto por código
+                int codigoProducto = carrito.getItems().get(fila).getProducto().getCodigo();
+                carrito.eliminarProducto(codigoProducto);
+
+                cargarProductos();
+                mostrarTotales();
+
+                crearCarrito.mostrarMensaje("Item eliminado correctamente.");
+            }
+        }
+    }
+
+    public void vaciarCarrito() {
+        int opcion = JOptionPane.showConfirmDialog(
+                crearCarrito,
+                "¿Está seguro que desea vaciar todo el carrito?",
+                "Confirmar vaciado",
+                JOptionPane.YES_NO_OPTION);
+
+        if (opcion == JOptionPane.YES_OPTION) {
+            carrito.vaciarCarrito();
+
+            cargarProductos();
+            mostrarTotales();
+
+            crearCarrito.mostrarMensaje("Carrito vaciado correctamente.");
+        }
+    }
+
+    public void editarItem(int fila) {
+        if (fila >= 0 && fila < carrito.getItems().size()) {
+            ItemCarrito item = carrito.getItems().get(fila);
+
+            String cantidadStr = JOptionPane.showInputDialog(
+                    crearCarrito,
+                    "Ingrese nueva cantidad para el producto " + item.getProducto().getNombre(),
+                    item.getCantidad());
+
+            if (cantidadStr != null) {
+                try {
+                    int nuevaCantidad = Integer.parseInt(cantidadStr);
+                    if (nuevaCantidad <= 0) {
+                        crearCarrito.mostrarMensaje("La cantidad debe ser mayor que cero.");
+                        return;
+                    }
+
+                    ItemCarrito itemEditado = new ItemCarrito(item.getProducto(), nuevaCantidad);
+                    carrito.actualizarProducto(itemEditado);
+
+                    cargarProductos();
+                    mostrarTotales();
+
+                    crearCarrito.mostrarMensaje("Producto actualizado correctamente.");
+
+                } catch (NumberFormatException ex) {
+                    crearCarrito.mostrarMensaje("Cantidad inválida.");
+                }
+            }
+        }
+    }
+
 }
