@@ -27,7 +27,7 @@ public class Main {
                 CarritoDAO carritoDAO = new CarritoDAOMemoria();
 
                 ProductoController productoController = new ProductoController(productoDAO);
-                CarritoController carritoController = new CarritoController(carritoDAO);
+                CarritoController carritoController = new CarritoController(carritoDAO,productoDAO);
                 List<Carrito> listaCarritos = new ArrayList<>();
 
                 menu.setVisible(true);
@@ -91,31 +91,7 @@ public class Main {
                     public void actionPerformed(ActionEvent e) {
                         CrearCarrito crearCarrito = new CrearCarrito();
                         carritoController.setCrearCarrito(crearCarrito);
-                        carritoController.eventoCrearCarrito();
-
-                        crearCarrito.getBtnSeleccionar().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                int codigo = Integer.parseInt(crearCarrito.getTxtCodigo().getText());
-                                Producto producto = productoDAO.buscarPorCodigo(codigo);
-                                crearCarrito.productoEncontrado(producto.getNombre(),producto.getPrecio());
-                            }
-                        });
-
-                        crearCarrito.getBtnAgregar().addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                int codigo = Integer.parseInt(crearCarrito.getTxtCodigo().getText());
-                                String nombre = crearCarrito.getTxtNombre().getText();
-                                double precio = Double.parseDouble(crearCarrito.getTxtPrecio().getText());
-                                int cantidad = Integer.parseInt(crearCarrito.getTxtCantidad().getText());
-
-                                Producto producto = new Producto(codigo,nombre,precio);
-                                ItemCarrito itemCarrito = new ItemCarrito(producto, cantidad);
-                                crearCarrito.cargarItem(itemCarrito);
-                            }
-                        });
-
+                        carritoController.crearCarrito();
                         menu.getjDesktopPane().add(crearCarrito);
                     }
 

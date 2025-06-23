@@ -12,4 +12,5 @@ public class LoginView {
     private JLabel lblUsername;
     private JLabel lblPassword;
     private JPanel panelBoton;
+    private JButton btnRegistrar;
 }

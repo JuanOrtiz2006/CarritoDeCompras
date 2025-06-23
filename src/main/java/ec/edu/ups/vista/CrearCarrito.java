@@ -38,6 +38,7 @@ public class CrearCarrito extends JInternalFrame{
     private JPanel panelSur;
     private JButton btnGuardar;
     private JTable tblTotal;
+    private JButton btnVaciar;
     private DefaultTableModel modelo;
     private DefaultTableModel modelo2;
     private Carrito carritoActual;
@@ -54,7 +55,7 @@ public class CrearCarrito extends JInternalFrame{
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 
         modelo = new DefaultTableModel();
-        Object[] columnasLista={"ID","NOMBRE","PRECIO", "CANTIDAD"};
+        Object[] columnasLista = {"ID", "NOMBRE", "PRECIO", "CANTIDAD", "EDITAR", "ELIMINAR"};
         modelo.setColumnIdentifiers(columnasLista);
         tblProductos.setModel(modelo);
 
@@ -65,7 +66,6 @@ public class CrearCarrito extends JInternalFrame{
         txtNombre.setEnabled(false);
         txtPrecio.setEnabled(false);
 
-        carritoActual = new Carrito(0, new GregorianCalendar());
         setVisible(true);
     }
 
@@ -101,55 +101,29 @@ public class CrearCarrito extends JInternalFrame{
         return tblTotal;
     }
 
+    public JTextField getTxtCodigoCarrito() {
+        return txtCodigoCarrito;
+    }
+
+    public JTextField getTxtFecha() {
+        return txtFecha;
+    }
+
+    public JTable getTblProductos() {
+        return tblProductos;
+    }
+
     public void setTxtCodigo(JTextField txtCodigo) {
         this.txtCodigo = txtCodigo;
     }
+
 
     public void productoEncontrado(String nombre, double precio){
         txtNombre.setText(nombre);
         txtPrecio.setText(Double.toString(precio));
     }
 
-    public void cargarItem(ItemCarrito itemCarrito) {
-        int codigo = itemCarrito.getProducto().getCodigo();
-        String nombre = itemCarrito.getProducto().getNombre();
-        double precio = itemCarrito.getProducto().getPrecio();
-        int cantidad = itemCarrito.getCantidad();
-        Object[] filaProducto = {codigo,nombre, precio, cantidad};
-        modelo.addRow(filaProducto);
-        carritoActual.agregarProducto(itemCarrito.getProducto(), cantidad);
-        calcularTotales();
-    }
-
-    private void calcularTotales(){
-        double subtotal = 0.0;
-        for (int i = 0; i < modelo.getRowCount(); i++) {
-            double precio = (double) modelo.getValueAt(i, 2);
-            int cantidad = (int) modelo.getValueAt(i, 3);
-            subtotal += precio * cantidad;
-        }
-        double iva = subtotal * 0.15;
-        double total = subtotal + iva;
-        modelo2.setRowCount(0);
-        Object[] filaTotal = {String.format("%.2f", subtotal),
-                String.format("%.2f", iva),
-                String.format("%.2f", total)};
-        modelo2.addRow(filaTotal);
-    }
-
-    public Carrito obtenerCarrito() {
-        int codigo = Integer.parseInt(txtCodigoCarrito.getText());
-        carritoActual.setCodigo(codigo);
-        carritoActual.setFecha(obtenerFecha());
-        return carritoActual;
-    }
-
-    public void mostrarMensaje(String mensaje) {
-        JOptionPane.showMessageDialog(this, mensaje);
-    }
-
     public void limpiarFormulario() {
-        txtCodigoCarrito.setText("");
         txtFecha.setText("");
         txtCodigo.setText("");
         txtNombre.setText("");
@@ -157,7 +131,6 @@ public class CrearCarrito extends JInternalFrame{
         txtCantidad.setText("");
         modelo.setRowCount(0);
         modelo2.setRowCount(0);
-        carritoActual = new Carrito(0, new GregorianCalendar());
     }
 
     public GregorianCalendar obtenerFecha() {
@@ -172,5 +145,13 @@ public class CrearCarrito extends JInternalFrame{
             JOptionPane.showMessageDialog(this, "Formato de fecha inválido. Debe ser dd/MM/yyyy", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
+    }
+
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
+    }
+
+    private void botonEdicion(){
+
     }
 }
