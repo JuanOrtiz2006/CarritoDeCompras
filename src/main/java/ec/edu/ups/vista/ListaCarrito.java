@@ -29,7 +29,7 @@ public class ListaCarrito extends JInternalFrame{
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
         modelo = new DefaultTableModel();
-        Object[] columnas = {"ID", "FECHA", "DESCRIPCION", "EDITAR", "ELIMINAR"};
+        Object[] columnas = {"USUARIO","ID", "FECHA", "TOTAL"};
         modelo.setColumnIdentifiers(columnas);
         tblCarritos.setModel(modelo);
 
@@ -67,6 +67,23 @@ public class ListaCarrito extends JInternalFrame{
 
     public void setTblCarritos(JTable tblCarritos) {
         this.tblCarritos = tblCarritos;
+    }
+
+
+    public int mostrarConfirmDialog(String mensaje, String[] opciones){
+
+        int seleccion = JOptionPane.showOptionDialog(
+                null,
+                mensaje,
+                "Opciones del carrito",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                opciones[0]
+        );
+
+        return seleccion;
     }
 
 

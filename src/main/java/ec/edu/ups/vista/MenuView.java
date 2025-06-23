@@ -17,9 +17,8 @@ public class MenuView extends JFrame {
     private JMenuItem menuActualizarProducto;
     private JMenuItem menuEliminarProducto;
     private JMenuItem menuListarProductos;
-    private JMenuItem menuAgregarProducto;
-    private JMenuItem menuEliminarItem;
-    private JMenuItem menuListarItems;
+    private JMenuItem menuCrearCarrito;
+    private JMenuItem menuListaCarrito;
 
     private JDesktopPane jDesktopPane;
 
@@ -39,9 +38,8 @@ public class MenuView extends JFrame {
         menuListarProductos = new JMenuItem("Listar Producto");
 
         menuCarrito = new JMenu("Carrito");
-        menuAgregarProducto = new JMenuItem("Agregar Producto");
-        menuEliminarItem = new JMenuItem("Listar Carritos");
-        menuListarItems = new JMenuItem("Actualizar Carrito");
+        menuCrearCarrito = new JMenuItem("Agregar Productos al Carrito");
+        menuListaCarrito = new JMenuItem("Listar Carritos");
 
         menuBar.add(menuProducto);
         menuBar.add(menuCarrito);
@@ -52,9 +50,8 @@ public class MenuView extends JFrame {
         menuProducto.add(menuEliminarProducto);
         menuProducto.add(menuListarProductos);
 
-        menuCarrito.add(menuAgregarProducto);
-        menuCarrito.add(menuEliminarItem);
-        menuCarrito.add(menuListarItems);
+        menuCarrito.add(menuCrearCarrito);
+        menuCarrito.add(menuListaCarrito);
 
         setJMenuBar(menuBar);
         setContentPane(jDesktopPane);
@@ -82,57 +79,18 @@ public class MenuView extends JFrame {
         return menuListarProductos;
     }
 
+    public JMenuItem getMenuCrearCarrito() {
+        return menuCrearCarrito;
+    }
+
+    public JMenuItem getMenuListaCarrito() {
+        return menuListaCarrito;
+    }
+
     public JDesktopPane getjDesktopPane() {
         return jDesktopPane;
     }
 
-    public JMenuItem getMenuAgregarProducto() {
-        return menuAgregarProducto;
-    }
-
-    public JMenuItem getMenuEliminarItem() {
-        return menuEliminarItem;
-    }
-
-    public JMenuItem getMenuListarItems() {
-        return menuListarItems;
-    }
 
 
-
-    public void setMenuCrearProducto(JMenuItem menuCrearProducto) {
-        this.menuCrearProducto = menuCrearProducto;
-    }
-
-    public void setMenuBuscarProducto(JMenuItem menuBuscarProducto) {
-        this.menuBuscarProducto = menuBuscarProducto;
-    }
-
-    public void setMenuActualizarProducto(JMenuItem menuActualizarProducto) {
-        this.menuActualizarProducto = menuActualizarProducto;
-    }
-
-    public void setMenuEliminarProducto(JMenuItem menuEliminarProducto) {
-        this.menuEliminarProducto = menuEliminarProducto;
-    }
-
-    public void setMenuListarProductos(JMenuItem menuListarProductos) {
-        this.menuListarProductos = menuListarProductos;
-    }
-
-    public void setjDesktopPane(JDesktopPane jDesktopPane) {
-        this.jDesktopPane = jDesktopPane;
-    }
-
-    public void setMenuAgregarProducto(JMenuItem menuAgregarProducto) {
-        this.menuAgregarProducto = menuAgregarProducto;
-    }
-
-    public void setMenuEliminarItem(JMenuItem menuEliminarItem) {
-        this.menuEliminarItem = menuEliminarItem;
-    }
-
-    public void setMenuListarItems(JMenuItem menuListarItems) {
-        this.menuListarItems = menuListarItems;
-    }
 }

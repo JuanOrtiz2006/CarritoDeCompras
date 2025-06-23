@@ -86,7 +86,7 @@ public class Main {
                     }
                 });
 
-                menu.getMenuAgregarProducto().addActionListener(new ActionListener() {
+                menu.getMenuCrearCarrito().addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         CrearCarrito crearCarrito = new CrearCarrito();
@@ -96,6 +96,18 @@ public class Main {
                     }
 
                 });
+
+                menu.getMenuListaCarrito().addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        ListaCarrito listaCarrito = new ListaCarrito();
+                        carritoController.setListaCarrito(listaCarrito);
+                        carritoController.listarCarritos();
+                        menu.getjDesktopPane().add(listaCarrito);
+                    }
+                });
+
+
             }
         });
     }

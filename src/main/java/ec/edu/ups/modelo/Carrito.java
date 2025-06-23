@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Carrito {
+    private Usuario usuario;
     private int codigo;
     private GregorianCalendar fecha;
     private List<ItemCarrito> items;
@@ -14,7 +15,6 @@ public class Carrito {
 
     public Carrito(){
         this.codigo = contador++;
-
         this.items = new ArrayList<>();
     }
     public Carrito(int codigo, GregorianCalendar fecha) {
@@ -23,6 +23,9 @@ public class Carrito {
         this.items = new ArrayList<>();
     }
 
+    public Usuario getUsuario() {
+        return usuario;
+    }
     public int getCodigo() {
         return codigo;
     }
@@ -33,6 +36,10 @@ public class Carrito {
 
     public List<ItemCarrito> getItems() {
         return items;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public void setFecha(GregorianCalendar fecha) {

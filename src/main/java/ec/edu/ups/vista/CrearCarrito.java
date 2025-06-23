@@ -66,16 +66,8 @@ public class CrearCarrito extends JInternalFrame{
         txtCodigoCarrito.setEnabled(false);
         txtNombre.setEnabled(false);
         txtPrecio.setEnabled(false);
-
+        txtFecha.setEnabled(false);
         setVisible(true);
-    }
-
-    public void setController(CarritoController controller) {
-        tblProductos.getColumn("EDITAR").setCellRenderer(new Boton("EDITAR"));
-        tblProductos.getColumn("ELIMINAR").setCellRenderer(new Boton("ELIMINAR"));
-
-        tblProductos.getColumn("EDITAR").setCellEditor(new BotonEditor(tblProductos, controller));
-        tblProductos.getColumn("ELIMINAR").setCellEditor(new BotonEditor(tblProductos, controller));
     }
 
     public JTextField getTxtCodigo() {
@@ -100,6 +92,10 @@ public class CrearCarrito extends JInternalFrame{
 
     public JTable getTblTotal() {
         return tblTotal;
+    }
+
+    public JTextField getTxtFecha() {
+        return txtFecha;
     }
 
     public JTextField getTxtCodigoCarrito() {
@@ -127,20 +123,6 @@ public class CrearCarrito extends JInternalFrame{
         txtCantidad.setText("");
         modelo.setRowCount(0);
         modelo2.setRowCount(0);
-    }
-
-    public GregorianCalendar obtenerFecha() {
-        String fechaTexto = txtFecha.getText().trim();
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-        try {
-            Date fecha = formato.parse(fechaTexto);
-            GregorianCalendar calendario = new GregorianCalendar();
-            calendario.setTime(fecha);
-            return calendario;
-        } catch (ParseException e) {
-            JOptionPane.showMessageDialog(this, "Formato de fecha inválido. Debe ser dd/MM/yyyy", "Error", JOptionPane.ERROR_MESSAGE);
-            return null;
-        }
     }
 
     public void mostrarMensaje(String mensaje) {

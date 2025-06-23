@@ -53,7 +53,7 @@
                 </constraints>
                 <properties>
                   <font name="Courier New" size="12" style="0"/>
-                  <foreground color="-12241615"/>
+                  <foreground color="-16184830"/>
                 </properties>
               </component>
             </children>
@@ -84,7 +84,7 @@
                 </constraints>
                 <properties>
                   <font name="Courier New" size="12" style="0"/>
-                  <foreground color="-12241615"/>
+                  <foreground color="-16184830"/>
                 </properties>
               </component>
             </children>

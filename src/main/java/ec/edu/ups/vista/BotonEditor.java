@@ -43,11 +43,10 @@ public class BotonEditor extends AbstractCellEditor implements TableCellEditor, 
         fireEditingStopped();
         if ("EDITAR".equals(label)) {
             System.out.println("Editar fila: " + row);
-            controlador.editarItem(row);  // método que tú definirás para editar
+            controlador.editarItem(row);
         } else if ("ELIMINAR".equals(label)) {
             System.out.println("Eliminar fila: " + row);
-
-            controlador.eliminarItem(row); // método para eliminar y refrescar
+            controlador.eliminarItem(row);
         }
     }
 }
