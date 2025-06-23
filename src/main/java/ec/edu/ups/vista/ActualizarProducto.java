@@ -19,7 +19,6 @@ public class ActualizarProducto extends JInternalFrame{
         setContentPane(panelGeneral);
         setTitle("Actualizar Producto");
         setSize(500, 500);
-        //setResizable(false);
         setClosable(true);
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
@@ -53,26 +52,6 @@ public class ActualizarProducto extends JInternalFrame{
 
     public void setPanelGeneral(JPanel panelGeneral) {
         this.panelGeneral = panelGeneral;
-    }
-
-    public void setTxtCodigo(JTextField txtCodigo) {
-        this.txtCodigo = txtCodigo;
-    }
-
-    public void setTxtNombre(JTextField txtNombre) {
-        this.txtNombre = txtNombre;
-    }
-
-    public void setTxtPrecio(JTextField txtPrecio) {
-        this.txtPrecio = txtPrecio;
-    }
-
-    public void setBtnSeleccionar(JButton btnSeleccionar) {
-        this.btnSeleccionar = btnSeleccionar;
-    }
-
-    public void setBtnActualizar(JButton btnActualizar) {
-        this.btnActualizar = btnActualizar;
     }
 
     public int mostrarMensaje(String mensaje) {

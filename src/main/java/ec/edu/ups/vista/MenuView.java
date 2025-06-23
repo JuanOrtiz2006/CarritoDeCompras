@@ -40,8 +40,8 @@ public class MenuView extends JFrame {
 
         menuCarrito = new JMenu("Carrito");
         menuAgregarProducto = new JMenuItem("Agregar Producto");
-        menuEliminarItem = new JMenuItem("Eliminar Producto");
-        menuListarItems = new JMenuItem("Listar Productos");
+        menuEliminarItem = new JMenuItem("Listar Carritos");
+        menuListarItems = new JMenuItem("Actualizar Carrito");
 
         menuBar.add(menuProducto);
         menuBar.add(menuCarrito);

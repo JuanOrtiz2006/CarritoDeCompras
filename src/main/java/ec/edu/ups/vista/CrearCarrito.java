@@ -1,5 +1,6 @@
 package ec.edu.ups.vista;
 
+import ec.edu.ups.controlador.CarritoController;
 import ec.edu.ups.modelo.Carrito;
 import ec.edu.ups.modelo.ItemCarrito;
 
@@ -69,8 +70,7 @@ public class CrearCarrito extends JInternalFrame{
         setVisible(true);
     }
 
-    // Este método configura los renderers y editors para botones, pasando el controlador
-    public void setController(ec.edu.ups.controlador.CarritoController controller) {
+    public void setController(CarritoController controller) {
         tblProductos.getColumn("EDITAR").setCellRenderer(new Boton("EDITAR"));
         tblProductos.getColumn("ELIMINAR").setCellRenderer(new Boton("ELIMINAR"));
 
@@ -80,14 +80,6 @@ public class CrearCarrito extends JInternalFrame{
 
     public JTextField getTxtCodigo() {
         return txtCodigo;
-    }
-
-    public JTextField getTxtNombre() {
-        return txtNombre;
-    }
-
-    public JTextField getTxtPrecio() {
-        return txtPrecio;
     }
 
     public JButton getBtnSeleccionar() {

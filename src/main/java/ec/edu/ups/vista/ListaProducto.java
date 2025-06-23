@@ -35,13 +35,6 @@ public class ListaProducto extends JInternalFrame{
         cmbTipo.addItem("Nombre");
     }
 
-    public JTable getTblProductos() {
-        return tblProductos;
-    }
-
-    public JPanel getPanelLista() {
-        return panelLista;
-    }
 
     public JPanel getPanelGeneral() {
         return panelGeneral;
@@ -59,28 +52,12 @@ public class ListaProducto extends JInternalFrame{
         return btnListar;
     }
 
-    public void setTblProductos(JTable tblProductos) {
-        this.tblProductos = tblProductos;
-    }
-
-    public void setPanelLista(JPanel panelLista) {
-        this.panelLista = panelLista;
-    }
-
     public void setPanelGeneral(JPanel panelGeneral) {
         this.panelGeneral = panelGeneral;
     }
 
     public void setModelo(DefaultTableModel modelo) {
         this.modelo = modelo;
-    }
-
-    public void setCmbTipo(JComboBox cmbTipo) {
-        this.cmbTipo = cmbTipo;
-    }
-
-    public void setBtnListar(JButton btnListar) {
-        this.btnListar = btnListar;
     }
 
     public void cargarProductos(List<Producto> productos) {

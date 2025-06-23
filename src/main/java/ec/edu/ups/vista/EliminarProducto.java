@@ -22,7 +22,6 @@ public class EliminarProducto extends JInternalFrame {
         setContentPane(panelGeneral);
         setTitle("Eliminar Producto");
         setSize(500, 500);
-        //setResizable(false);
         setClosable(true);
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
@@ -36,88 +35,20 @@ public class EliminarProducto extends JInternalFrame {
         return panelGeneral;
     }
 
-    public JPanel getPanelCentral() {
-        return panelCentral;
-    }
-
-    public JTextField getTxtNombre() {
-        return txtNombre;
-    }
-
-    public JTextField getTxtPrecio() {
-        return txtPrecio;
-    }
-
-    public JLabel getLblNombre() {
-        return lblNombre;
-    }
-
     public JButton getBtnSeleccionar() {
         return btnSeleccionar;
-    }
-
-    public JLabel getLblPrecio() {
-        return lblPrecio;
     }
 
     public JTextField getTxtCodigo() {
         return txtCodigo;
     }
 
-    public JLabel getLblCodigo() {
-        return lblCodigo;
-    }
-
     public JButton getBtnEliminar() {
         return btnEliminar;
     }
 
-    public JPanel getPanelDatos() {
-        return panelDatos;
-    }
-
     public void setPanelGeneral(JPanel panelGeneral) {
         this.panelGeneral = panelGeneral;
-    }
-
-    public void setPanelCentral(JPanel panelCentral) {
-        this.panelCentral = panelCentral;
-    }
-
-    public void setTxtCodigo(JTextField txtCodigo) {
-        this.txtCodigo = txtCodigo;
-    }
-
-    public void setLblCodigo(JLabel lblCodigo) {
-        this.lblCodigo = lblCodigo;
-    }
-
-    public void setBtnEliminar(JButton btnEliminar) {
-        this.btnEliminar = btnEliminar;
-    }
-
-    public void setPanelDatos(JPanel panelDatos) {
-        this.panelDatos = panelDatos;
-    }
-
-    public void setTxtNombre(JTextField txtNombre) {
-        this.txtNombre = txtNombre;
-    }
-
-    public void setTxtPrecio(JTextField txtPrecio) {
-        this.txtPrecio = txtPrecio;
-    }
-
-    public void setLblNombre(JLabel lblNombre) {
-        this.lblNombre = lblNombre;
-    }
-
-    public void setBtnSeleccionar(JButton btnSeleccionar) {
-        this.btnSeleccionar = btnSeleccionar;
-    }
-
-    public void setLblPrecio(JLabel lblPrecio) {
-        this.lblPrecio = lblPrecio;
     }
 
     public int mostrarMensaje(String mensaje) {

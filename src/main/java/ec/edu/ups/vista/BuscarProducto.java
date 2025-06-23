@@ -56,9 +56,6 @@ public class BuscarProducto extends JInternalFrame {
         return panelGeneral;
     }
 
-    public JPanel getPanelCentral() {
-        return panelCentral;
-    }
 
     public JTextField getTxtBusqueda() {
         return txtBusqueda;
@@ -68,60 +65,12 @@ public class BuscarProducto extends JInternalFrame {
         return btnBuscar;
     }
 
-    public JPanel getPanelInput() {
-        return panelInput;
-    }
-
-    public JPanel getPanelSur() {
-        return panelSur;
-    }
-
     public JComboBox getCmbBusqueda() {
         return cmbBusqueda;
     }
 
-    public JLabel getLabelBusqueda() {
-        return labelBusqueda;
-    }
-
-    public JTable getTblProducto() {
-        return tblProducto;
-    }
-
     public void setPanelGeneral(JPanel panelGeneral) {
         this.panelGeneral = panelGeneral;
-    }
-
-    public void setPanelCentral(JPanel panelCentral) {
-        this.panelCentral = panelCentral;
-    }
-
-    public void setTxtBusqueda(JTextField txtBusqueda) {
-        this.txtBusqueda = txtBusqueda;
-    }
-
-    public void setBtnBuscar(JButton btnBuscar) {
-        this.btnBuscar = btnBuscar;
-    }
-
-    public void setPanelInput(JPanel panelInput) {
-        this.panelInput = panelInput;
-    }
-
-    public void setPanelSur(JPanel panelSur) {
-        this.panelSur = panelSur;
-    }
-
-    public void setCmbBusqueda(JComboBox cmbBusqueda) {
-        this.cmbBusqueda = cmbBusqueda;
-    }
-
-    public void setLabelBusqueda(JLabel labelBusqueda) {
-        this.labelBusqueda = labelBusqueda;
-    }
-
-    public void setTblProducto(JTable tblProducto) {
-        this.tblProducto = tblProducto;
     }
 
     public void mostrarMensaje(String mensaje){

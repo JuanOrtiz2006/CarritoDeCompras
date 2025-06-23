@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
 public class CarritoController {
 
     private CrearCarrito crearCarrito;
+    private ListaCarrito listaCarrito;
     private final CarritoDAO carritoDAO;
     private final ProductoDAO productoDAO;
     private Carrito carrito;
@@ -25,6 +27,12 @@ public class CarritoController {
 
         this.carritoDAO = carritoDAO;
         this.productoDAO = productoDAO;
+    }
+
+    public void setCrearCarrito(CrearCarrito crearCarrito) {
+        this.crearCarrito = crearCarrito;
+        this.carrito = new Carrito(); // Aquí recién se crea el primer carrito
+        crearCarrito.getTxtCodigoCarrito().setText(String.valueOf(carrito.getCodigo()));
     }
 
     public void crearCarrito() {
@@ -60,26 +68,12 @@ public class CarritoController {
 
     }
 
-    public CrearCarrito getCrearCarrito() {
-        return crearCarrito;
-    }
-
-    public CarritoDAO getCarritoDAO() {
-        return carritoDAO;
-    }
-
-    public void setCrearCarrito(CrearCarrito crearCarrito) {
-        this.crearCarrito = crearCarrito;
-        this.carrito = new Carrito(); // Aquí recién se crea el primer carrito
-        crearCarrito.getTxtCodigoCarrito().setText(String.valueOf(carrito.getCodigo()));
-    }
-
-
     private void itemSeleccionado(){
         int codigo = Integer.parseInt(crearCarrito.getTxtCodigo().getText());
         Producto producto = productoDAO.buscarPorCodigo(codigo);
         crearCarrito.productoEncontrado(producto.getNombre(),producto.getPrecio());
     }
+
     private void anadirProducto() {
 
         int codigo = Integer.parseInt(crearCarrito.getTxtCodigo().getText());
@@ -106,6 +100,59 @@ public class CarritoController {
                     "EDITAR",
                     "ELIMINAR"
             });
+        }
+    }
+
+    public   void eliminarItem(int fila) {
+        if (fila >= 0 && fila < carrito.getItems().size()) {
+            int opcion = JOptionPane.showConfirmDialog(
+                    crearCarrito,
+                    "¿Está seguro que desea eliminar el item seleccionado?",
+                    "Confirmar eliminación",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (opcion == JOptionPane.YES_OPTION) {
+                // Eliminar producto por código
+                int codigoProducto = carrito.getItems().get(fila).getProducto().getCodigo();
+                carrito.eliminarProducto(codigoProducto);
+
+                cargarProductos();
+                mostrarTotales();
+
+                crearCarrito.mostrarMensaje("Item eliminado correctamente.");
+            }
+        }
+    }
+
+    public void editarItem(int fila) {
+        if (fila >= 0 && fila < carrito.getItems().size()) {
+            ItemCarrito item = carrito.getItems().get(fila);
+
+            String cantidadStr = JOptionPane.showInputDialog(
+                    crearCarrito,
+                    "Ingrese nueva cantidad para el producto " + item.getProducto().getNombre(),
+                    item.getCantidad());
+
+            if (cantidadStr != null) {
+                try {
+                    int nuevaCantidad = Integer.parseInt(cantidadStr);
+                    if (nuevaCantidad <= 0) {
+                        crearCarrito.mostrarMensaje("La cantidad debe ser mayor que cero.");
+                        return;
+                    }
+
+                    ItemCarrito itemEditado = new ItemCarrito(item.getProducto(), nuevaCantidad);
+                    carrito.actualizarProducto(itemEditado);
+
+                    cargarProductos();
+                    mostrarTotales();
+
+                    crearCarrito.mostrarMensaje("Producto actualizado correctamente.");
+
+                } catch (NumberFormatException ex) {
+                    crearCarrito.mostrarMensaje("Cantidad inválida.");
+                }
+            }
         }
     }
 
@@ -145,28 +192,7 @@ public class CarritoController {
         crearCarrito.getTxtCodigoCarrito().setText(String.valueOf(carrito.getCodigo()));
     }
 
-    public void eliminarItem(int fila) {
-        if (fila >= 0 && fila < carrito.getItems().size()) {
-            int opcion = JOptionPane.showConfirmDialog(
-                    crearCarrito,
-                    "¿Está seguro que desea eliminar el item seleccionado?",
-                    "Confirmar eliminación",
-                    JOptionPane.YES_NO_OPTION);
-
-            if (opcion == JOptionPane.YES_OPTION) {
-                // Eliminar producto por código
-                int codigoProducto = carrito.getItems().get(fila).getProducto().getCodigo();
-                carrito.eliminarProducto(codigoProducto);
-
-                cargarProductos();
-                mostrarTotales();
-
-                crearCarrito.mostrarMensaje("Item eliminado correctamente.");
-            }
-        }
-    }
-
-    public void vaciarCarrito() {
+    private void vaciarCarrito() {
         int opcion = JOptionPane.showConfirmDialog(
                 crearCarrito,
                 "¿Está seguro que desea vaciar todo el carrito?",
@@ -183,35 +209,45 @@ public class CarritoController {
         }
     }
 
-    public void editarItem(int fila) {
-        if (fila >= 0 && fila < carrito.getItems().size()) {
-            ItemCarrito item = carrito.getItems().get(fila);
-
-            String cantidadStr = JOptionPane.showInputDialog(
-                    crearCarrito,
-                    "Ingrese nueva cantidad para el producto " + item.getProducto().getNombre(),
-                    item.getCantidad());
-
-            if (cantidadStr != null) {
-                try {
-                    int nuevaCantidad = Integer.parseInt(cantidadStr);
-                    if (nuevaCantidad <= 0) {
-                        crearCarrito.mostrarMensaje("La cantidad debe ser mayor que cero.");
-                        return;
-                    }
-
-                    ItemCarrito itemEditado = new ItemCarrito(item.getProducto(), nuevaCantidad);
-                    carrito.actualizarProducto(itemEditado);
-
-                    cargarProductos();
-                    mostrarTotales();
-
-                    crearCarrito.mostrarMensaje("Producto actualizado correctamente.");
-
-                } catch (NumberFormatException ex) {
-                    crearCarrito.mostrarMensaje("Cantidad inválida.");
-                }
+    public void listarProducto(){
+        listaCarrito.getBtnBuscar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                buscarCarrito();
             }
+        });
+
+        listaCarrito.getBtnListar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cargarCarritos();
+            }
+        });
+    }
+
+    private void buscarCarrito(){
+        int codigo = Integer.parseInt(listaCarrito.getTxtCodigo().getText());
+        Carrito carrito = carritoDAO.buscarPorCodigo(codigo);
+        cargarCarrito(carrito);
+    }
+
+    private void cargarCarrito(Carrito carrito){
+        DefaultTableModel modelo = (DefaultTableModel) listaCarrito.getTblCarritos().getModel();
+        modelo.setNumRows(0);
+        modelo.addRow(new Object[]{
+                carrito.getCodigo(), carrito.getFecha(),"Descripcion"
+        });
+    }
+
+    private void cargarCarritos(){
+        List<Carrito> carritos = carritoDAO.listarCarritos();
+        DefaultTableModel modelo = (DefaultTableModel) listaCarrito.getTblCarritos().getModel();
+        modelo.setNumRows(0);
+
+        for(Carrito carrito: carritos){
+            modelo.addRow(new Object[]{
+                    carrito.getCodigo(), carrito.getFecha(),"Descripcion"
+            });
         }
     }
 

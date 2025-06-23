@@ -12,10 +12,9 @@ public interface UsuarioDAO {
 
     Usuario buscarPorUsername(String username);
 
+    void eliminar(String username);
 
     void actualizar(Usuario usuario);
-
-    void eliminar(String username);
 
     List<Usuario> listarTodos();
 
