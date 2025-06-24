@@ -23,6 +23,11 @@ public class Carrito {
         this.items = new ArrayList<>();
     }
 
+    public Carrito(int codigo, GregorianCalendar fecha, List<ItemCarrito> items) {
+        this.fecha=fecha;
+        this.items = items;
+    }
+
     public Usuario getUsuario() {
         return usuario;
     }

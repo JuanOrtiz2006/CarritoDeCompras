@@ -1,17 +1,7 @@
 package ec.edu.ups.vista;
 
-import ec.edu.ups.controlador.CarritoController;
-import ec.edu.ups.modelo.Carrito;
-import ec.edu.ups.modelo.ItemCarrito;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 
 public class CrearCarrito extends JInternalFrame{
     private JPanel panelGeneral;
@@ -40,8 +30,9 @@ public class CrearCarrito extends JInternalFrame{
     private JButton btnGuardar;
     private JTable tblTotal;
     private JButton btnVaciar;
-    private DefaultTableModel modelo;
-    private DefaultTableModel modelo2;
+    private JButton btnEditar;
+    private DefaultTableModel modeloItems;
+    private DefaultTableModel modeloTotales;
 
 
 
@@ -53,16 +44,16 @@ public class CrearCarrito extends JInternalFrame{
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 
-        modelo = new DefaultTableModel();
+        modeloItems = new DefaultTableModel();
         Object[] columnasLista = {"ID", "NOMBRE", "PRECIO", "CANTIDAD","TOTAL", "EDITAR", "ELIMINAR"};
-        modelo.setColumnIdentifiers(columnasLista);
-        tblProductos.setModel(modelo);
+        modeloItems.setColumnIdentifiers(columnasLista);
+        tblProductos.setModel(modeloItems);
 
 
-        modelo2 = new DefaultTableModel();
+        modeloTotales = new DefaultTableModel();
         Object[] columnasTotales={"SubTotal","IVA","Total"};
-        modelo2.setColumnIdentifiers(columnasTotales);
-        tblTotal.setModel(modelo2);
+        modeloTotales.setColumnIdentifiers(columnasTotales);
+        tblTotal.setModel(modeloTotales);
         txtCodigoCarrito.setEnabled(false);
         txtNombre.setEnabled(false);
         txtPrecio.setEnabled(false);
@@ -110,24 +101,37 @@ public class CrearCarrito extends JInternalFrame{
         return tblProductos;
     }
 
-    public void productoEncontrado(String nombre, double precio){
+    public JButton getBtnEditar() {
+        return btnEditar;
+    }
+
+    public void productoEncontrado(String nombre, double precio) {
         txtNombre.setText(nombre);
-        txtPrecio.setText(Double.toString(precio));
+        txtPrecio.setText(String.valueOf(precio));
     }
 
     public void limpiarFormulario() {
-        txtFecha.setText("");
         txtCodigo.setText("");
         txtNombre.setText("");
         txtPrecio.setText("");
         txtCantidad.setText("");
-        modelo.setRowCount(0);
-        modelo2.setRowCount(0);
+        modeloItems.setRowCount(0);
+        modeloTotales.setRowCount(0);
+    }
+
+    public void activarModoEdicion() {
+        btnGuardar.setVisible(false);
+        btnEditar.setVisible(true);
+        panelNorte.setVisible(false);
+    }
+
+    public void activarModoCreacion() {
+        btnGuardar.setVisible(true);
+        btnEditar.setVisible(false);
+        panelNorte.setVisible(true);
     }
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
-
-
 }
