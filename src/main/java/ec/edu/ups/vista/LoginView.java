@@ -2,7 +2,7 @@ package ec.edu.ups.vista;
 
 import javax.swing.*;
 
-public class LoginView extends JInternalFrame{
+public class LoginView extends JFrame{
     private JPanel panelGeneral;
     private JTextField txtUsername;
     private JTextField txtPassword;
@@ -19,7 +19,6 @@ public class LoginView extends JInternalFrame{
         setTitle("Iniciar Sesión");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
-
     }
 
     public JPanel getPanelGeneral() {

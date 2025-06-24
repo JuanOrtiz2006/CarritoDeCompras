@@ -24,7 +24,7 @@ public class UsuarioController {
         loginView.getBtnLogin().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                autenticar();
             }
         });
     }
