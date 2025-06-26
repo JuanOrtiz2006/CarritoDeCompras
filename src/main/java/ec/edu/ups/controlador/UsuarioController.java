@@ -8,8 +8,7 @@ import ec.edu.ups.vista.LoginView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.List;
 
 public class UsuarioController {
@@ -23,7 +22,6 @@ public class UsuarioController {
         this.loginView = loginView;
         this.usuario = null;
         configurarEventosEnVistas();
-
     }
 
     public GestionUsuarios getGestionUsuarios() {
@@ -34,72 +32,58 @@ public class UsuarioController {
         this.gestionUsuarios = gestionUsuarios;
     }
 
-    private void configurarEventosEnVistas(){
-        loginView.getBtnLogin().addActionListener(new ActionListener() {
+    private void configurarEventosEnVistas() {
+        loginView.getBtnLogin().addActionListener(e -> autenticar());
+        loginView.getBtnRegistrar().addActionListener(e -> registrarUsuario());
+    }
+
+    public void eventosGestionUsuario() {
+        gestionUsuarios.getBtnBuscar().addActionListener(e -> buscarUsuario());
+        gestionUsuarios.getBtnListar().addActionListener(e -> listar());
+        activarAccionesEnTablaUsuarios(); // ← activar clic en filas
+        gestionUsuarios.getBtnCrear().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                autenticar();
-            }
-        });
-        loginView.getBtnRegistrar().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                registrarUsuario();
+                crearUsuarios();
             }
         });
     }
 
-    public void eventosGestionUsuario(){
-        gestionUsuarios.getBtnBuscar().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buscarUsuario();
-            }
-        });
-
-        gestionUsuarios.getBtnListar().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                listar();
-            }
-        });
-    }
-
-    private void autenticar(){
+    private void autenticar() {
         String username = loginView.getTxtUsername().getText();
         String contrasenia = loginView.getTxtPassword().getText();
 
         usuario = usuarioDAO.autenticar(username, contrasenia);
-        if(usuario == null){
+        if (usuario == null) {
             loginView.mostrarMensaje("Usuario o contraseña incorrectos.");
-        }else{
+        } else {
             loginView.dispose();
         }
     }
 
-    private void registrarUsuario(){
-        String [] respuestas = loginView.mostrarRegistroMensaje();
-        if(respuestas!=null){
-            Usuario usuarioRegistrado = new Usuario(respuestas[0],respuestas[1], Rol.USUARIO);
+    private void registrarUsuario() {
+        String[] respuestas = loginView.mostrarRegistroMensaje();
+        if (respuestas != null) {
+            Usuario usuarioRegistrado = new Usuario(respuestas[0], respuestas[1], Rol.USUARIO);
             usuarioDAO.crear(usuarioRegistrado);
         }
     }
 
-    public Usuario getUsuarioAutenticado(){
+    public Usuario getUsuarioAutenticado() {
         return usuario;
     }
 
-    private void buscarUsuario(){
+    private void buscarUsuario() {
         String username = gestionUsuarios.getTxtBusqueda().getText();
         Usuario usuarioEncontrado = usuarioDAO.buscarPorUsername(username);
-        if(usuarioEncontrado!=null){
+        if (usuarioEncontrado != null) {
             cargarUsuarioEncontrado(usuarioEncontrado);
-        } else{
-            JOptionPane.showMessageDialog(null,"Usuario no encontrado o nombre mal ingresado, ingrese de nuevo");
+        } else {
+            JOptionPane.showMessageDialog(null, "Usuario no encontrado o nombre mal ingresado, intente de nuevo");
         }
     }
 
-    private void cargarUsuarioEncontrado(Usuario usuario){
+    private void cargarUsuarioEncontrado(Usuario usuario) {
         DefaultTableModel modelo = (DefaultTableModel) gestionUsuarios.getTblUsuarios().getModel();
         modelo.setRowCount(0);
         modelo.addRow(new Object[]{
@@ -111,24 +95,24 @@ public class UsuarioController {
         gestionUsuarios.getTxtBusqueda().setText("");
     }
 
-    private void listar(){
+    private void listar() {
         String seleccion = gestionUsuarios.getCmbLista().getSelectedItem().toString();
-        if(seleccion.equals("USUARIOS")){
+        if (seleccion.equals("USUARIOS")) {
             cargarClientes();
         } else if (seleccion.equals("ADMINISTRADORES")) {
             cargarAdministradores();
         } else if (seleccion.equals("TODOS")) {
             cargarUsuarios();
         } else {
-            JOptionPane.showMessageDialog(null, "Seleccion no valida, intente de nuevo");
+            JOptionPane.showMessageDialog(null, "Selección no válida, intente de nuevo");
         }
     }
 
-    private void cargarAdministradores(){
+    private void cargarAdministradores() {
         DefaultTableModel modelo = (DefaultTableModel) gestionUsuarios.getTblUsuarios().getModel();
         modelo.setRowCount(0);
         List<Usuario> usuariosAdministrador = usuarioDAO.listarPorRol("ADMINISTRADOR");
-        for(Usuario usuarioLista : usuariosAdministrador){
+        for (Usuario usuarioLista : usuariosAdministrador) {
             modelo.addRow(new Object[]{
                     usuarioLista.getRol(),
                     usuarioLista.getUsername(),
@@ -137,12 +121,12 @@ public class UsuarioController {
         }
     }
 
-    private void cargarClientes(){
+    private void cargarClientes() {
         DefaultTableModel modelo = (DefaultTableModel) gestionUsuarios.getTblUsuarios().getModel();
         modelo.setRowCount(0);
         List<Usuario> usuariosClientes = usuarioDAO.listarPorRol("USUARIO");
 
-        for(Usuario usuarioLista : usuariosClientes){
+        for (Usuario usuarioLista : usuariosClientes) {
             modelo.addRow(new Object[]{
                     usuarioLista.getRol(),
                     usuarioLista.getUsername(),
@@ -151,12 +135,12 @@ public class UsuarioController {
         }
     }
 
-    private void cargarUsuarios(){
+    private void cargarUsuarios() {
         DefaultTableModel modelo = (DefaultTableModel) gestionUsuarios.getTblUsuarios().getModel();
         modelo.setRowCount(0);
         List<Usuario> usuarios = usuarioDAO.listarTodos();
 
-        for(Usuario usuarioLista : usuarios){
+        for (Usuario usuarioLista : usuarios) {
             modelo.addRow(new Object[]{
                     usuarioLista.getRol(),
                     usuarioLista.getUsername(),
@@ -164,4 +148,97 @@ public class UsuarioController {
             });
         }
     }
+
+    private void activarAccionesEnTablaUsuarios() {
+        gestionUsuarios.getTblUsuarios().addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable tabla = gestionUsuarios.getTblUsuarios();
+                int fila = tabla.getSelectedRow();
+                if (fila >= 0) {
+                    String rolStr = tabla.getValueAt(fila, 0).toString();
+                    String username = tabla.getValueAt(fila, 1).toString();
+                    String password = tabla.getValueAt(fila, 2).toString();
+                    Rol rol = Rol.valueOf(rolStr);
+
+                    String[] opciones = {"Editar", "Eliminar", "Cancelar"};
+                    int opcion = JOptionPane.showOptionDialog(null,
+                            "¿Qué desea hacer con el usuario '" + username + "'?",
+                            "Acción sobre usuario",
+                            JOptionPane.DEFAULT_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null, opciones, opciones[0]);
+
+                    if (opcion == 0) { // Editar
+                        editarUsuario(username, rol);
+                    } else if (opcion == 1) { // Eliminar
+                        eliminarUsuario(username);
+                    }
+                }
+            }
+        });
+    }
+
+    private void editarUsuario(String usernameOriginal, Rol rol) {
+        String nuevoUsername = JOptionPane.showInputDialog(null, "Ingrese el nuevo username:", usernameOriginal);
+        if (nuevoUsername == null || nuevoUsername.trim().isEmpty()) return;
+
+        String nuevaPassword = JOptionPane.showInputDialog(null, "Ingrese la nueva contraseña:");
+        if (nuevaPassword == null || nuevaPassword.trim().isEmpty()) return;
+
+        Usuario actualizado = new Usuario(nuevoUsername, nuevaPassword, rol);
+        usuarioDAO.actualizar(actualizado);
+
+        JOptionPane.showMessageDialog(null, "Usuario actualizado exitosamente.");
+        listar(); // refresca la tabla
+    }
+
+    private void eliminarUsuario(String username) {
+        int confirmacion = JOptionPane.showConfirmDialog(null,
+                "¿Está seguro de eliminar al usuario '" + username + "'?",
+                "Confirmación",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            usuarioDAO.eliminar(username);
+            JOptionPane.showMessageDialog(null, "Usuario eliminado exitosamente.");
+            listar(); // refresca la tabla
+        }
+    }
+
+    private void crearUsuarios() {
+        JTextField nombreField = new JTextField();
+        JPasswordField passwordField = new JPasswordField();
+        JComboBox<String> rolBox = new JComboBox<>(new String[]{"USUARIO", "ADMINISTRADOR"});
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(new JLabel("Nombre de usuario:"));
+        panel.add(nombreField);
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(new JLabel("Contraseña:"));
+        panel.add(passwordField);
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(new JLabel("Rol:"));
+        panel.add(rolBox);
+
+        int result = JOptionPane.showConfirmDialog(null, panel,
+                "Registro de Usuario", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            String nombre = nombreField.getText().trim();
+            String password = new String(passwordField.getPassword()).trim();
+            String rolSeleccionado = rolBox.getSelectedItem().toString();
+
+            if (!nombre.isEmpty() && !password.isEmpty()) {
+                Rol rol = rolSeleccionado.equals("ADMINISTRADOR") ? Rol.ADMINISTRADOR : Rol.USUARIO;
+                Usuario nuevoUsuario = new Usuario(nombre, password, rol);
+                usuarioDAO.crear(nuevoUsuario);
+                JOptionPane.showMessageDialog(null, "Usuario creado exitosamente.");
+                listar(); // Actualiza la tabla
+            } else {
+                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.");
+            }
+        }
+    }
+
 }

@@ -18,6 +18,8 @@ public class GestionUsuarios extends JInternalFrame{
     private JPanel panelLista;
     private JLabel lblLista;
     private JComboBox cmbLista;
+    private JButton btnCrear;
+    private JPanel panelSur;
     private JButton btnListarTodos;
     private DefaultTableModel modelo;
 
@@ -61,6 +63,10 @@ public class GestionUsuarios extends JInternalFrame{
         return cmbLista;
     }
 
+    public JButton getBtnCrear() {
+        return btnCrear;
+    }
+
     public int mostrarConfirmDialog(String mensaje, String[] opciones){
 
         int seleccion = JOptionPane.showOptionDialog(
@@ -76,4 +82,5 @@ public class GestionUsuarios extends JInternalFrame{
 
         return seleccion;
     }
+
 }
