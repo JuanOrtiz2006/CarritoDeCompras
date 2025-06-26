@@ -1,11 +1,7 @@
 package ec.edu.ups.vista;
 
-import ec.edu.ups.modelo.Carrito;
-import ec.edu.ups.modelo.Producto;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.util.List;
 
 public class ListaCarrito extends JInternalFrame{
     private JPanel panelGeneral;
@@ -32,9 +28,6 @@ public class ListaCarrito extends JInternalFrame{
         Object[] columnas = {"USUARIO","ID", "FECHA", "TOTAL"};
         modelo.setColumnIdentifiers(columnas);
         tblCarritos.setModel(modelo);
-
-
-
     }
 
     public JTextField getTxtCodigo() {
@@ -53,23 +46,6 @@ public class ListaCarrito extends JInternalFrame{
         return tblCarritos;
     }
 
-    public void setTxtCodigo(JTextField txtCodigo) {
-        this.txtCodigo = txtCodigo;
-    }
-
-    public void setBtnBuscar(JButton btnBuscar) {
-        this.btnBuscar = btnBuscar;
-    }
-
-    public void setBtnListar(JButton btnListar) {
-        this.btnListar = btnListar;
-    }
-
-    public void setTblCarritos(JTable tblCarritos) {
-        this.tblCarritos = tblCarritos;
-    }
-
-
     public int mostrarConfirmDialog(String mensaje, String[] opciones){
 
         int seleccion = JOptionPane.showOptionDialog(
@@ -85,6 +61,4 @@ public class ListaCarrito extends JInternalFrame{
 
         return seleccion;
     }
-
-
 }

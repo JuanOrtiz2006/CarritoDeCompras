@@ -34,8 +34,6 @@ public class CrearCarrito extends JInternalFrame{
     private DefaultTableModel modeloItems;
     private DefaultTableModel modeloTotales;
 
-
-
     public CrearCarrito(){
         setContentPane(panelGeneral);
         setTitle("Crear Carrito");
@@ -48,7 +46,6 @@ public class CrearCarrito extends JInternalFrame{
         Object[] columnasLista = {"ID", "NOMBRE", "PRECIO", "CANTIDAD","TOTAL", "EDITAR", "ELIMINAR"};
         modeloItems.setColumnIdentifiers(columnasLista);
         tblProductos.setModel(modeloItems);
-
 
         modeloTotales = new DefaultTableModel();
         Object[] columnasTotales={"SubTotal","IVA","Total"};

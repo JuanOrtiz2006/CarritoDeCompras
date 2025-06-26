@@ -1,9 +1,11 @@
 package ec.edu.ups.controlador;
 
 import ec.edu.ups.dao.UsuarioDAO;
+import ec.edu.ups.modelo.Rol;
 import ec.edu.ups.modelo.Usuario;
 import ec.edu.ups.vista.LoginView;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -27,6 +29,12 @@ public class UsuarioController {
                 autenticar();
             }
         });
+        loginView.getBtnRegistrar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                registrarUsuario();
+            }
+        });
     }
 
     private void autenticar(){
@@ -38,6 +46,14 @@ public class UsuarioController {
             loginView.mostrarMensaje("Usuario o contraseña incorrectos.");
         }else{
             loginView.dispose();
+        }
+    }
+
+    private void registrarUsuario(){
+        String [] respuestas = loginView.mostrarRegistroMensaje();
+        if(respuestas!=null){
+            Usuario usuarioRegistrado = new Usuario(respuestas[0],respuestas[1], Rol.USUARIO);
+            usuarioDAO.crear(usuarioRegistrado);
         }
     }
 

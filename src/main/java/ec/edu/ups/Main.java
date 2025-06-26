@@ -43,7 +43,7 @@ public class Main {
                             CarritoDAO carritoDAO = new CarritoDAOMemoria();
 
                             //Instanciamos vistas
-                            MenuView menu = new MenuView();
+                            MenuView menu = new MenuView(usuarioAutenticado);
 
                             //Instanciamos controladores
                             ProductoController productoController = new ProductoController(productoDAO);

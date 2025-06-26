@@ -17,7 +17,6 @@ public class EliminarProducto extends JInternalFrame {
     private JButton btnSeleccionar;
     private JLabel lblPrecio;
 
-
     public EliminarProducto(){
         setContentPane(panelGeneral);
         setTitle("Eliminar Producto");

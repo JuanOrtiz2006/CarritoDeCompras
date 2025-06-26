@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class CrearProductoView extends JInternalFrame {
-
     private JPanel panelPrincipal;
     private JTextField txtPrecio;
     private JTextField txtNombre;
@@ -22,7 +21,6 @@ public class CrearProductoView extends JInternalFrame {
     private JPanel panelBotones;
 
     public CrearProductoView() {
-
         setContentPane(panelPrincipal);
         setTitle("Datos del Producto");
         setSize(500, 500);
@@ -30,7 +28,6 @@ public class CrearProductoView extends JInternalFrame {
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
-
     }
 
     public JTextField getTxtPrecio() {

@@ -49,13 +49,11 @@ public class BuscarProducto extends JInternalFrame {
                 }
             }
         });
-
     }
 
     public JPanel getPanelGeneral() {
         return panelGeneral;
     }
-
 
     public JTextField getTxtBusqueda() {
         return txtBusqueda;
@@ -81,11 +79,13 @@ public class BuscarProducto extends JInternalFrame {
         txtBusqueda.setText("");
         modelo.setNumRows(0);
     }
+
     public void cargarProducto(Producto producto){
         modelo.setNumRows(0);
         Object[] filaProducto={producto.getCodigo(),producto.getNombre(),producto.getPrecio()};
         modelo.addRow(filaProducto);
     }
+
     public void cargarProductos(List<Producto> productos) {
         modelo.setNumRows(0); // Limpia la tabla
         for (Producto producto : productos) {

@@ -16,7 +16,6 @@ public class ListaProducto extends JInternalFrame{
     private JLabel lblTipo;
     private DefaultTableModel modelo;
 
-
     public ListaProducto(){
         setContentPane(panelGeneral);
         setTitle("Buscar Producto");
@@ -34,7 +33,6 @@ public class ListaProducto extends JInternalFrame{
         cmbTipo.addItem("Codigo");
         cmbTipo.addItem("Nombre");
     }
-
 
     public JPanel getPanelGeneral() {
         return panelGeneral;

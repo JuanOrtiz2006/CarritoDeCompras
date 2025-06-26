@@ -101,7 +101,34 @@ public class LoginView extends JFrame{
         this.btnRegistrar = btnRegistrar;
     }
 
-    public void mostrarMensaje(String dialogo){
-        JOptionPane.showMessageDialog(null, dialogo);
+    public void mostrarMensaje(String mensaje){
+        JOptionPane.showMessageDialog(null,mensaje);
+
     }
+    public String[] mostrarRegistroMensaje() {
+        JTextField nombreField = new JTextField();
+        JTextField passwordField = new JTextField();
+        String nombreIngresado;
+        String passwordIngresado;
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(new JLabel("Nombre de usuario:"));
+        panel.add(nombreField);
+        panel.add(Box.createVerticalStrut(10)); // espacio
+        panel.add(new JLabel("Contrasenia:"));
+        panel.add(passwordField);
+
+        int result = JOptionPane.showConfirmDialog(null, panel,
+                "Registro de Usuario", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            nombreIngresado = nombreField.getText();
+            passwordIngresado = passwordField.getText();
+            String [] respuestas = {nombreIngresado,passwordIngresado};
+            return respuestas;
+        }
+        return null;
+    }
+
+
 }
