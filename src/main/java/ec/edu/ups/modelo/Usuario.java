@@ -5,6 +5,7 @@ public class Usuario {
     private String password;
     private Rol rol;
 
+
     public Usuario(){
 
     }
