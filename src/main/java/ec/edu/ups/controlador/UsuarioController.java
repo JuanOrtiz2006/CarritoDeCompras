@@ -3,6 +3,7 @@ package ec.edu.ups.controlador;
 import ec.edu.ups.dao.UsuarioDAO;
 import ec.edu.ups.modelo.Rol;
 import ec.edu.ups.modelo.Usuario;
+import ec.edu.ups.util.Contexto;
 import ec.edu.ups.vista.GestionUsuarios;
 import ec.edu.ups.vista.LoginView;
 
@@ -14,25 +15,23 @@ import java.util.List;
 public class UsuarioController {
     private Usuario usuario;
     private final UsuarioDAO usuarioDAO;
-    private final LoginView loginView;
+    private LoginView loginView;
     private GestionUsuarios gestionUsuarios;
 
-    public UsuarioController(UsuarioDAO usuarioDAO, LoginView loginView) {
+    public UsuarioController(UsuarioDAO usuarioDAO) {
         this.usuarioDAO = usuarioDAO;
-        this.loginView = loginView;
         this.usuario = null;
-        configurarEventosEnVistas();
     }
 
-    public GestionUsuarios getGestionUsuarios() {
-        return gestionUsuarios;
+    public void setLoginView(LoginView loginView) {
+        this.loginView = loginView;
     }
 
     public void setGestionUsuarios(GestionUsuarios gestionUsuarios) {
         this.gestionUsuarios = gestionUsuarios;
     }
 
-    private void configurarEventosEnVistas() {
+    public void configurarEventosEnVistas() {
         loginView.getBtnLogin().addActionListener(e -> autenticar());
         loginView.getBtnRegistrar().addActionListener(e -> registrarUsuario());
     }
@@ -55,7 +54,7 @@ public class UsuarioController {
 
         usuario = usuarioDAO.autenticar(username, contrasenia);
         if (usuario == null) {
-            loginView.mostrarMensaje("Usuario o contraseña incorrectos.");
+            loginView.mostrarMensaje(Contexto.getHandler().get("usuario.contrasena.incorrectos"));
         } else {
             loginView.dispose();
         }
@@ -79,7 +78,8 @@ public class UsuarioController {
         if (usuarioEncontrado != null) {
             cargarUsuarioEncontrado(usuarioEncontrado);
         } else {
-            JOptionPane.showMessageDialog(null, "Usuario no encontrado o nombre mal ingresado, intente de nuevo");
+            JOptionPane.showMessageDialog(null,
+                    Contexto.getHandler().get("usuario.no.encontrado"));
         }
     }
 
@@ -178,30 +178,33 @@ public class UsuarioController {
         });
     }
 
-    private void editarUsuario(String usernameOriginal, Rol rol) {
-        String nuevoUsername = JOptionPane.showInputDialog(null, "Ingrese el nuevo username:", usernameOriginal);
+    public void editarUsuario(String usernameOriginal, Rol rol) {
+        String nuevoUsername = JOptionPane.showInputDialog(null,
+                Contexto.getHandler().get("usuario.ingrese.nuevo.username"), usernameOriginal);
+
         if (nuevoUsername == null || nuevoUsername.trim().isEmpty()) return;
 
-        String nuevaPassword = JOptionPane.showInputDialog(null, "Ingrese la nueva contraseña:");
+        String nuevaPassword = JOptionPane.showInputDialog(null,
+                Contexto.getHandler().get("usuario.ingrese.nueva.contrasena"));
+
         if (nuevaPassword == null || nuevaPassword.trim().isEmpty()) return;
 
-        Usuario actualizado = new Usuario(nuevoUsername, nuevaPassword, rol);
-        usuarioDAO.actualizar(actualizado);
-
-        JOptionPane.showMessageDialog(null, "Usuario actualizado exitosamente.");
+        JOptionPane.showMessageDialog(null,
+                Contexto.getHandler().get("usuario.actualizado.exito"));
         listar(); // refresca la tabla
     }
 
     private void eliminarUsuario(String username) {
         int confirmacion = JOptionPane.showConfirmDialog(null,
-                "¿Está seguro de eliminar al usuario '" + username + "'?",
-                "Confirmación",
+                Contexto.getHandler().get("usuario.confirmar.eliminar") + " '" + username + "'?",
+                Contexto.getHandler().get("confirmacion"),
                 JOptionPane.YES_NO_OPTION);
 
         if (confirmacion == JOptionPane.YES_OPTION) {
             usuarioDAO.eliminar(username);
-            JOptionPane.showMessageDialog(null, "Usuario eliminado exitosamente.");
-            listar(); // refresca la tabla
+            JOptionPane.showMessageDialog(null,
+                    Contexto.getHandler().get("usuario.eliminado.exito"));
+            listar();
         }
     }
 
@@ -212,17 +215,18 @@ public class UsuarioController {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(new JLabel("Nombre de usuario:"));
+        panel.add(new JLabel(Contexto.getHandler().get("usuario.nombre")));
         panel.add(nombreField);
         panel.add(Box.createVerticalStrut(10));
-        panel.add(new JLabel("Contraseña:"));
+        panel.add(new JLabel(Contexto.getHandler().get("usuario.contrasena")));
         panel.add(passwordField);
         panel.add(Box.createVerticalStrut(10));
-        panel.add(new JLabel("Rol:"));
+        panel.add(new JLabel(Contexto.getHandler().get("usuario.rol")));
         panel.add(rolBox);
 
         int result = JOptionPane.showConfirmDialog(null, panel,
-                "Registro de Usuario", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                Contexto.getHandler().get("usuario.registro.titulo"),
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
             String nombre = nombreField.getText().trim();
@@ -236,9 +240,13 @@ public class UsuarioController {
                 JOptionPane.showMessageDialog(null, "Usuario creado exitosamente.");
                 listar(); // Actualiza la tabla
             } else {
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.");
+                JOptionPane.showMessageDialog(null,     Contexto.getHandler().get("usuario.campos.obligatorios"));
+
             }
         }
     }
 
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 }

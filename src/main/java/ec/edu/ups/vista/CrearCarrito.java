@@ -1,5 +1,7 @@
 package ec.edu.ups.vista;
 
+import ec.edu.ups.util.Contexto;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -36,26 +38,73 @@ public class CrearCarrito extends JInternalFrame{
 
     public CrearCarrito(){
         setContentPane(panelGeneral);
-        setTitle("Crear Carrito");
+        setTitle(Contexto.getHandler().get("crearcarrito.titulo"));
         setSize(800, 500);
         setClosable(true);
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 
         modeloItems = new DefaultTableModel();
-        Object[] columnasLista = {"ID", "NOMBRE", "PRECIO", "CANTIDAD","TOTAL", "EDITAR", "ELIMINAR"};
+        Object[] columnasLista = {
+                Contexto.getHandler().get("crearcarrito.columna.id"),
+                Contexto.getHandler().get("crearcarrito.columna.nombre"),
+                Contexto.getHandler().get("crearcarrito.columna.precio"),
+                Contexto.getHandler().get("crearcarrito.columna.cantidad"),
+                Contexto.getHandler().get("crearcarrito.columna.total"),
+                Contexto.getHandler().get("crearcarrito.columna.editar"),
+                Contexto.getHandler().get("crearcarrito.columna.eliminar")
+        };
         modeloItems.setColumnIdentifiers(columnasLista);
         tblProductos.setModel(modeloItems);
 
         modeloTotales = new DefaultTableModel();
-        Object[] columnasTotales={"SubTotal","IVA","Total"};
+        Object[] columnasTotales = {
+                Contexto.getHandler().get("crearcarrito.columna.subtotal"),
+                Contexto.getHandler().get("crearcarrito.columna.iva"),
+                Contexto.getHandler().get("crearcarrito.columna.totalgeneral")
+        };
         modeloTotales.setColumnIdentifiers(columnasTotales);
         tblTotal.setModel(modeloTotales);
+
         txtCodigoCarrito.setEnabled(false);
         txtNombre.setEnabled(false);
         txtPrecio.setEnabled(false);
         txtFecha.setEnabled(false);
-        setVisible(true);
+
+    }
+
+    public void recargarTextos() {
+        setTitle(Contexto.getHandler().get("crearcarrito.titulo"));
+
+        lblCodigoCarrto.setText(Contexto.getHandler().get("crearcarrito.codigo"));
+        lblFecha.setText(Contexto.getHandler().get("crearcarrito.fecha"));
+        lblProducto.setText(Contexto.getHandler().get("crearcarrito.producto"));
+        lblCantidad.setText(Contexto.getHandler().get("crearcarrito.cantidad"));
+
+        btnSeleccionar.setText(Contexto.getHandler().get("crearcarrito.boton.seleccionar"));
+        btnAgregar.setText(Contexto.getHandler().get("crearcarrito.boton.agregar"));
+        btnGuardar.setText(Contexto.getHandler().get("crearcarrito.boton.guardar"));
+        btnVaciar.setText(Contexto.getHandler().get("crearcarrito.boton.vaciar"));
+        btnEditar.setText(Contexto.getHandler().get("crearcarrito.boton.editar"));
+
+        // Actualizar encabezados de columnas
+        Object[] columnasLista = {
+                Contexto.getHandler().get("crearcarrito.columna.id"),
+                Contexto.getHandler().get("crearcarrito.columna.nombre"),
+                Contexto.getHandler().get("crearcarrito.columna.precio"),
+                Contexto.getHandler().get("crearcarrito.columna.cantidad"),
+                Contexto.getHandler().get("crearcarrito.columna.total"),
+                Contexto.getHandler().get("crearcarrito.columna.editar"),
+                Contexto.getHandler().get("crearcarrito.columna.eliminar")
+        };
+        modeloItems.setColumnIdentifiers(columnasLista);
+
+        Object[] columnasTotales = {
+                Contexto.getHandler().get("crearcarrito.columna.subtotal"),
+                Contexto.getHandler().get("crearcarrito.columna.iva"),
+                Contexto.getHandler().get("crearcarrito.columna.totalgeneral")
+        };
+        modeloTotales.setColumnIdentifiers(columnasTotales);
     }
 
     public JTextField getTxtCodigo() {

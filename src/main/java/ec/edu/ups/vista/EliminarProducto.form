@@ -74,6 +74,8 @@
                   </grid>
                 </constraints>
                 <properties>
+                  <editable value="false"/>
+                  <enabled value="false"/>
                   <foreground color="-16184830"/>
                 </properties>
               </component>
@@ -94,6 +96,8 @@
                   </grid>
                 </constraints>
                 <properties>
+                  <editable value="false"/>
+                  <enabled value="false"/>
                   <font name="Courier New" size="12" style="0"/>
                   <foreground color="-16184830"/>
                 </properties>

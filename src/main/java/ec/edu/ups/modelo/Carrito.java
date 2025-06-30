@@ -14,45 +14,44 @@ public class Carrito {
     private static int contador = 1;
 
     public Carrito(){
-        this.codigo = contador++;
-        this.items = new ArrayList<>();
-    }
-    public Carrito(int codigo, GregorianCalendar fecha) {
-        this.codigo = contador++;
-        this.fecha=fecha;
         this.items = new ArrayList<>();
     }
 
-    public Carrito(int codigo, GregorianCalendar fecha, List<ItemCarrito> items) {
-        this.fecha=fecha;
-        this.items = items;
+    public static int generarCodigo() {
+        return contador++;
+    }
+
+    public static int getContadorActual() {
+        return contador;
     }
 
     public Usuario getUsuario() {
         return usuario;
-    }
-    public int getCodigo() {
-        return codigo;
-    }
-
-    public GregorianCalendar getFecha() {
-        return fecha;
-    }
-
-    public List<ItemCarrito> getItems() {
-        return items;
     }
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
 
-    public void setFecha(GregorianCalendar fecha) {
-        this.fecha = fecha;
+    public int getCodigo() {
+        return codigo;
     }
 
     public void setCodigo(int codigo) {
         this.codigo = codigo;
+    }
+
+    public GregorianCalendar getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(GregorianCalendar fecha) {
+        this.fecha = fecha;
+    }
+
+
+    public List<ItemCarrito> getItems() {
+        return items;
     }
 
     public void setItems(List<ItemCarrito> items) {
@@ -112,5 +111,7 @@ public class Carrito {
     public double calcularTotal() {
         return calcularSubtotal() + calcularIVA();
     }
+
+
 }
 

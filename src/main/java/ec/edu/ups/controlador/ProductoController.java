@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ProductoController {
 
-    private  CrearProductoView crearProductoView;
+    private CrearProductoView crearProductoView;
     private BuscarProducto buscarProducto;
     private ActualizarProducto actualizarProducto;
     private EliminarProducto eliminarProducto;
@@ -45,7 +45,7 @@ public class ProductoController {
         this.actualizarProducto = actualizarProducto;
     }
 
-    public void eventoCrearProducto(){
+    public void eventoCrearProducto() {
         crearProductoView.getBtnAceptar().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -53,6 +53,7 @@ public class ProductoController {
             }
         });
     }
+
     private void crearProducto() {
         int codigo = Integer.parseInt(crearProductoView.getTxtCodigo().getText());
         String nombre = crearProductoView.getTxtNombre().getText();
@@ -64,7 +65,7 @@ public class ProductoController {
 
     }
 
-    public void eventoBuscarProducto(){
+    public void eventoBuscarProducto() {
         buscarProducto.getBtnBuscar().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -72,11 +73,12 @@ public class ProductoController {
             }
         });
     }
-    private void buscarProducto(){
+
+    private void buscarProducto() {
         String tipoBusqueda = (String) buscarProducto.getCmbBusqueda().getSelectedItem();
         String valorBuscado = buscarProducto.getTxtBusqueda().getText();
 
-        if (tipoBusqueda == "Codigo"){
+        if (tipoBusqueda == "Codigo") {
             try {
                 int codigo = Integer.parseInt(valorBuscado);
                 Producto producto = productoDAO.buscarPorCodigo(codigo);
@@ -86,10 +88,10 @@ public class ProductoController {
                     buscarProducto.eliminarCampos();
                     buscarProducto.mostrarMensaje("Producto no enctontrado");
                 }
-            } catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 buscarProducto.mostrarMensaje("Codigo incorrecto");
             }
-        } else if(tipoBusqueda == "Nombre"){
+        } else if (tipoBusqueda == "Nombre") {
             List<Producto> productos = productoDAO.buscarPorNombre(valorBuscado);
             if (!productos.isEmpty()) {
                 buscarProducto.cargarProductos(productos);
@@ -101,13 +103,13 @@ public class ProductoController {
         }
     }
 
-    public void eventoActualizarProducto(){
+    public void eventoActualizarProducto() {
         actualizarProducto.getBtnSeleccionar().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int codigo = Integer.parseInt(actualizarProducto.getTxtCodigo().getText());
                 Producto producto = productoDAO.buscarPorCodigo(codigo);
-                actualizarProducto.productoEncontrado(producto.getNombre(),producto.getPrecio());
+                actualizarProducto.productoEncontrado(producto.getNombre(), producto.getPrecio());
             }
         });
         actualizarProducto.getBtnActualizar().addActionListener(new ActionListener() {
@@ -117,26 +119,27 @@ public class ProductoController {
             }
         });
     }
-    public void actualizarProducto(){
+
+    public void actualizarProducto() {
         int opcion = actualizarProducto.mostrarMensaje("Desea actualizar el producto ?");
-        if (opcion == JOptionPane.YES_OPTION){
+        if (opcion == JOptionPane.YES_OPTION) {
             int codigo = Integer.parseInt(actualizarProducto.getTxtCodigo().getText());
             String nombre = actualizarProducto.getTxtNombre().getText();
             double precio = Double.parseDouble(actualizarProducto.getTxtPrecio().getText());
 
-            productoDAO.actualizar(new Producto(codigo,nombre,precio));
+            productoDAO.actualizar(new Producto(codigo, nombre, precio));
             actualizarProducto.limpiarCampos();
-            JOptionPane.showMessageDialog(null,"Producto actualizado");
+            JOptionPane.showMessageDialog(null, "Producto actualizado");
         }
     }
 
-    public void eventoEliminarProducto(){
+    public void eventoEliminarProducto() {
         eliminarProducto.getBtnSeleccionar().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int codigo = Integer.parseInt(eliminarProducto.getTxtCodigo().getText());
                 Producto producto = productoDAO.buscarPorCodigo(codigo);
-                eliminarProducto.productoEncontrado(producto.getNombre(),producto.getPrecio());
+                eliminarProducto.productoEncontrado(producto.getNombre(), producto.getPrecio());
             }
         });
 
@@ -147,10 +150,11 @@ public class ProductoController {
             }
         });
     }
-    private void eliminarProducto(){
+
+    private void eliminarProducto() {
         int opcion = eliminarProducto.mostrarMensaje("Desea eliminar este producto?");
 
-        if (opcion == JOptionPane.YES_OPTION){
+        if (opcion == JOptionPane.YES_OPTION) {
             int codigo = Integer.parseInt(eliminarProducto.getTxtCodigo().getText());
             productoDAO.eliminar(codigo);
             eliminarProducto.limpiarCampos();
@@ -158,7 +162,7 @@ public class ProductoController {
         }
     }
 
-    public void eventoListarProductos(){
+    public void eventoListarProductos() {
         listaProducto.getBtnListar().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -166,7 +170,8 @@ public class ProductoController {
             }
         });
     }
-    private void listarProductos(){
+
+    private void listarProductos() {
         String tipoOrden = (String) listaProducto.getCmbTipo().getSelectedItem();
         List<Producto> productos = productoDAO.listarTodos();
 

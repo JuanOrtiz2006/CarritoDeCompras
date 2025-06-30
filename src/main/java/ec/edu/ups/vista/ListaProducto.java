@@ -1,6 +1,7 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.Producto;
+import ec.edu.ups.util.Contexto;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -18,20 +19,47 @@ public class ListaProducto extends JInternalFrame{
 
     public ListaProducto(){
         setContentPane(panelGeneral);
-        setTitle("Buscar Producto");
+        setTitle(Contexto.getHandler().get("listaproducto.titulo"));
         setSize(500, 500);
         setClosable(true);
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setVisible(true);
+
         modelo = new DefaultTableModel();
-        Object[] columnas={"ID","NOMBRE","PRECIO"};
+        Object[] columnas = {
+                Contexto.getHandler().get("listaproducto.columna.id"),
+                Contexto.getHandler().get("listaproducto.columna.nombre"),
+                Contexto.getHandler().get("listaproducto.columna.precio")
+        };
         modelo.setColumnIdentifiers(columnas);
         tblProductos.setModel(modelo);
 
+        // Cargar ítems del combo traducidos
+        cmbTipo.addItem(""); // vacío
+        cmbTipo.addItem(Contexto.getHandler().get("listaproducto.filtro.codigo"));
+        cmbTipo.addItem(Contexto.getHandler().get("listaproducto.filtro.nombre"));
+
+        // Botón y etiqueta traducidos
+        btnListar.setText(Contexto.getHandler().get("listaproducto.boton"));
+        lblTipo.setText(Contexto.getHandler().get("listaproducto.etiqueta"));
+    }
+
+    public void recargarTextos() {
+        setTitle(Contexto.getHandler().get("listaproducto.titulo"));
+        modelo.setColumnIdentifiers(new Object[]{
+                Contexto.getHandler().get("listaproducto.columna.id"),
+                Contexto.getHandler().get("listaproducto.columna.nombre"),
+                Contexto.getHandler().get("listaproducto.columna.precio")
+        });
+
+        // Recargar combo y otros textos
+        cmbTipo.removeAllItems();
         cmbTipo.addItem("");
-        cmbTipo.addItem("Codigo");
-        cmbTipo.addItem("Nombre");
+        cmbTipo.addItem(Contexto.getHandler().get("listaproducto.filtro.codigo"));
+        cmbTipo.addItem(Contexto.getHandler().get("listaproducto.filtro.nombre"));
+
+        btnListar.setText(Contexto.getHandler().get("listaproducto.boton"));
+        lblTipo.setText(Contexto.getHandler().get("listaproducto.etiqueta"));
     }
 
     public JPanel getPanelGeneral() {

@@ -1,5 +1,7 @@
 package ec.edu.ups.vista;
 
+import ec.edu.ups.util.Contexto;
+
 import javax.swing.*;
 
 public class ActualizarProducto extends JInternalFrame{
@@ -17,13 +19,21 @@ public class ActualizarProducto extends JInternalFrame{
 
     public ActualizarProducto(){
         setContentPane(panelGeneral);
-        setTitle("Actualizar Producto");
+        setTitle(Contexto.getHandler().get("actualizarproducto.titulo"));
         setSize(500, 500);
         setClosable(true);
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setVisible(true);
 
+    }
+
+    private void recargarTextos() {
+        setTitle(Contexto.getHandler().get("actualizarproducto.titulo"));
+        lblCodigo.setText(Contexto.getHandler().get("actualizarproducto.lbl.codigo"));
+        lblNombre.setText(Contexto.getHandler().get("actualizarproducto.lbl.nombre"));
+        lblPrecio.setText(Contexto.getHandler().get("actualizarproducto.lbl.precio"));
+        btnSeleccionar.setText(Contexto.getHandler().get("actualizarproducto.btn.seleccionar"));
+        btnActualizar.setText(Contexto.getHandler().get("actualizarproducto.btn.actualizar"));
     }
 
     public JPanel getPanelGeneral() {

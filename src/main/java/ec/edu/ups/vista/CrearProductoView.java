@@ -1,11 +1,8 @@
 package ec.edu.ups.vista;
 
-import ec.edu.ups.modelo.Producto;
+import ec.edu.ups.util.Contexto;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
 
 public class CrearProductoView extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -22,12 +19,26 @@ public class CrearProductoView extends JInternalFrame {
 
     public CrearProductoView() {
         setContentPane(panelPrincipal);
-        setTitle("Datos del Producto");
+        setTitle(Contexto.getHandler().get("crearproducto.titulo"));
         setSize(500, 500);
         setClosable(true);
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setVisible(true);
+
+        // Cargar textos desde el archivo de idioma
+        lblCodigo.setText(Contexto.getHandler().get("crearproducto.codigo"));
+        lblNombre.setText(Contexto.getHandler().get("crearproducto.nombre"));
+        lblPrecio.setText(Contexto.getHandler().get("crearproducto.precio"));
+        btnAceptar.setText(Contexto.getHandler().get("crearproducto.boton"));
+    }
+
+    // Metodo para actualizar textos si se cambia el idioma
+    public void recargarTextos() {
+        setTitle(Contexto.getHandler().get("crearproducto.titulo"));
+        lblCodigo.setText(Contexto.getHandler().get("crearproducto.codigo"));
+        lblNombre.setText(Contexto.getHandler().get("crearproducto.nombre"));
+        lblPrecio.setText(Contexto.getHandler().get("crearproducto.precio"));
+        btnAceptar.setText(Contexto.getHandler().get("crearproducto.boton"));
     }
 
     public JTextField getTxtPrecio() {

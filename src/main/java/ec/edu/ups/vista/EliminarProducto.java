@@ -1,8 +1,8 @@
 package ec.edu.ups.vista;
 
+import ec.edu.ups.util.Contexto;
+
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class EliminarProducto extends JInternalFrame {
     private JPanel panelGeneral;
@@ -17,18 +17,34 @@ public class EliminarProducto extends JInternalFrame {
     private JButton btnSeleccionar;
     private JLabel lblPrecio;
 
-    public EliminarProducto(){
+    public EliminarProducto() {
         setContentPane(panelGeneral);
-        setTitle("Eliminar Producto");
+        setTitle(Contexto.getHandler().get("eliminarproducto.titulo"));
         setSize(500, 500);
         setClosable(true);
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setVisible(true);
 
         txtNombre.setEnabled(false);
         txtPrecio.setEnabled(false);
+
+        // Traducción inicial
+        lblCodigo.setText(Contexto.getHandler().get("eliminarproducto.etiqueta.codigo"));
+        lblNombre.setText(Contexto.getHandler().get("eliminarproducto.etiqueta.nombre"));
+        lblPrecio.setText(Contexto.getHandler().get("eliminarproducto.etiqueta.precio"));
+        btnSeleccionar.setText(Contexto.getHandler().get("eliminarproducto.boton.seleccionar"));
+        btnEliminar.setText(Contexto.getHandler().get("eliminarproducto.boton.eliminar"));
     }
+
+    public void recargarTextos() {
+        setTitle(Contexto.getHandler().get("eliminarproducto.titulo"));
+        lblCodigo.setText(Contexto.getHandler().get("eliminarproducto.etiqueta.codigo"));
+        lblNombre.setText(Contexto.getHandler().get("eliminarproducto.etiqueta.nombre"));
+        lblPrecio.setText(Contexto.getHandler().get("eliminarproducto.etiqueta.precio"));
+        btnSeleccionar.setText(Contexto.getHandler().get("eliminarproducto.boton.seleccionar"));
+        btnEliminar.setText(Contexto.getHandler().get("eliminarproducto.boton.eliminar"));
+    }
+
 
     public JPanel getPanelGeneral() {
         return panelGeneral;

@@ -1,11 +1,11 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.Producto;
+import ec.edu.ups.util.Contexto;
+
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.List;
@@ -24,20 +24,25 @@ public class BuscarProducto extends JInternalFrame {
 
     public BuscarProducto() {
         setContentPane(panelGeneral);
-        setTitle("Buscar Producto");
+        setTitle(Contexto.getHandler().get("buscarproducto.titulo"));
         setSize(500, 500);
         setClosable(true);
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setVisible(true);
 
         modelo = new DefaultTableModel();
-        Object[] columnas={"ID","NOMBRE","PRECIO"};
+        Object[] columnas = {
+                Contexto.getHandler().get("buscarproducto.columna.id"),
+                Contexto.getHandler().get("buscarproducto.columna.nombre"),
+                Contexto.getHandler().get("buscarproducto.columna.precio")
+        };
         modelo.setColumnIdentifiers(columnas);
         tblProducto.setModel(modelo);
+
         cmbBusqueda.addItem("");
-        cmbBusqueda.addItem("Codigo");
-        cmbBusqueda.addItem("Nombre");
+        cmbBusqueda.addItem(Contexto.getHandler().get("buscarproducto.combo.codigo"));
+        cmbBusqueda.addItem(Contexto.getHandler().get("buscarproducto.combo.nombre"));
+
         setVisible(true);
 
         cmbBusqueda.addItemListener(new ItemListener() {
@@ -45,10 +50,30 @@ public class BuscarProducto extends JInternalFrame {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     String selectedItem = (String) e.getItem();
-                    txtBusqueda.setText("Ingrese aqui el " + selectedItem);
+                    if (selectedItem.isEmpty()) {
+                        txtBusqueda.setText("");
+                    } else {
+                        txtBusqueda.setText(Contexto.getHandler().get("buscarproducto.ingrese") + " " + selectedItem);
+                    }
                 }
             }
         });
+    }
+    
+    public void recargarTextos(){
+        setTitle(Contexto.getHandler().get("buscarproducto.titulo"));
+        Object[] columnas = {
+                Contexto.getHandler().get("buscarproducto.columna.id"),
+                Contexto.getHandler().get("buscarproducto.columna.nombre"),
+                Contexto.getHandler().get("buscarproducto.columna.precio")
+        };
+        modelo.setColumnIdentifiers(columnas);
+        tblProducto.setModel(modelo);
+
+        cmbBusqueda.addItem("");
+        cmbBusqueda.addItem(Contexto.getHandler().get("buscarproducto.combo.codigo"));
+        cmbBusqueda.addItem(Contexto.getHandler().get("buscarproducto.combo.nombre"));
+        
     }
 
     public JPanel getPanelGeneral() {

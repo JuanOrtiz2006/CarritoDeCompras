@@ -154,7 +154,7 @@
                 </constraints>
                 <properties>
                   <font name="Courier New" style="0"/>
-                  <text value="Button"/>
+                  <text value="Crear Usuario"/>
                 </properties>
               </component>
             </children>

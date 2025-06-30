@@ -1,5 +1,7 @@
 package ec.edu.ups.vista;
 
+import ec.edu.ups.util.Contexto;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -7,7 +9,6 @@ public class GestionUsuarios extends JInternalFrame{
     private JPanel panelGeneral;
     private JPanel panelBusqueda;
     private JTextField txtBusqueda;
-    private JComboBox cmbBusqueda;
     private JButton btnBuscar;
     private JPanel panelNorte;
     private JLabel lblBusqueda;
@@ -20,27 +21,59 @@ public class GestionUsuarios extends JInternalFrame{
     private JComboBox cmbLista;
     private JButton btnCrear;
     private JPanel panelSur;
-    private JButton btnListarTodos;
     private DefaultTableModel modelo;
 
     public GestionUsuarios(){
         setContentPane(panelGeneral);
-        setTitle("Buscar Producto");
+        setTitle(Contexto.getHandler().get("gestionusuarios.titulo"));
         setSize(500, 500);
         setClosable(true);
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setVisible(true);
+
+        lblBusqueda.setText(Contexto.getHandler().get("gestionusuarios.etiqueta.busqueda"));
+        lblLista.setText(Contexto.getHandler().get("gestionusuarios.etiqueta.lista"));
+        btnBuscar.setText(Contexto.getHandler().get("gestionusuarios.boton.buscar"));
+        btnListar.setText(Contexto.getHandler().get("gestionusuarios.boton.listar"));
+        btnListar.setText(Contexto.getHandler().get("gestionusuarios.boton.listarTodos"));
+        btnCrear.setText(Contexto.getHandler().get("gestionusuarios.boton.crear"));
+
         modelo = new DefaultTableModel();
-        Object[] columnas = {"ROL","USERNAME", "PASSWORD"};
+        Object[] columnas = {
+                Contexto.getHandler().get("gestionusuarios.columna.rol"),
+                Contexto.getHandler().get("gestionusuarios.columna.usuario"),
+                Contexto.getHandler().get("gestionusuarios.columna.password")
+        };
         modelo.setColumnIdentifiers(columnas);
         tblUsuarios.setModel(modelo);
 
+        cmbLista.removeAllItems();
         cmbLista.addItem("");
-        cmbLista.addItem("USUARIOS");
-        cmbLista.addItem("ADMINISTRADORES");
-        cmbLista.addItem("TODOS");
+        cmbLista.addItem(Contexto.getHandler().get("gestionusuarios.combo.usuarios"));
+        cmbLista.addItem(Contexto.getHandler().get("gestionusuarios.combo.admins"));
+        cmbLista.addItem(Contexto.getHandler().get("gestionusuarios.combo.todos"));
 
+    }
+
+    public void recargarTextos() {
+        setTitle(Contexto.getHandler().get("gestionusuarios.titulo"));
+        lblBusqueda.setText(Contexto.getHandler().get("gestionusuarios.etiqueta.busqueda"));
+        lblLista.setText(Contexto.getHandler().get("gestionusuarios.etiqueta.lista"));
+        btnBuscar.setText(Contexto.getHandler().get("gestionusuarios.boton.buscar"));
+        btnListar.setText(Contexto.getHandler().get("gestionusuarios.boton.listar"));
+        btnCrear.setText(Contexto.getHandler().get("gestionusuarios.boton.crear"));
+
+        modelo.setColumnIdentifiers(new Object[]{
+                Contexto.getHandler().get("gestionusuarios.columna.rol"),
+                Contexto.getHandler().get("gestionusuarios.columna.usuario"),
+                Contexto.getHandler().get("gestionusuarios.columna.password")
+        });
+
+        cmbLista.removeAllItems();
+        cmbLista.addItem("");
+        cmbLista.addItem(Contexto.getHandler().get("gestionusuarios.combo.usuarios"));
+        cmbLista.addItem(Contexto.getHandler().get("gestionusuarios.combo.admins"));
+        cmbLista.addItem(Contexto.getHandler().get("gestionusuarios.combo.todos"));
     }
 
     public JTextField getTxtBusqueda() {
@@ -67,20 +100,16 @@ public class GestionUsuarios extends JInternalFrame{
         return btnCrear;
     }
 
-    public int mostrarConfirmDialog(String mensaje, String[] opciones){
-
-        int seleccion = JOptionPane.showOptionDialog(
+    public int mostrarConfirmDialog(String mensaje, String[] opciones) {
+        return JOptionPane.showOptionDialog(
                 null,
                 mensaje,
-                "Opciones del carrito",
+                Contexto.getHandler().get("gestionusuarios.titulo.dialogo"),
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 opciones,
                 opciones[0]
         );
-
-        return seleccion;
     }
-
 }
