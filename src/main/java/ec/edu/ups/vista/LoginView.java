@@ -15,6 +15,7 @@ public class LoginView extends JFrame{
     private JLabel lblPassword;
     private JPanel panelBoton;
     private JButton btnRegistrar;
+    private JButton btnRecuperar;
 
     public LoginView (){
         setContentPane(panelGeneral);

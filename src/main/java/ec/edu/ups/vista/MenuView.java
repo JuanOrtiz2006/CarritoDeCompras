@@ -1,5 +1,7 @@
 package ec.edu.ups.vista;
 
+import ec.edu.ups.util.Contexto;
+
 import javax.swing.*;
 
 public class MenuView extends JFrame {
@@ -34,6 +36,7 @@ public class MenuView extends JFrame {
 
     public MenuView() {
         setTitle("Menú");
+
         setSize(520, 560);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

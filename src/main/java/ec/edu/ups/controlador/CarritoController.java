@@ -59,9 +59,33 @@ public class CarritoController {
         crearCarrito.getBtnAgregar().addActionListener(e -> anadirProductoACarrito());
         crearCarrito.getBtnGuardar().addActionListener(e -> guardarCarrito());
         crearCarrito.getBtnVaciar().addActionListener(e -> vaciarCarrito());
+        crearCarrito.getTblProductos().addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int fila = crearCarrito.getTblProductos().getSelectedRow();
+                if (fila != -1) {
+                    int codigoProducto = (int) crearCarrito.getTblProductos().getValueAt(fila, 0);
+                    String nombre = (String) crearCarrito.getTblProductos().getValueAt(fila, 1);
 
-        crearCarrito.getTblProductos().getColumn(Contexto.getHandler().get("boton.editar")).setCellEditor(new BotonEditor(crearCarrito.getTblProductos(), this));
-        crearCarrito.getTblProductos().getColumn(Contexto.getHandler().get("boton.editar")).setCellEditor(new BotonEditor(crearCarrito.getTblProductos(), this));
+                    String[] opciones = {Contexto.getHandler().get("opciones.editar"), Contexto.getHandler().get("opciones.eliminar"), Contexto.getHandler().get("opciones.cancelar")};
+                    int opcion = JOptionPane.showOptionDialog(
+                            crearCarrito,
+                            Contexto.getHandler().get("opciones.accionproducto"),
+                            Contexto.getHandler().get("opciones.titulo"),
+                            JOptionPane.DEFAULT_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            opciones,
+                            opciones[2]
+                    );
+
+                    if (opcion == 0) {
+                        editarItem(fila);
+                    } else if (opcion == 1) {
+                        eliminarItem(fila);
+                    }
+                }
+            }
+        });
     }
 
     private void seleccionarItem() {
@@ -70,7 +94,7 @@ public class CarritoController {
         if (producto != null) {
             crearCarrito.productoEncontrado(producto.getNombre(), producto.getPrecio());
         } else {
-            crearCarrito.mostrarMensaje("Producto no encontrado.");
+            crearCarrito.mostrarMensaje(Contexto.getHandler().get("mensaje.producto.noencontrado"));
         }
     }
 
@@ -83,7 +107,7 @@ public class CarritoController {
             cargarProductosEnTabla();
             mostrarTotalesEnTabla();
         } else {
-            crearCarrito.mostrarMensaje("Producto no encontrado.");
+            crearCarrito.mostrarMensaje(Contexto.getHandler().get("mensaje.producto.noencontrado"));
         }
     }
 
@@ -97,8 +121,6 @@ public class CarritoController {
                     item.getProducto().getPrecio(),
                     item.getCantidad(),
                     item.getProducto().getPrecio() * item.getCantidad(),
-                    "EDITAR",
-                    "ELIMINAR"
             });
         }
     }
@@ -115,7 +137,7 @@ public class CarritoController {
 
     private void guardarCarrito() {
         if (carrito.estaVacio()) {
-            crearCarrito.mostrarMensaje("El carrito está vacío. Agregue al menos un producto antes de guardar.");
+            crearCarrito.mostrarMensaje(Contexto.getHandler().get("mensaje.carrito.vacio"));
             return;
         }
 
@@ -128,7 +150,7 @@ public class CarritoController {
         carrito.setUsuario(usuario);
 
         carritoDAO.crear(carrito);
-        crearCarrito.mostrarMensaje("Carrito creado correctamente por usuario: " + usuario.getUsername());
+        crearCarrito.mostrarMensaje(Contexto.getHandler().get("mensaje.carrito.creado") + usuario.getUsername());
 
         crearCarrito.limpiarFormulario();
         modoEdicion = false;
@@ -139,11 +161,11 @@ public class CarritoController {
     }
 
     private void vaciarCarrito() {
-        if (JOptionPane.showConfirmDialog(crearCarrito, "¿Vaciar carrito?", "Confirmación", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showConfirmDialog(crearCarrito, Contexto.getHandler().get("mensaje.carrito.confirmarvaciar"), Contexto.getHandler().get("opciones.titulo"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             carrito.vaciarCarrito();
             cargarProductosEnTabla();
             mostrarTotalesEnTabla();
-            crearCarrito.mostrarMensaje("Carrito vaciado.");
+            crearCarrito.mostrarMensaje(Contexto.getHandler().get("mensaje.carrito.vaciar"));
         }
     }
 
@@ -153,22 +175,22 @@ public class CarritoController {
             carrito.eliminarProducto(codigoProducto);
             cargarProductosEnTabla();
             mostrarTotalesEnTabla();
-            crearCarrito.mostrarMensaje("Item eliminado.");
+            crearCarrito.mostrarMensaje(Contexto.getHandler().get("mensaje.item.eliminar"));
         }
     }
 
     public void editarItem(int fila) {
         if (fila >= 0 && fila < carrito.getItems().size()) {
             ItemCarrito item = carrito.getItems().get(fila);
-            String nuevaCantidadStr = JOptionPane.showInputDialog("Nueva cantidad para " + item.getProducto().getNombre(), item.getCantidad());
+            String nuevaCantidadStr = JOptionPane.showInputDialog(Contexto.getHandler().get("mensaje.item.cantidad") + item.getProducto().getNombre(), item.getCantidad());
             try {
                 int nuevaCantidad = Integer.parseInt(nuevaCantidadStr);
                 carrito.actualizarProducto(new ItemCarrito(item.getProducto(), nuevaCantidad));
                 cargarProductosEnTabla();
                 mostrarTotalesEnTabla();
-                crearCarrito.mostrarMensaje("Cantidad actualizada.");
+                crearCarrito.mostrarMensaje(Contexto.getHandler().get("mensaje.item.actualizarcantidad"));
             } catch (Exception e) {
-                crearCarrito.mostrarMensaje("Cantidad inválida.");
+                crearCarrito.mostrarMensaje(Contexto.getHandler().get("mensaje.item.errorcantidad"));
             }
         }
     }
@@ -184,8 +206,8 @@ public class CarritoController {
                 int fila = listaCarrito.getTblCarritos().getSelectedRow();
                 if (fila != -1) {
                     int codigo = (int) listaCarrito.getTblCarritos().getValueAt(fila, 1);
-                    String[] opciones = {"Editar", "Eliminar", "Cancelar"};
-                    int opcion = listaCarrito.mostrarConfirmDialog("¿Qué desea hacer con el carrito #" + codigo + "?", opciones);
+                    String[] opciones = {Contexto.getHandler().get("opciones.editar"), Contexto.getHandler().get("opciones.eliminar"), Contexto.getHandler().get("opciones.cancelar")};
+                    int opcion = listaCarrito.mostrarConfirmDialog(Contexto.getHandler().get("mensaje.carrito.accion"), opciones);
                     if (opcion == 0) editarCarrito(codigo);
                     else if (opcion == 1) eliminarCarrito(codigo);
                 }
@@ -212,7 +234,7 @@ public class CarritoController {
         if (c != null) {
             cargarCarritoEnTabla(c);
         } else {
-            listaCarrito.mostrarMensaje("No se encontró el carrito.");
+            listaCarrito.mostrarMensaje(Contexto.getHandler().get("mensaje.carrito.noencontrado"));
         }
     }
 
@@ -228,10 +250,10 @@ public class CarritoController {
     }
 
     private void eliminarCarrito(int codigo) {
-        if (JOptionPane.showConfirmDialog(listaCarrito, "¿Eliminar carrito?", "Confirmar", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showConfirmDialog(listaCarrito, Contexto.getHandler().get("mensaje.carrito.eliminar"), Contexto.getHandler().get("opciones.titulo"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             carritoDAO.eliminar(codigo);
             cargarCarritosEnTabla();
-            listaCarrito.mostrarMensaje("Carrito eliminado.");
+            listaCarrito.mostrarMensaje(Contexto.getHandler().get("mensaje.carrito.eliminado"));
         }
     }
 
@@ -269,7 +291,7 @@ public class CarritoController {
 
     private void actualizarCarrito() {
         if (carrito.estaVacio()) {
-            crearCarrito.mostrarMensaje("El carrito está vacío.");
+            crearCarrito.mostrarMensaje(Contexto.getHandler().get("mensaje.carrito.vacio"));
             return;
         }
 
@@ -281,12 +303,12 @@ public class CarritoController {
             fechaGC.setTime(fecha);
             carrito.setFecha(fechaGC);
         } catch (Exception e) {
-            crearCarrito.mostrarMensaje("Fecha inválida.");
+            crearCarrito.mostrarMensaje(Contexto.getHandler().get("mensaje.carrito.errorfecha"));
             return;
         }
 
         carritoDAO.actualizar(carrito);
-        crearCarrito.mostrarMensaje("Carrito actualizado correctamente.");
+        crearCarrito.mostrarMensaje(Contexto.getHandler().get("mensaje.carrito.actualizado"));
     }
 
     public void setUsuario(Usuario usuario) {

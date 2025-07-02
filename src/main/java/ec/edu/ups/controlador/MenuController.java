@@ -42,7 +42,7 @@ public class MenuController {
         // Menú Producto
         JMenu menuProducto = new JMenu(Contexto.getHandler().get("menu.producto"));
 
-        if (usuario.getRol().toString().equalsIgnoreCase("ADMINISTRADOR")) {
+        if (usuario.getRol().toString().equalsIgnoreCase(Contexto.getHandler().get("usuario.administrador"))) {
             menuView.setMenuCrearProducto(new JMenuItem(Contexto.getHandler().get("menu.producto.crear")));
             menuView.setMenuBuscarProducto(new JMenuItem(Contexto.getHandler().get("menu.producto.buscar")));
             menuView.setMenuActualizarProducto(new JMenuItem(Contexto.getHandler().get("menu.producto.actualizar")));
@@ -94,7 +94,7 @@ public class MenuController {
         menuUsuario.add(menuView.getMenuCerrarSesion());
         menuView.setMenuUsuario(menuUsuario);
         menuBar.add(menuUsuario);
-        if(usuario.getRol().toString().equalsIgnoreCase("ADMINISTRADOR")){
+        if(usuario.getRol().toString().equalsIgnoreCase(Contexto.getHandler().get("usuario.administrador"))){
             menuView.setMenuGestiosUsuarios(new JMenuItem(Contexto.getHandler().get("menu.usuario.gestion")));
             menuUsuario.add(menuView.getMenuGestiosUsuarios());
         }
@@ -172,7 +172,7 @@ public class MenuController {
             view.setVisible(true);
         });
 
-        if(usuario.getRol().toString().equalsIgnoreCase("ADMINISTRADOR")){
+        if(usuario.getRol().toString().equalsIgnoreCase(Contexto.getHandler().get("usuario.administrador"))){
             menuView.getMenuGestiosUsuarios().addActionListener(e -> {
                 GestionUsuarios view = new GestionUsuarios();
                 usuarioController.setGestionUsuarios(view);

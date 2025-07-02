@@ -97,21 +97,21 @@ public class UsuarioController {
 
     private void listar() {
         String seleccion = gestionUsuarios.getCmbLista().getSelectedItem().toString();
-        if (seleccion.equals("USUARIOS")) {
+        if (seleccion.equals(Contexto.getHandler().get("usuario.normal"))) {
             cargarClientes();
-        } else if (seleccion.equals("ADMINISTRADORES")) {
+        } else if (seleccion.equals(Contexto.getHandler().get("usuario.administrador"))) {
             cargarAdministradores();
-        } else if (seleccion.equals("TODOS")) {
+        } else if (seleccion.equals(Contexto.getHandler().get("gestionusuarios.combo.todos"))) {
             cargarUsuarios();
         } else {
-            JOptionPane.showMessageDialog(null, "Selección no válida, intente de nuevo");
+            JOptionPane.showMessageDialog(null, Contexto.getHandler().get("mensaje.usuario.error"));
         }
     }
 
     private void cargarAdministradores() {
         DefaultTableModel modelo = (DefaultTableModel) gestionUsuarios.getTblUsuarios().getModel();
         modelo.setRowCount(0);
-        List<Usuario> usuariosAdministrador = usuarioDAO.listarPorRol("ADMINISTRADOR");
+        List<Usuario> usuariosAdministrador = usuarioDAO.listarPorRol(Contexto.getHandler().get("usuario.adminstrador"));
         for (Usuario usuarioLista : usuariosAdministrador) {
             modelo.addRow(new Object[]{
                     usuarioLista.getRol(),
@@ -211,7 +211,7 @@ public class UsuarioController {
     private void crearUsuarios() {
         JTextField nombreField = new JTextField();
         JPasswordField passwordField = new JPasswordField();
-        JComboBox<String> rolBox = new JComboBox<>(new String[]{"USUARIO", "ADMINISTRADOR"});
+        JComboBox<String> rolBox = new JComboBox<>(new String[]{Contexto.getHandler().get("usuario.normal"), Contexto.getHandler().get("usuario.administrador")});
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -234,7 +234,7 @@ public class UsuarioController {
             String rolSeleccionado = rolBox.getSelectedItem().toString();
 
             if (!nombre.isEmpty() && !password.isEmpty()) {
-                Rol rol = rolSeleccionado.equals("ADMINISTRADOR") ? Rol.ADMINISTRADOR : Rol.USUARIO;
+                Rol rol = rolSeleccionado.equals(Contexto.getHandler().get("usuario.administrador")) ? Rol.ADMINISTRADOR : Rol.USUARIO;
                 Usuario nuevoUsuario = new Usuario(nombre, password, rol);
                 usuarioDAO.crear(nuevoUsuario);
                 JOptionPane.showMessageDialog(null, "Usuario creado exitosamente.");

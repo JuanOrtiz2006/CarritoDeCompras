@@ -38,6 +38,9 @@ public class Main {
             loginView.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
+                    loginView.getTxtUsername().setText("");
+                    loginView.getTxtPassword().setText("");
+
                     Usuario usuarioAutenticado = usuarioController.getUsuarioAutenticado();
                     if (usuarioAutenticado != null) {
                         // Instanciar vistas para la sesión (solo una vez)

@@ -2,6 +2,7 @@ package ec.edu.ups.controlador;
 
 import ec.edu.ups.dao.ProductoDAO;
 import ec.edu.ups.modelo.Producto;
+import ec.edu.ups.util.Contexto;
 import ec.edu.ups.vista.*;
 
 import javax.swing.*;
@@ -61,7 +62,7 @@ public class ProductoController {
 
         productoDAO.crear(new Producto(codigo, nombre, precio));
         crearProductoView.limpiarCampos();
-        crearProductoView.mostrarMensaje("Producto " + nombre + " guardado correctamente");
+        crearProductoView.mostrarMensaje(Contexto.getHandler().get("mensaje.producto.creado") + nombre);
 
     }
 
@@ -78,7 +79,7 @@ public class ProductoController {
         String tipoBusqueda = (String) buscarProducto.getCmbBusqueda().getSelectedItem();
         String valorBuscado = buscarProducto.getTxtBusqueda().getText();
 
-        if (tipoBusqueda == "Codigo") {
+        if (tipoBusqueda == Contexto.getHandler().get("buscarproducto.combo.codigo")) {
             try {
                 int codigo = Integer.parseInt(valorBuscado);
                 Producto producto = productoDAO.buscarPorCodigo(codigo);
@@ -86,18 +87,18 @@ public class ProductoController {
                     buscarProducto.cargarProducto(producto);
                 } else {
                     buscarProducto.eliminarCampos();
-                    buscarProducto.mostrarMensaje("Producto no enctontrado");
+                    buscarProducto.mostrarMensaje(Contexto.getHandler().get("mensaje.producto.noencontrado"));
                 }
             } catch (NumberFormatException e) {
-                buscarProducto.mostrarMensaje("Codigo incorrecto");
+                buscarProducto.mostrarMensaje(Contexto.getHandler().get("mensaje.producto.errorcodigo"));
             }
-        } else if (tipoBusqueda == "Nombre") {
+        } else if (tipoBusqueda == Contexto.getHandler().get("buscarproducto.combo.nombre")) {
             List<Producto> productos = productoDAO.buscarPorNombre(valorBuscado);
             if (!productos.isEmpty()) {
                 buscarProducto.cargarProductos(productos);
             } else {
                 buscarProducto.eliminarCampos();
-                buscarProducto.mostrarMensaje("No se encontraron productos con ese nombre.");
+                buscarProducto.mostrarMensaje(Contexto.getHandler().get("mensaje.producto.noencontrado"));
             }
 
         }
@@ -121,7 +122,7 @@ public class ProductoController {
     }
 
     public void actualizarProducto() {
-        int opcion = actualizarProducto.mostrarMensaje("Desea actualizar el producto ?");
+        int opcion = actualizarProducto.mostrarMensaje(Contexto.getHandler().get("mensaje.producto.confirmaractualizacion"));
         if (opcion == JOptionPane.YES_OPTION) {
             int codigo = Integer.parseInt(actualizarProducto.getTxtCodigo().getText());
             String nombre = actualizarProducto.getTxtNombre().getText();
@@ -129,7 +130,7 @@ public class ProductoController {
 
             productoDAO.actualizar(new Producto(codigo, nombre, precio));
             actualizarProducto.limpiarCampos();
-            JOptionPane.showMessageDialog(null, "Producto actualizado");
+            JOptionPane.showMessageDialog(null, Contexto.getHandler().get("mensaje.producto.actualizado"));
         }
     }
 
@@ -152,13 +153,13 @@ public class ProductoController {
     }
 
     private void eliminarProducto() {
-        int opcion = eliminarProducto.mostrarMensaje("Desea eliminar este producto?");
+        int opcion = eliminarProducto.mostrarMensaje(Contexto.getHandler().get("mensaje.producto.confirmareliminar"));
 
         if (opcion == JOptionPane.YES_OPTION) {
             int codigo = Integer.parseInt(eliminarProducto.getTxtCodigo().getText());
             productoDAO.eliminar(codigo);
             eliminarProducto.limpiarCampos();
-            JOptionPane.showMessageDialog(null, "Producto Eliminado");
+            JOptionPane.showMessageDialog(null, Contexto.getHandler().get("mensaje.producto.eliminado"));
         }
     }
 
@@ -176,9 +177,9 @@ public class ProductoController {
         List<Producto> productos = productoDAO.listarTodos();
 
         if (tipoOrden != null) {
-            if (tipoOrden.equalsIgnoreCase("Código")) {
+            if (tipoOrden.equalsIgnoreCase(Contexto.getHandler().get("buscarproducto.combo.codigo"))) {
                 productos.sort(Comparator.comparingInt(Producto::getCodigo));
-            } else if (tipoOrden.equalsIgnoreCase("Nombre")) {
+            } else if (tipoOrden.equalsIgnoreCase(Contexto.getHandler().get("buscarproducto.combo.nombre"))) {
                 productos.sort(Comparator.comparing(Producto::getNombre, String.CASE_INSENSITIVE_ORDER));
             }
         }

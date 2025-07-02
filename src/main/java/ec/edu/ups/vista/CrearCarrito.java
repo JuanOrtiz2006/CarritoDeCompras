@@ -50,9 +50,7 @@ public class CrearCarrito extends JInternalFrame{
                 Contexto.getHandler().get("crearcarrito.columna.nombre"),
                 Contexto.getHandler().get("crearcarrito.columna.precio"),
                 Contexto.getHandler().get("crearcarrito.columna.cantidad"),
-                Contexto.getHandler().get("crearcarrito.columna.total"),
-                Contexto.getHandler().get("crearcarrito.columna.editar"),
-                Contexto.getHandler().get("crearcarrito.columna.eliminar")
+                Contexto.getHandler().get("crearcarrito.columna.total")
         };
         modeloItems.setColumnIdentifiers(columnasLista);
         tblProductos.setModel(modeloItems);
@@ -63,6 +61,16 @@ public class CrearCarrito extends JInternalFrame{
                 Contexto.getHandler().get("crearcarrito.columna.iva"),
                 Contexto.getHandler().get("crearcarrito.columna.totalgeneral")
         };
+
+        lblCodigoCarrto.setText(Contexto.getHandler().get("crearcarrito.codigo"));
+        lblFecha.setText(Contexto.getHandler().get("crearcarrito.fecha"));
+        lblProducto.setText(Contexto.getHandler().get("crearcarrito.producto"));
+        lblCantidad.setText(Contexto.getHandler().get("crearcarrito.cantidad"));
+        btnSeleccionar.setText(Contexto.getHandler().get("crearcarrito.boton.seleccionar"));
+        btnAgregar.setText(Contexto.getHandler().get("crearcarrito.boton.agregar"));
+        btnGuardar.setText(Contexto.getHandler().get("crearcarrito.boton.guardar"));
+        btnVaciar.setText(Contexto.getHandler().get("crearcarrito.boton.vaciar"));
+        btnEditar.setText(Contexto.getHandler().get("crearcarrito.boton.editar"));
         modeloTotales.setColumnIdentifiers(columnasTotales);
         tblTotal.setModel(modeloTotales);
 
@@ -71,40 +79,6 @@ public class CrearCarrito extends JInternalFrame{
         txtPrecio.setEnabled(false);
         txtFecha.setEnabled(false);
 
-    }
-
-    public void recargarTextos() {
-        setTitle(Contexto.getHandler().get("crearcarrito.titulo"));
-
-        lblCodigoCarrto.setText(Contexto.getHandler().get("crearcarrito.codigo"));
-        lblFecha.setText(Contexto.getHandler().get("crearcarrito.fecha"));
-        lblProducto.setText(Contexto.getHandler().get("crearcarrito.producto"));
-        lblCantidad.setText(Contexto.getHandler().get("crearcarrito.cantidad"));
-
-        btnSeleccionar.setText(Contexto.getHandler().get("crearcarrito.boton.seleccionar"));
-        btnAgregar.setText(Contexto.getHandler().get("crearcarrito.boton.agregar"));
-        btnGuardar.setText(Contexto.getHandler().get("crearcarrito.boton.guardar"));
-        btnVaciar.setText(Contexto.getHandler().get("crearcarrito.boton.vaciar"));
-        btnEditar.setText(Contexto.getHandler().get("crearcarrito.boton.editar"));
-
-        // Actualizar encabezados de columnas
-        Object[] columnasLista = {
-                Contexto.getHandler().get("crearcarrito.columna.id"),
-                Contexto.getHandler().get("crearcarrito.columna.nombre"),
-                Contexto.getHandler().get("crearcarrito.columna.precio"),
-                Contexto.getHandler().get("crearcarrito.columna.cantidad"),
-                Contexto.getHandler().get("crearcarrito.columna.total"),
-                Contexto.getHandler().get("crearcarrito.columna.editar"),
-                Contexto.getHandler().get("crearcarrito.columna.eliminar")
-        };
-        modeloItems.setColumnIdentifiers(columnasLista);
-
-        Object[] columnasTotales = {
-                Contexto.getHandler().get("crearcarrito.columna.subtotal"),
-                Contexto.getHandler().get("crearcarrito.columna.iva"),
-                Contexto.getHandler().get("crearcarrito.columna.totalgeneral")
-        };
-        modeloTotales.setColumnIdentifiers(columnasTotales);
     }
 
     public JTextField getTxtCodigo() {

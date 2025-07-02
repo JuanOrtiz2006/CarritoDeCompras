@@ -24,18 +24,12 @@ public class ActualizarProducto extends JInternalFrame{
         setClosable(true);
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-
-    }
-
-    private void recargarTextos() {
-        setTitle(Contexto.getHandler().get("actualizarproducto.titulo"));
         lblCodigo.setText(Contexto.getHandler().get("actualizarproducto.lbl.codigo"));
         lblNombre.setText(Contexto.getHandler().get("actualizarproducto.lbl.nombre"));
         lblPrecio.setText(Contexto.getHandler().get("actualizarproducto.lbl.precio"));
         btnSeleccionar.setText(Contexto.getHandler().get("actualizarproducto.btn.seleccionar"));
         btnActualizar.setText(Contexto.getHandler().get("actualizarproducto.btn.actualizar"));
     }
-
     public JPanel getPanelGeneral() {
         return panelGeneral;
     }

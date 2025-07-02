@@ -58,23 +58,12 @@ public class BuscarProducto extends JInternalFrame {
                 }
             }
         });
+
+        labelBusqueda.setText(Contexto.getHandler().get("buscarproducto.label"));
+        btnBuscar.setText(Contexto.getHandler().get("buscarproducto.boton"));
     }
     
-    public void recargarTextos(){
-        setTitle(Contexto.getHandler().get("buscarproducto.titulo"));
-        Object[] columnas = {
-                Contexto.getHandler().get("buscarproducto.columna.id"),
-                Contexto.getHandler().get("buscarproducto.columna.nombre"),
-                Contexto.getHandler().get("buscarproducto.columna.precio")
-        };
-        modelo.setColumnIdentifiers(columnas);
-        tblProducto.setModel(modelo);
 
-        cmbBusqueda.addItem("");
-        cmbBusqueda.addItem(Contexto.getHandler().get("buscarproducto.combo.codigo"));
-        cmbBusqueda.addItem(Contexto.getHandler().get("buscarproducto.combo.nombre"));
-        
-    }
 
     public JPanel getPanelGeneral() {
         return panelGeneral;
