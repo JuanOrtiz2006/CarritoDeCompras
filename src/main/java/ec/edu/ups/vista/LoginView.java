@@ -22,12 +22,14 @@ public class LoginView extends JFrame{
         setTitle(Contexto.getHandler().get("login.titulo"));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
+        setLocationRelativeTo(null);
 
         // Asignar textos internacionalizados
         lblUsername.setText(Contexto.getHandler().get("login.usuario"));
         lblPassword.setText(Contexto.getHandler().get("login.contrasena"));
         btnLogin.setText(Contexto.getHandler().get("login.entrar"));
         btnRegistrar.setText(Contexto.getHandler().get("login.registrar"));
+        btnRecuperar.setText(Contexto.getHandler().get("login.recuperar"));
     }
 
     public void recargarTextos() {
@@ -56,6 +58,10 @@ public class LoginView extends JFrame{
 
     public JButton getBtnRegistrar() {
         return btnRegistrar;
+    }
+
+    public JButton getBtnRecuperar() {
+        return btnRecuperar;
     }
 
     public void setPanelGeneral(JPanel panelGeneral) {
@@ -87,4 +93,6 @@ public class LoginView extends JFrame{
         }
         return null;
     }
+
+
 }

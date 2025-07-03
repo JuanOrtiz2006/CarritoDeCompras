@@ -1,6 +1,8 @@
 package ec.edu.ups.modelo;
 
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Usuario {
     private String nombre;
@@ -10,6 +12,7 @@ public class Usuario {
     private String username;
     private String password;
     private Rol rol;
+    private Map<String,String> informacion = new HashMap<String,String>();
 
 
     public Usuario(){
@@ -63,5 +66,29 @@ public class Usuario {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public Map<String, String> getInformacion() {
+        return informacion;
+    }
+
+    public void setInformacion(Map<String, String> informacion) {
+        this.informacion = informacion;
+    }
+
+    public void setRespuestaInformacion(String key, String value){
+        informacion.put(key,value);
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 }

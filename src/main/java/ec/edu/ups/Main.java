@@ -27,11 +27,15 @@ public class Main {
 
             // Instanciar vistas comunes (login)
             LoginView loginView = new LoginView();
+            RegistrarUsuario registrarUsuario = new RegistrarUsuario();
+            PreguntasSeguridad preguntasSeguridad = new PreguntasSeguridad();
 
             // Controlador usuario
             UsuarioController usuarioController = new UsuarioController(usuarioDAO);
             usuarioController.setLoginView(loginView);
             usuarioController.configurarEventosEnVistas();
+            usuarioController.setRegistrarUsuario(registrarUsuario);
+            usuarioController.setPreguntasSeguridad(preguntasSeguridad);
 
             loginView.setVisible(true);
 

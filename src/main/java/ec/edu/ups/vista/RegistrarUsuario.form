@@ -29,7 +29,9 @@
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <background color="-67073"/>
+            </properties>
             <border type="none"/>
             <children>
               <grid id="200a5" binding="panelNombre" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -37,24 +39,30 @@
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-67073"/>
+                </properties>
                 <border type="none"/>
                 <children>
-                  <component id="910d7" class="javax.swing.JLabel">
+                  <component id="910d7" class="javax.swing.JLabel" binding="lblNombre">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
+                      <font name="Courier New" style="0"/>
+                      <foreground color="-12241615"/>
                       <text value="Nombre:"/>
                     </properties>
                   </component>
-                  <component id="ca0cb" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+                  <component id="ca0cb" class="javax.swing.JTextField" binding="txtNombre">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
                       </grid>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <font name="Courier New"/>
+                    </properties>
                   </component>
                 </children>
               </grid>
@@ -63,24 +71,30 @@
                 <constraints>
                   <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-67073"/>
+                </properties>
                 <border type="none"/>
                 <children>
-                  <component id="12638" class="javax.swing.JLabel">
+                  <component id="12638" class="javax.swing.JLabel" binding="lblFecha">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
+                      <font name="Courier New" style="0"/>
+                      <foreground color="-12241615"/>
                       <text value="F.Nacimiento:"/>
                     </properties>
                   </component>
-                  <component id="ecb43" class="javax.swing.JTextField" binding="textField2" default-binding="true">
+                  <component id="ecb43" class="javax.swing.JTextField" binding="txtFecha">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
                       </grid>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <font name="Courier New"/>
+                    </properties>
                   </component>
                 </children>
               </grid>
@@ -89,24 +103,30 @@
                 <constraints>
                   <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-67073"/>
+                </properties>
                 <border type="none"/>
                 <children>
-                  <component id="b2765" class="javax.swing.JLabel">
+                  <component id="b2765" class="javax.swing.JLabel" binding="lblCorreo">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
+                      <font name="Courier New" style="0"/>
+                      <foreground color="-12241615"/>
                       <text value="Correo:"/>
                     </properties>
                   </component>
-                  <component id="a674c" class="javax.swing.JTextField" binding="textField3" default-binding="true">
+                  <component id="a674c" class="javax.swing.JTextField" binding="txtCorreo">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
                       </grid>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <font name="Courier New"/>
+                    </properties>
                   </component>
                 </children>
               </grid>
@@ -115,32 +135,40 @@
                 <constraints>
                   <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-67073"/>
+                </properties>
                 <border type="none"/>
                 <children>
-                  <component id="ce8a3" class="javax.swing.JLabel">
+                  <component id="ce8a3" class="javax.swing.JLabel" binding="lblTelefono">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
+                      <font name="Courier New" style="0"/>
+                      <foreground color="-12241615"/>
                       <text value="Telefono:"/>
                     </properties>
                   </component>
-                  <component id="de080" class="javax.swing.JTextField" binding="textField4" default-binding="true">
+                  <component id="de080" class="javax.swing.JTextField" binding="txtTelefono">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
                       </grid>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <font name="Courier New"/>
+                    </properties>
                   </component>
                 </children>
               </grid>
-              <component id="b80a" class="javax.swing.JLabel">
+              <component id="b80a" class="javax.swing.JLabel" binding="lblTitulo">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <font name="Courier New" style="0"/>
+                  <foreground color="-12241615"/>
                   <text value="Cuentanos de ti"/>
                 </properties>
               </component>
@@ -151,14 +179,18 @@
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <background color="-67073"/>
+            </properties>
             <border type="none"/>
             <children>
-              <component id="a70e6" class="javax.swing.JLabel">
+              <component id="a70e6" class="javax.swing.JLabel" binding="lblTitulo2">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <font name="Courier New" style="0"/>
+                  <foreground color="-12241615"/>
                   <text value="Como te llamamos?"/>
                 </properties>
               </component>
@@ -167,24 +199,30 @@
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-67073"/>
+                </properties>
                 <border type="none"/>
                 <children>
-                  <component id="f6dba" class="javax.swing.JLabel">
+                  <component id="f6dba" class="javax.swing.JLabel" binding="lblUsuario">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
+                      <font name="Courier New" style="0"/>
+                      <foreground color="-12241615"/>
                       <text value="Usuario:"/>
                     </properties>
                   </component>
-                  <component id="c3fc5" class="javax.swing.JTextField" binding="textField5" default-binding="true">
+                  <component id="c3fc5" class="javax.swing.JTextField" binding="txtUsuario">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
                       </grid>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <font name="Courier New"/>
+                    </properties>
                   </component>
                 </children>
               </grid>
@@ -193,24 +231,30 @@
                 <constraints>
                   <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-67073"/>
+                </properties>
                 <border type="none"/>
                 <children>
-                  <component id="f76ab" class="javax.swing.JLabel">
+                  <component id="f76ab" class="javax.swing.JLabel" binding="lblPassword">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
+                      <font name="Courier New" style="0"/>
+                      <foreground color="-12241615"/>
                       <text value="Password"/>
                     </properties>
                   </component>
-                  <component id="2328a" class="javax.swing.JTextField" binding="textField6" default-binding="true">
+                  <component id="2328a" class="javax.swing.JTextField" binding="txtPassword">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
                       </grid>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <font name="Courier New"/>
+                    </properties>
                   </component>
                 </children>
               </grid>
@@ -226,11 +270,12 @@
             </properties>
             <border type="none"/>
             <children>
-              <component id="aa5" class="javax.swing.JButton" binding="siguienteButton" default-binding="true">
+              <component id="aa5" class="javax.swing.JButton" binding="btnSiguiente">
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <font name="Courier New"/>
                   <text value="Siguiente"/>
                 </properties>
               </component>
