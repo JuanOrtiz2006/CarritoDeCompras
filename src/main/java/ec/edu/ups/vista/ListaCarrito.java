@@ -21,7 +21,7 @@ public class ListaCarrito extends JInternalFrame{
     public ListaCarrito() {
         setContentPane(panelGeneral);
         setTitle(Contexto.getHandler().get("listacarrito.titulo"));
-        setSize(500, 500);
+        setSize(800, 500);
         setClosable(true);
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);

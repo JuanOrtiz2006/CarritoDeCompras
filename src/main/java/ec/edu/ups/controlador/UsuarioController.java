@@ -1,13 +1,10 @@
 package ec.edu.ups.controlador;
 
+import ec.edu.ups.dao.PreguntaDAO;
 import ec.edu.ups.dao.UsuarioDAO;
-import ec.edu.ups.modelo.Rol;
-import ec.edu.ups.modelo.Usuario;
+import ec.edu.ups.modelo.*;
 import ec.edu.ups.util.Contexto;
-import ec.edu.ups.vista.GestionUsuarios;
-import ec.edu.ups.vista.LoginView;
-import ec.edu.ups.vista.PreguntasSeguridad;
-import ec.edu.ups.vista.RegistrarUsuario;
+import ec.edu.ups.vista.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -19,14 +16,17 @@ public class UsuarioController {
     // === Atributos ===
     private Usuario usuario;
     private final UsuarioDAO usuarioDAO;
+    private final PreguntaDAO preguntaDAO;
     private LoginView loginView;
     private GestionUsuarios gestionUsuarios;
     private RegistrarUsuario registrarUsuario;
     private PreguntasSeguridad preguntasSeguridad;
+    private RecuperarClave recuperarClave;
 
     // === Constructor ===
-    public UsuarioController(UsuarioDAO usuarioDAO) {
+    public UsuarioController(UsuarioDAO usuarioDAO, PreguntaDAO preguntaDAO) {
         this.usuarioDAO = usuarioDAO;
+        this.preguntaDAO = preguntaDAO;
         this.usuario = null;
     }
 
@@ -51,6 +51,10 @@ public class UsuarioController {
         this.usuario = usuario;
     }
 
+    public void setRecuperarClave(RecuperarClave recuperarClave) {
+        this.recuperarClave = recuperarClave;
+    }
+
     public Usuario getUsuarioAutenticado() {
         return usuario;
     }
@@ -59,13 +63,20 @@ public class UsuarioController {
     // ===================== EVENTOS PRINCIPALES =====================
     // ===============================================================
 
-    public void configurarEventosEnVistas() {
+    public void eventosLogin() {
         loginView.getBtnLogin().addActionListener(e -> autenticar());
-        loginView.getBtnRegistrar().addActionListener(e -> eventoregistrarUsuario());
+        loginView.getBtnRegistrar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loginView.setVisible(false);
+                registrarUsuario.setVisible(true);
+                eventoRegistrarUsuario();
+            }
+        });
         loginView.getBtnRecuperar().addActionListener(e -> {
             loginView.setVisible(false);
-            cargarPreguntasParaRecuperar();
-            preguntasSeguridad.getPanelBotonRegistrar().setVisible(false);
+            preguntasSeguridad.setVisible(true);
+            eventoRecuperarClave();
         });
     }
 
@@ -76,13 +87,7 @@ public class UsuarioController {
         activarAccionesEnTablaUsuarios();
     }
 
-    // ===============================================================
-    // ================= REGISTRO DE USUARIO Y PREGUNTAS =============
-    // ===============================================================
-
-    private void eventoregistrarUsuario() {
-        loginView.setVisible(false);
-        registrarUsuario.setVisible(true);
+    private void eventoRegistrarUsuario() {
 
         registrarUsuario.getBtnSiguiente().addActionListener(e -> {
             String nombre = registrarUsuario.getTxtNombre().getText();
@@ -98,129 +103,43 @@ public class UsuarioController {
             usuariocreado.setTelefono(telefono);
 
             registrarUsuario.setVisible(false);
-            cargarInformacionAdicionalRegistrarUsuario(usuariocreado);
+            eventoPreguntasSeguridad(usuariocreado);
         });
     }
 
-    public void cargarInformacionAdicionalRegistrarUsuario(Usuario usuariocreado) {
-        preguntasSeguridad.mostrarPanelPreguntas();
-        preguntasSeguridad.getPanelUsuario().setVisible(false);
-        preguntasSeguridad.getPanelBotonClave().setVisible(false);
-        preguntasSeguridad.setVisible(true);
-        preguntasSeguridad.getPanelBotonRegistrar().setVisible(true);
-        String[] preguntas = {
-                "lbl.preguntas.nombremadre", "lbl.preguntas.nombremascota", "lbl.pregunta.ciudad",
-                "lbl.pregunta.comida", "lbl.pregunta.primermaestro", "lbl.pregunta.mejoramigo",
-                "lbl.pregunta.primertrabajo", "lbl.pregunta.calleinfancia", "lbl.pregunta.peliculafavorita",
-                "lbl.pregunta.apodoinfancia"
-        };
+    private void eventoRecuperarClave(){
+        final Usuario[] usuarioEncontrado = new Usuario[1];
 
-        String[] seleccionadas = new String[3];
-        Random random = new Random();
-        Set<Integer> usados = new HashSet<>();
-        int contador = 0;
-        while (contador < 3) {
-            int indice = random.nextInt(preguntas.length);
-            if (usados.add(indice)) {
-                seleccionadas[contador++] = preguntas[indice];
-            }
-        }
-
-        preguntasSeguridad.getLblPregunta().setText(Contexto.getHandler().get(seleccionadas[0]));
-        preguntasSeguridad.getLblPregunta2().setText(Contexto.getHandler().get(seleccionadas[1]));
-        preguntasSeguridad.getLblPregunta3().setText(Contexto.getHandler().get(seleccionadas[2]));
-
-        Map<String, String> info = new LinkedHashMap<>();
-        info.put(seleccionadas[0], null);
-        info.put(seleccionadas[1], null);
-        info.put(seleccionadas[2], null);
-        usuariocreado.setInformacion(info);
-
-        preguntasSeguridad.getBtnRegistrarse().addActionListener(e -> {
-            String r1 = preguntasSeguridad.getTxtPregunta().getText();
-            String r2 = preguntasSeguridad.getTxtPregunta2().getText();
-            String r3 = preguntasSeguridad.getTxtPregunta3().getText();
-
-            if (r1.isEmpty() || r2.isEmpty() || r3.isEmpty()) {
-                preguntasSeguridad.mostrarMensaje(Contexto.getHandler().get("usuario.campos.obligatorios"));
-                return;
-            }
-
-            int i = 0;
-            for (String key : usuariocreado.getInformacion().keySet()) {
-                if (i == 0) usuariocreado.setRespuestaInformacion(key, r1);
-                if (i == 1) usuariocreado.setRespuestaInformacion(key, r2);
-                if (i == 2) usuariocreado.setRespuestaInformacion(key, r3);
-                i++;
-            }
-
-            usuarioDAO.crear(usuariocreado);
-            preguntasSeguridad.mostrarMensaje(Contexto.getHandler().get("usuario.registro.exito"));
-            preguntasSeguridad.setVisible(false);
-            loginView.setVisible(true);
-        });
-    }
-
-    private void cargarPreguntasParaRecuperar() {
-        preguntasSeguridad.setVisible(true);
-        preguntasSeguridad.limpiarCampos();
-        preguntasSeguridad.ocultarPanelPreguntas();
-        preguntasSeguridad.getPanelUsuario().setVisible(true);
-        preguntasSeguridad.getPanelBotonClave().setVisible(true);
-        preguntasSeguridad.getPanelBotonRegistrar().setVisible(false);
-        eventosPreguntasSeguridad();
-    }
-
-    private void eventosPreguntasSeguridad() {
-        preguntasSeguridad.getBtnBuscar().addActionListener(e -> {
-            String username = preguntasSeguridad.getTxtUsuario().getText().trim();
-            Usuario usuarioEncontrado = usuarioDAO.buscarPorUsername(username);
-
-            if (usuarioEncontrado != null && usuarioEncontrado.getInformacion().size() >= 3) {
-                String[] claves = usuarioEncontrado.getInformacion().keySet().toArray(new String[0]);
-                preguntasSeguridad.getLblPregunta().setText(Contexto.getHandler().get(claves[0]));
-                preguntasSeguridad.getLblPregunta2().setText(Contexto.getHandler().get(claves[1]));
-                preguntasSeguridad.getLblPregunta3().setText(Contexto.getHandler().get(claves[2]));
-                preguntasSeguridad.mostrarPanelPreguntas();
-            } else {
-                preguntasSeguridad.mostrarMensaje(Contexto.getHandler().get("usuario.no.encontrado"));
-            }
-        });
-
-        preguntasSeguridad.getBtnRecuperar().addActionListener(e -> {
-            String username = preguntasSeguridad.getTxtUsuario().getText().trim();
-            Usuario usuarioRecuperado = usuarioDAO.buscarPorUsername(username);
-
-            if (usuarioRecuperado == null) {
-                preguntasSeguridad.mostrarMensaje(Contexto.getHandler().get("usuario.no.encontrado"));
-                return;
-            }
-
-            Map<String, String> info = usuarioRecuperado.getInformacion();
-            String[] claves = info.keySet().toArray(new String[0]);
-
-            String r1 = preguntasSeguridad.getTxtPregunta().getText().trim();
-            String r2 = preguntasSeguridad.getTxtPregunta2().getText().trim();
-            String r3 = preguntasSeguridad.getTxtPregunta3().getText().trim();
-
-            boolean validas =
-                    info.get(claves[0]).equalsIgnoreCase(r1) &&
-                            info.get(claves[1]).equalsIgnoreCase(r2) &&
-                            info.get(claves[2]).equalsIgnoreCase(r3);
-
-            if (validas) {
-                String nueva = JOptionPane.showInputDialog(null, Contexto.getHandler().get("usuario.ingrese.nueva.contrasena"));
-                if (nueva != null && !nueva.trim().isEmpty()) {
-                    usuarioRecuperado.setPassword(nueva.trim());
-                    usuarioDAO.actualizar(usuarioRecuperado);
-                    preguntasSeguridad.mostrarMensaje(Contexto.getHandler().get("usuario.clave.actualizada"));
-                    preguntasSeguridad.setVisible(false);
-                    loginView.setVisible(true);
+        recuperarClave.getBtnBuscar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = recuperarClave.getTxtUsuario().getText();
+                Usuario usuario = usuarioDAO.buscarPorUsername(username);
+                if(usuario != null){
+                    usuarioEncontrado[0] = usuario;
+                    Pregunta pregunta = usuario.obtenerPreguntaParaRecuperacion();
+                    recuperarClave.getLblPregunta().setText(pregunta.getTexto());
+                    recuperarClave.getTxtUsuario().setEnabled(false);
+                    recuperarClave.getBtnBuscar().setEnabled(false);
                 } else {
-                    preguntasSeguridad.mostrarMensaje(Contexto.getHandler().get("usuario.clave.vacia"));
+                    recuperarClave.mostrarMensaje("Usuario no encontrado");
                 }
-            } else {
-                preguntasSeguridad.mostrarMensaje(Contexto.getHandler().get("usuario.respuestas.incorrectas"));
+            }
+        });
+
+        recuperarClave.getBtnRecuperar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(usuarioEncontrado[0] != null) {
+                    String respuesta = recuperarClave.getTxtPregunta().getText();
+                    if(usuarioEncontrado[0].verificarRespuesta(respuesta)){
+                        recuperarClave.mostrarMensaje("Respuesta correcta. Aquí se podrá cambiar la clave");
+                    } else {
+                        recuperarClave.mostrarMensaje("Respuesta incorrecta");
+                    }
+                } else {
+                    recuperarClave.mostrarMensaje("Primero busque un usuario");
+                }
             }
         });
     }
@@ -239,6 +158,155 @@ public class UsuarioController {
         } else {
             loginView.dispose();
         }
+    }
+
+    // ===============================================================
+    // ================= REGISTRO DE USUARIO Y PREGUNTAS =============
+    // ===============================================================
+
+    public void eventoPreguntasSeguridad(Usuario usuariocreado) {
+        preguntasSeguridad.cargarPreguntas(preguntaDAO.obtenerPreguntas());
+        preguntasSeguridad.cargarCheckBox(preguntaDAO.obtenerTipos());
+        preguntasSeguridad.setVisible(true);
+
+        preguntasSeguridad.getCkbTipo1().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (preguntasSeguridad.getCkbTipo1().isSelected()) {
+                    preguntasSeguridad.habilitarPreguntasTipo1();
+                } else {
+                    preguntasSeguridad.deshabilitarPreguntasTipo1();
+                }
+            }
+        });
+        preguntasSeguridad.getCkbTipo2().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (preguntasSeguridad.getCkbTipo2().isSelected()) {
+                    preguntasSeguridad.habilitarPreguntasTipo2();
+                } else {
+                    preguntasSeguridad.deshabilitarPreguntasTipo2();
+                }
+            }
+        });
+        preguntasSeguridad.getCkbTipo3().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (preguntasSeguridad.getCkbTipo3().isSelected()) {
+                    preguntasSeguridad.habilitarPreguntasTipo3();
+                } else {
+                    preguntasSeguridad.deshabilitarPreguntasTipo3();
+                }
+            }
+        });
+        preguntasSeguridad.getCkbTipo4().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (preguntasSeguridad.getCkbTipo4().isSelected()) {
+                    preguntasSeguridad.habilitarPreguntasTipo4();
+                } else {
+                    preguntasSeguridad.deshabilitarPreguntasTipo4();
+                }
+            }
+        });
+        preguntasSeguridad.getCkbTipo5().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (preguntasSeguridad.getCkbTipo5().isSelected()) {
+                    preguntasSeguridad.habilitarPreguntasTipo5();
+                } else {
+                    preguntasSeguridad.deshabilitarPreguntasTipo5();
+                }
+            }
+        });
+
+        // Reemplaza el ActionListener del botón "Registrarse" (línea 276 aproximadamente)
+        preguntasSeguridad.getBtnRegistrarse().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<Respuesta> respuestas = new ArrayList<>();
+
+                // Recolectar todas las respuestas no vacías
+                if(preguntasSeguridad.getTxtPregunta().getText() != null &&
+                        !preguntasSeguridad.getTxtPregunta().getText().trim().isEmpty()){
+                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta().getText());
+                    String respuesta = preguntasSeguridad.getTxtPregunta().getText().trim();
+                    respuestas.add(new Respuesta(pregunta, respuesta));
+                }
+                if(preguntasSeguridad.getTxtPregunta2().getText() != null &&
+                        !preguntasSeguridad.getTxtPregunta2().getText().trim().isEmpty()){
+                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta2().getText());
+                    String respuesta = preguntasSeguridad.getTxtPregunta2().getText().trim();
+                    respuestas.add(new Respuesta(pregunta, respuesta));
+                }
+                if(preguntasSeguridad.getTxtPregunta3().getText() != null &&
+                        !preguntasSeguridad.getTxtPregunta3().getText().trim().isEmpty()){
+                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta3().getText());
+                    String respuesta = preguntasSeguridad.getTxtPregunta3().getText().trim();
+                    respuestas.add(new Respuesta(pregunta, respuesta));
+                }
+                if(preguntasSeguridad.getTxtPregunta4().getText() != null &&
+                        !preguntasSeguridad.getTxtPregunta4().getText().trim().isEmpty()){
+                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta4().getText());
+                    String respuesta = preguntasSeguridad.getTxtPregunta4().getText().trim();
+                    respuestas.add(new Respuesta(pregunta, respuesta));
+                }
+                if(preguntasSeguridad.getTxtPregunta5().getText() != null &&
+                        !preguntasSeguridad.getTxtPregunta5().getText().trim().isEmpty()){
+                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta5().getText());
+                    String respuesta = preguntasSeguridad.getTxtPregunta5().getText().trim();
+                    respuestas.add(new Respuesta(pregunta, respuesta));
+                }
+                if(preguntasSeguridad.getTxtPregunta6().getText() != null &&
+                        !preguntasSeguridad.getTxtPregunta6().getText().trim().isEmpty()){
+                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta6().getText());
+                    String respuesta = preguntasSeguridad.getTxtPregunta6().getText().trim();
+                    respuestas.add(new Respuesta(pregunta, respuesta));
+                }
+                if(preguntasSeguridad.getTxtPregunta7().getText() != null &&
+                        !preguntasSeguridad.getTxtPregunta7().getText().trim().isEmpty()){
+                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta7().getText());
+                    String respuesta = preguntasSeguridad.getTxtPregunta7().getText().trim();
+                    respuestas.add(new Respuesta(pregunta, respuesta));
+                }
+                if(preguntasSeguridad.getTxtPregunta8().getText() != null &&
+                        !preguntasSeguridad.getTxtPregunta8().getText().trim().isEmpty()){
+                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta8().getText());
+                    String respuesta = preguntasSeguridad.getTxtPregunta8().getText().trim();
+                    respuestas.add(new Respuesta(pregunta, respuesta));
+                }
+                if(preguntasSeguridad.getTxtPregunta9().getText() != null &&
+                        !preguntasSeguridad.getTxtPregunta9().getText().trim().isEmpty()){
+                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta9().getText());
+                    String respuesta = preguntasSeguridad.getTxtPregunta9().getText().trim();
+                    respuestas.add(new Respuesta(pregunta, respuesta));
+                }
+                if(preguntasSeguridad.getTxtPregunta10().getText() != null &&
+                        !preguntasSeguridad.getTxtPregunta10().getText().trim().isEmpty()){
+                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta10().getText());
+                    String respuesta = preguntasSeguridad.getTxtPregunta10().getText().trim();
+                    respuestas.add(new Respuesta(pregunta, respuesta));
+                }
+
+                // Validar que se hayan respondido al menos 3 preguntas
+                if(respuestas.size() >= 3){
+                    usuariocreado.setRespuestas(respuestas);
+
+                    // *** AQUÍ ESTÁ LA CORRECCIÓN PRINCIPAL ***
+                    // Guardar el usuario en la base de datos
+                    try {
+                        usuarioDAO.crear(usuariocreado);
+                        preguntasSeguridad.mostrarMensaje("Usuario registrado exitosamente");
+                        preguntasSeguridad.setVisible(false);
+                        loginView.setVisible(true);
+                    } catch (Exception ex) {
+                        preguntasSeguridad.mostrarMensaje("Error al registrar usuario: " + ex.getMessage());
+                    }
+                } else {
+                    preguntasSeguridad.mostrarMensaje("Mínimo conteste 3 preguntas");
+                }
+            }
+        });
     }
 
     // ===============================================================
@@ -313,10 +381,10 @@ public class UsuarioController {
     }
 
     private void mostrarOpcionesUsuario(String username, Rol rol) {
-        String[] opciones = {"Editar", "Eliminar", "Cancelar"};
+        String[] opciones = {Contexto.getHandler().get("opciones.editar"), Contexto.getHandler().get("opciones.eliminar"), Contexto.getHandler().get("opciones.cancelar")};
         int opcion = JOptionPane.showOptionDialog(null,
-                "¿Qué desea hacer con el usuario '" + username + "'?",
-                "Acción sobre usuario",
+                Contexto.getHandler().get("mensaje.usuario.accion"),
+                Contexto.getHandler().get("gestionusuarios.titulo.dialogo"),
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null, opciones, opciones[0]);

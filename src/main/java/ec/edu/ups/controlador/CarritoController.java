@@ -30,7 +30,7 @@ public class CarritoController {
         this.carritoDAO = carritoDAO;
         this.productoDAO = productoDAO;
         this.carrito = new Carrito();
-        this.usuario = new Usuario(); // Esto debería actualizarse con el usuario real en sesión
+        this.usuario = new Usuario();
     }
 
     public void setCrearCarrito(CrearCarrito crearCarrito) {

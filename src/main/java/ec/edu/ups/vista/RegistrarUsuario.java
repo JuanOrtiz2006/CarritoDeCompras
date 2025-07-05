@@ -21,7 +21,7 @@ public class RegistrarUsuario extends JFrame {
     private JPanel panelUserName;
     private JTextField txtPassword;
     private JPanel panelPassword;
-    private JButton btnSiguiente;
+    private JButton btnGuardar;
     private JPanel panelBoton;
     private JLabel lblNombre;
     private JLabel lblFecha;
@@ -47,31 +47,15 @@ public class RegistrarUsuario extends JFrame {
         lblTitulo2.setText(Contexto.getHandler().get("lbl.titulo2"));
         lblUsuario.setText(Contexto.getHandler().get("lbl.usuario"));
         lblPassword.setText(Contexto.getHandler().get("lbl.password"));
-        btnSiguiente.setText(Contexto.getHandler().get("btn.siguiente"));
+        btnGuardar.setText(Contexto.getHandler().get("btn.siguiente"));
     }
 
     public JPanel getPanelGeneral() {
         return panelGeneral;
     }
 
-    public JPanel getPanelCentro() {
-        return panelCentro;
-    }
-
     public JTextField getTxtNombre() {
         return txtNombre;
-    }
-
-    public JPanel getPanelInfoPersonal() {
-        return panelInfoPersonal;
-    }
-
-    public JPanel getPanelNombre() {
-        return panelNombre;
-    }
-
-    public JPanel getPanelFecha() {
-        return panelFecha;
     }
 
     public JTextField getTxtFecha() {
@@ -86,98 +70,21 @@ public class RegistrarUsuario extends JFrame {
         return txtTelefono;
     }
 
-    public JPanel getPanelCorreo() {
-        return panelCorreo;
-    }
-
-    public JPanel getPanelTelefono() {
-        return panelTelefono;
-    }
-
     public JTextField getTxtUsuario() {
         return txtUsuario;
-    }
-
-    public JPanel getPanelUsuario() {
-        return panelUsuario;
-    }
-
-    public JPanel getPanelUserName() {
-        return panelUserName;
     }
 
     public JTextField getTxtPassword() {
         return txtPassword;
     }
 
-    public JPanel getPanelPassword() {
-        return panelPassword;
-    }
-
     public JButton getBtnSiguiente() {
-        return btnSiguiente;
-    }
-
-    public JPanel getPanelBoton() {
-        return panelBoton;
-    }
-
-    public JLabel getLblNombre() {
-        return lblNombre;
-    }
-
-    public JLabel getLblFecha() {
-        return lblFecha;
-    }
-
-    public JLabel getLblCorreo() {
-        return lblCorreo;
-    }
-
-    public JLabel getLblTelefono() {
-        return lblTelefono;
-    }
-
-    public JLabel getLblTitulo() {
-        return lblTitulo;
-    }
-
-    public JLabel getLblTitulo2() {
-        return lblTitulo2;
-    }
-
-    public JLabel getLblUsuario() {
-        return lblUsuario;
-    }
-
-    public JLabel getLblPassword() {
-        return lblPassword;
+        return btnGuardar;
     }
 
     public void mostrarMensaje(String mensaje){
         JOptionPane.showMessageDialog(null,mensaje);
 
-    }
-
-    public String[] mostrarRegistroMensaje() {
-        JTextField nombreField = new JTextField();
-        JTextField passwordField = new JTextField();
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(new JLabel(Contexto.getHandler().get("login.registro.usuario")));
-        panel.add(nombreField);
-        panel.add(Box.createVerticalStrut(10));
-        panel.add(new JLabel(Contexto.getHandler().get("login.registro.contrasena")));
-        panel.add(passwordField);
-
-        int result = JOptionPane.showConfirmDialog(null, panel,
-                Contexto.getHandler().get("login.registro.titulo"),
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-        if (result == JOptionPane.OK_OPTION) {
-            return new String[]{nombreField.getText(), passwordField.getText()};
-        }
-        return null;
     }
 
 }

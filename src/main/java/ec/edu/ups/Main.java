@@ -24,18 +24,21 @@ public class Main {
             ProductoDAO productoDAO = new ProductoDAOMemoria();
             CarritoDAO carritoDAO = new CarritoDAOMemoria();
             UsuarioDAO usuarioDAO = new UsuarioDAOMemoria();
+            PreguntaDAO preguntaDAO = new PreguntaDAOMemoria();
 
             // Instanciar vistas comunes (login)
             LoginView loginView = new LoginView();
             RegistrarUsuario registrarUsuario = new RegistrarUsuario();
             PreguntasSeguridad preguntasSeguridad = new PreguntasSeguridad();
+            RecuperarClave recuperarClave = new RecuperarClave();
 
             // Controlador usuario
-            UsuarioController usuarioController = new UsuarioController(usuarioDAO);
+            UsuarioController usuarioController = new UsuarioController(usuarioDAO, preguntaDAO);
             usuarioController.setLoginView(loginView);
-            usuarioController.configurarEventosEnVistas();
+            usuarioController.eventosLogin();
             usuarioController.setRegistrarUsuario(registrarUsuario);
             usuarioController.setPreguntasSeguridad(preguntasSeguridad);
+            usuarioController.setRecuperarClave(recuperarClave);
 
             loginView.setVisible(true);
 

@@ -16,12 +16,4 @@ public class MensajeInternacionalizacionHandler {
         return bundle.getString(key);
     }
 
-    public void setLenguaje(String lenguaje, String pais) {
-        this.locale = new Locale(lenguaje, pais);
-        this.bundle = ResourceBundle.getBundle("mensajes", locale);
-    }
-
-    public Locale getLocale() {
-        return locale;
-    }
 }
