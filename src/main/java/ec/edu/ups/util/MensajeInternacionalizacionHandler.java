@@ -16,4 +16,9 @@ public class MensajeInternacionalizacionHandler {
         return bundle.getString(key);
     }
 
+    public Locale getLocale() {
+        return locale;
+    }
+
+
 }

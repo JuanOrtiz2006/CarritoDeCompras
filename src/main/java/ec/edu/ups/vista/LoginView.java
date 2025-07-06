@@ -3,6 +3,8 @@ package ec.edu.ups.vista;
 import ec.edu.ups.util.Contexto;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 
 public class LoginView extends JFrame{
     private JPanel panelGeneral;
@@ -24,20 +26,18 @@ public class LoginView extends JFrame{
         setSize(600, 400);
         setLocationRelativeTo(null);
 
-        // Asignar textos internacionalizados
-        lblUsername.setText(Contexto.getHandler().get("login.usuario"));
-        lblPassword.setText(Contexto.getHandler().get("login.contrasena"));
-        btnLogin.setText(Contexto.getHandler().get("login.entrar"));
-        btnRegistrar.setText(Contexto.getHandler().get("login.registrar"));
-        btnRecuperar.setText(Contexto.getHandler().get("login.recuperar"));
+        actualizarIdioma();
     }
 
-    public void recargarTextos() {
-        setTitle(Contexto.getHandler().get("login.titulo"));
-        lblUsername.setText(Contexto.getHandler().get("login.usuario"));
-        lblPassword.setText(Contexto.getHandler().get("login.contrasena"));
-        btnLogin.setText(Contexto.getHandler().get("login.entrar"));
-        btnRegistrar.setText(Contexto.getHandler().get("login.registrar"));
+    public void actualizarIdioma() {
+        var handler = Contexto.getHandler();
+
+        setTitle(handler.get("login.titulo"));
+        lblUsername.setText(handler.get("login.usuario"));
+        lblPassword.setText(handler.get("login.contrasena"));
+        btnLogin.setText(handler.get("login.entrar"));
+        btnRegistrar.setText(handler.get("login.registrar"));
+        btnRecuperar.setText(handler.get("login.recuperar"));
     }
 
     public JPanel getPanelGeneral() {
@@ -70,29 +70,6 @@ public class LoginView extends JFrame{
 
     public void mostrarMensaje(String mensaje){
         JOptionPane.showMessageDialog(null,mensaje);
-
     }
-
-    public String[] mostrarRegistroMensaje() {
-        JTextField nombreField = new JTextField();
-        JTextField passwordField = new JTextField();
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(new JLabel(Contexto.getHandler().get("login.registro.usuario")));
-        panel.add(nombreField);
-        panel.add(Box.createVerticalStrut(10));
-        panel.add(new JLabel(Contexto.getHandler().get("login.registro.contrasena")));
-        panel.add(passwordField);
-
-        int result = JOptionPane.showConfirmDialog(null, panel,
-                Contexto.getHandler().get("login.registro.titulo"),
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-        if (result == JOptionPane.OK_OPTION) {
-            return new String[]{nombreField.getText(), passwordField.getText()};
-        }
-        return null;
-    }
-
 
 }

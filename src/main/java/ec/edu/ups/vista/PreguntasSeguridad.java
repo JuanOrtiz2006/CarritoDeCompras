@@ -23,7 +23,6 @@ public class PreguntasSeguridad extends JFrame {
     private JLabel lblPregunta3;
     private JTextField txtUsuario;
     private JPanel panelUsuario;
-    private JLabel lblUsuario;
     private JPanel panelInformacion;
     private JCheckBox ckbTipo1;
     private JCheckBox ckbTipo2;
@@ -53,9 +52,9 @@ public class PreguntasSeguridad extends JFrame {
     private JLabel lblPregunta10;
     private JTextField txtPregunta10;
     private JPanel panelP10;
-    private JButton btnBuscar;
+    private JButton btnActualizar;
     private JComboBox cmbTipoPregunta;
-    private JButton btnGuardar;
+    private boolean modoEdicion = false;
 
     public PreguntasSeguridad() {
         setContentPane(panelGeneral);
@@ -64,15 +63,44 @@ public class PreguntasSeguridad extends JFrame {
         setSize(600, 400);
         setLocationRelativeTo(null);
 
-        // Etiquetas traducidas (i18n)
         btnRegistrarse.setText(Contexto.getHandler().get("login.registrar"));
-
         deshabilitarPreguntasTipo1();
         deshabilitarPreguntasTipo2();
         deshabilitarPreguntasTipo3();
         deshabilitarPreguntasTipo4();
         deshabilitarPreguntasTipo5();
 
+        actualizarIdioma();
+
+    }
+
+    public void actualizarIdioma() {
+        var handler = Contexto.getHandler();
+
+        setTitle(handler.get("lbl.preguntas.titulo"));
+        btnRegistrarse.setText(handler.get("login.registrar"));
+        btnActualizar.setText(handler.get("usuario.btn.guardar"));
+
+        cargarPreguntas(new String[]{
+                handler.get("lbl.preguntas.nombremadre"),
+                handler.get("lbl.preguntas.nombremascota"),
+                handler.get("lbl.pregunta.ciudad"),
+                handler.get("lbl.pregunta.comida"),
+                handler.get("lbl.pregunta.primermaestro"),
+                handler.get("lbl.pregunta.mejoramigo"),
+                handler.get("lbl.pregunta.primertrabajo"),
+                handler.get("lbl.pregunta.calleinfancia"),
+                handler.get("lbl.pregunta.peliculafavorita"),
+                handler.get("lbl.pregunta.apodoinfancia")
+        });
+
+        cargarCheckBox(new String[]{
+                handler.get("tipo.pregunta.1"),
+                handler.get("tipo.pregunta.2"),
+                handler.get("tipo.pregunta.3"),
+                handler.get("tipo.pregunta.4"),
+                handler.get("tipo.pregunta.5")
+        });
     }
 
     // ================== GETTERS ==================
@@ -89,17 +117,6 @@ public class PreguntasSeguridad extends JFrame {
         return txtPregunta2;
     }
 
-    public JButton getRegistrarseButton() {
-        return btnRegistrarse;
-    }
-
-    public JPanel getPanelBotonRegistrar() {
-        return panelBotonRegistrar;
-    }
-
-    public JPanel getPanelBotonClave() {
-        return panelBotonClave;
-    }
 
     public JLabel getLblPregunta() {
         return lblPregunta;
@@ -109,28 +126,12 @@ public class PreguntasSeguridad extends JFrame {
         return lblPregunta2;
     }
 
-    public JTextField getTxtUsuario() {
-        return txtUsuario;
-    }
-
-    public JPanel getPanelUsuario() {
-        return panelUsuario;
-    }
-
     public JPanel getPanelGeneral() {
         return panelGeneral;
     }
 
     public JButton getBtnRegistrarse() {
         return btnRegistrarse;
-    }
-
-    public JButton getBtnRecuperar() {
-        return btnRecuperar;
-    }
-
-    public JButton getBtnBuscar() {
-        return btnBuscar;
     }
 
     public JTextField getTxtPregunta3() {
@@ -217,11 +218,9 @@ public class PreguntasSeguridad extends JFrame {
         return txtPregunta10;
     }
 
-    public JComboBox getCmbTipoPregunta() {
-        return cmbTipoPregunta;
+    public JButton getBtnActualizar() {
+        return btnActualizar;
     }
-
-    // ================== FUNCIONES AUXILIARES ==================
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(null, mensaje);
@@ -243,7 +242,6 @@ public class PreguntasSeguridad extends JFrame {
         panelP7.setVisible(true);
         panelP8.setVisible(true);
     }
-
     public void habilitarPreguntasTipo5(){
         panelP9.setVisible(true);
         panelP10.setVisible(true);
@@ -253,7 +251,6 @@ public class PreguntasSeguridad extends JFrame {
         panelP.setVisible(false);
         panelP2.setVisible(false);
     }
-
     public void deshabilitarPreguntasTipo2(){
         panelP3.setVisible(false);
         panelP4.setVisible(false);
@@ -291,5 +288,43 @@ public class PreguntasSeguridad extends JFrame {
         ckbTipo3.setText(tipos[2]);
         ckbTipo4.setText(tipos[3]);
         ckbTipo5.setText(tipos[4]);
+    }
+
+    public void activarModoEdicion() {
+        this.modoEdicion = true;
+    }
+
+    public void activarModoRegistro() {
+        this.modoEdicion = false;
+        limpiarCampos();
+    }
+
+    public boolean isModoEdicion() {
+        return modoEdicion;
+    }
+
+    public void cambiarTextoBotonRegistro(String texto) {
+        btnRegistrarse.setText(texto);
+    }
+
+
+    public void limpiarCampos(){
+        ckbTipo1.setSelected(false);
+        ckbTipo2.setSelected(false);
+        ckbTipo3.setSelected(false);
+        ckbTipo4.setSelected(false);
+        ckbTipo5.setSelected(false);
+
+        txtPregunta.setText("");
+        txtPregunta2.setText("");
+        txtPregunta3.setText("");
+        txtPregunta4.setText("");
+        txtPregunta5.setText("");
+        txtPregunta6.setText("");
+        txtPregunta7.setText("");
+        txtPregunta8.setText("");
+        txtPregunta9.setText("");
+        txtPregunta10.setText("");
+
     }
 }

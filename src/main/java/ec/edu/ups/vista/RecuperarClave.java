@@ -23,6 +23,23 @@ public class RecuperarClave extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
         setLocationRelativeTo(null);
+        actualizarIdioma();
+        panelPregunta.setVisible(false);
+    }
+
+    public void actualizarIdioma() {
+        var handler = Contexto.getHandler();
+
+        setTitle(handler.get("lbl.preguntas.titulo"));
+        lblUsuario.setText(handler.get("login.usuario"));
+        btnBuscar.setText(handler.get("login.boton.buscar"));
+        btnRecuperar.setText(handler.get("usuario.btn.guardar"));
+    }
+
+    public void limpiarCampos(){
+        txtUsuario.setText("");
+        txtPregunta.setText("");
+
     }
 
     public JTextField getTxtUsuario() {

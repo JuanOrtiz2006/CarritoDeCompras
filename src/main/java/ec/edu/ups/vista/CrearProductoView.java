@@ -3,6 +3,8 @@ package ec.edu.ups.vista;
 import ec.edu.ups.util.Contexto;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 
 public class CrearProductoView extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -25,20 +27,24 @@ public class CrearProductoView extends JInternalFrame {
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 
-        // Cargar textos desde el archivo de idioma
-        lblCodigo.setText(Contexto.getHandler().get("crearproducto.codigo"));
-        lblNombre.setText(Contexto.getHandler().get("crearproducto.nombre"));
-        lblPrecio.setText(Contexto.getHandler().get("crearproducto.precio"));
-        btnAceptar.setText(Contexto.getHandler().get("crearproducto.boton"));
+        actualizarIdioma();
     }
 
-    // Metodo para actualizar textos si se cambia el idioma
-    public void recargarTextos() {
-        setTitle(Contexto.getHandler().get("crearproducto.titulo"));
-        lblCodigo.setText(Contexto.getHandler().get("crearproducto.codigo"));
-        lblNombre.setText(Contexto.getHandler().get("crearproducto.nombre"));
-        lblPrecio.setText(Contexto.getHandler().get("crearproducto.precio"));
-        btnAceptar.setText(Contexto.getHandler().get("crearproducto.boton"));
+    public void actualizarIdioma() {
+        var handler = Contexto.getHandler();
+        // Títulos de ventana y etiquetas
+        setTitle(handler.get("crearproducto.titulo"));
+        lblCodigo.setText(handler.get("crearproducto.codigo"));
+        lblNombre.setText(handler.get("crearproducto.nombre"));
+        lblPrecio.setText(handler.get("crearproducto.precio"));
+        btnAceptar.setText(handler.get("crearproducto.boton"));
+
+        // Actualizar título del borde si es un TitledBorder
+        Border border = panelPrincipal.getBorder();
+        if (border instanceof TitledBorder) {
+            ((TitledBorder) border).setTitle(handler.get("crearproducto.borde"));
+            panelPrincipal.repaint(); // Para que se refleje el nuevo texto
+        }
     }
 
     public JTextField getTxtPrecio() {

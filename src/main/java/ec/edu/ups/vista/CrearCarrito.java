@@ -1,8 +1,11 @@
 package ec.edu.ups.vista;
 
+import ec.edu.ups.modelo.ItemCarrito;
 import ec.edu.ups.util.Contexto;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class CrearCarrito extends JInternalFrame{
@@ -45,40 +48,66 @@ public class CrearCarrito extends JInternalFrame{
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 
         modeloItems = new DefaultTableModel();
-        Object[] columnasLista = {
-                Contexto.getHandler().get("crearcarrito.columna.id"),
-                Contexto.getHandler().get("crearcarrito.columna.nombre"),
-                Contexto.getHandler().get("crearcarrito.columna.precio"),
-                Contexto.getHandler().get("crearcarrito.columna.cantidad"),
-                Contexto.getHandler().get("crearcarrito.columna.total")
-        };
-        modeloItems.setColumnIdentifiers(columnasLista);
         tblProductos.setModel(modeloItems);
-
         modeloTotales = new DefaultTableModel();
-        Object[] columnasTotales = {
-                Contexto.getHandler().get("crearcarrito.columna.subtotal"),
-                Contexto.getHandler().get("crearcarrito.columna.iva"),
-                Contexto.getHandler().get("crearcarrito.columna.totalgeneral")
-        };
-
-        lblCodigoCarrto.setText(Contexto.getHandler().get("crearcarrito.codigo"));
-        lblFecha.setText(Contexto.getHandler().get("crearcarrito.fecha"));
-        lblProducto.setText(Contexto.getHandler().get("crearcarrito.producto"));
-        lblCantidad.setText(Contexto.getHandler().get("crearcarrito.cantidad"));
-        btnSeleccionar.setText(Contexto.getHandler().get("crearcarrito.boton.seleccionar"));
-        btnAgregar.setText(Contexto.getHandler().get("crearcarrito.boton.agregar"));
-        btnGuardar.setText(Contexto.getHandler().get("crearcarrito.boton.guardar"));
-        btnVaciar.setText(Contexto.getHandler().get("crearcarrito.boton.vaciar"));
-        btnEditar.setText(Contexto.getHandler().get("crearcarrito.boton.editar"));
-        modeloTotales.setColumnIdentifiers(columnasTotales);
         tblTotal.setModel(modeloTotales);
+
+        actualizarIdioma();
 
         txtCodigoCarrito.setEnabled(false);
         txtNombre.setEnabled(false);
         txtPrecio.setEnabled(false);
         txtFecha.setEnabled(false);
 
+    }
+
+    public void actualizarIdioma() {
+        var handler = Contexto.getHandler();
+        setTitle(handler.get("crearcarrito.titulo"));
+
+        // Etiquetas
+        lblCodigoCarrto.setText(handler.get("crearcarrito.codigo"));
+        lblFecha.setText(handler.get("crearcarrito.fecha"));
+        lblProducto.setText(handler.get("crearcarrito.producto"));
+        lblCantidad.setText(handler.get("crearcarrito.cantidad"));
+
+        // Textos en campos
+        txtCodigo.setText(handler.get("crearcarrito.columna.id"));
+        txtNombre.setText(handler.get("crearcarrito.columna.nombre"));
+        txtPrecio.setText(handler.get("crearcarrito.columna.precio"));
+        txtCantidad.setText(handler.get("crearcarrito.columna.cantidad"));
+
+        // Botones
+        btnSeleccionar.setText(handler.get("crearcarrito.boton.seleccionar"));
+        btnAgregar.setText(handler.get("crearcarrito.boton.agregar"));
+        btnGuardar.setText(handler.get("crearcarrito.boton.guardar"));
+        btnVaciar.setText(handler.get("crearcarrito.boton.vaciar"));
+        btnEditar.setText(handler.get("crearcarrito.boton.editar"));
+
+        // Tabla de productos
+        String[] columnasLista = {
+                handler.get("crearcarrito.columna.id"),
+                handler.get("crearcarrito.columna.nombre"),
+                handler.get("crearcarrito.columna.precio"),
+                handler.get("crearcarrito.columna.cantidad"),
+                handler.get("crearcarrito.columna.total")
+        };
+        modeloItems.setColumnIdentifiers(columnasLista);
+
+        // Tabla de totales
+        String[] columnasTotales = {
+                handler.get("crearcarrito.columna.subtotal"),
+                handler.get("crearcarrito.columna.iva"),
+                handler.get("crearcarrito.columna.totalgeneral")
+        };
+        modeloTotales.setColumnIdentifiers(columnasTotales);
+
+        // Borde del panel
+        Border border = panelGeneral.getBorder();
+        if (border instanceof TitledBorder) {
+            ((TitledBorder) border).setTitle(handler.get("crearcarrito.borde"));
+            panelGeneral.repaint();
+        }
     }
 
     public JTextField getTxtCodigo() {
@@ -125,10 +154,11 @@ public class CrearCarrito extends JInternalFrame{
         return btnEditar;
     }
 
-    public void productoEncontrado(String nombre, double precio) {
+    public void cargarProductoEncontrado(String nombre, double precio) {
         txtNombre.setText(nombre);
         txtPrecio.setText(String.valueOf(precio));
     }
+
 
     public void limpiarFormulario() {
         txtCodigo.setText("");
@@ -149,6 +179,13 @@ public class CrearCarrito extends JInternalFrame{
         btnGuardar.setVisible(true);
         btnEditar.setVisible(false);
         panelNorte.setVisible(true);
+    }
+
+    public void limpiarCamposItem(){
+        txtCodigo.setText("");
+        txtCantidad.setText("");
+        txtNombre.setText("");
+        txtPrecio.setText("");
     }
 
     public void mostrarMensaje(String mensaje) {

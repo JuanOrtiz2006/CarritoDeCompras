@@ -4,6 +4,8 @@ import ec.edu.ups.util.Contexto;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 
 public class ListaCarrito extends JInternalFrame{
     private JPanel panelGeneral;
@@ -26,34 +28,32 @@ public class ListaCarrito extends JInternalFrame{
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 
-        lblCodigo.setText(Contexto.getHandler().get("listacarrito.codigo"));
-        btnBuscar.setText(Contexto.getHandler().get("listacarrito.boton.buscar"));
-        btnListar.setText(Contexto.getHandler().get("listacarrito.boton.listar"));
-
         modelo = new DefaultTableModel();
-        Object[] columnas = {
-                Contexto.getHandler().get("listacarrito.columna.usuario"),
-                Contexto.getHandler().get("listacarrito.columna.id"),
-                Contexto.getHandler().get("listacarrito.columna.fecha"),
-                Contexto.getHandler().get("listacarrito.columna.total")
-        };
-        modelo.setColumnIdentifiers(columnas);
         tblCarritos.setModel(modelo);
+
+        actualizarIdioma();
     }
 
-    // Metodo para recargar textos si se cambia el idioma
-    public void recargarTextos() {
-        setTitle(Contexto.getHandler().get("listacarrito.titulo"));
-        lblCodigo.setText(Contexto.getHandler().get("listacarrito.codigo"));
-        btnBuscar.setText(Contexto.getHandler().get("listacarrito.boton.buscar"));
-        btnListar.setText(Contexto.getHandler().get("listacarrito.boton.listar"));
+    public void actualizarIdioma() {
+        var handler = Contexto.getHandler();
+
+        setTitle(handler.get("listacarrito.titulo"));
+        lblCodigo.setText(handler.get("listacarrito.codigo"));
+        btnBuscar.setText(handler.get("listacarrito.boton.buscar"));
+        btnListar.setText(handler.get("listacarrito.boton.listar"));
 
         modelo.setColumnIdentifiers(new Object[]{
-                Contexto.getHandler().get("listacarrito.columna.usuario"),
-                Contexto.getHandler().get("listacarrito.columna.id"),
-                Contexto.getHandler().get("listacarrito.columna.fecha"),
-                Contexto.getHandler().get("listacarrito.columna.total")
+                handler.get("listacarrito.columna.usuario"),
+                handler.get("listacarrito.columna.id"),
+                handler.get("listacarrito.columna.fecha"),
+                handler.get("listacarrito.columna.total")
         });
+
+        Border border = panelGeneral.getBorder();
+        if (border instanceof TitledBorder) {
+            ((TitledBorder) border).setTitle(handler.get("listacarrito.borde"));
+            panelGeneral.repaint();
+        }
     }
 
     public JTextField getTxtCodigo() {

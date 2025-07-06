@@ -2,8 +2,11 @@ package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.util.Contexto;
+import ec.edu.ups.util.FormateadorUtils;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
@@ -26,40 +29,34 @@ public class ListaProducto extends JInternalFrame{
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 
         modelo = new DefaultTableModel();
-        Object[] columnas = {
-                Contexto.getHandler().get("listaproducto.columna.id"),
-                Contexto.getHandler().get("listaproducto.columna.nombre"),
-                Contexto.getHandler().get("listaproducto.columna.precio")
-        };
-        modelo.setColumnIdentifiers(columnas);
         tblProductos.setModel(modelo);
 
-        // Cargar ítems del combo traducidos
-        cmbTipo.addItem(""); // vacío
-        cmbTipo.addItem(Contexto.getHandler().get("listaproducto.filtro.codigo"));
-        cmbTipo.addItem(Contexto.getHandler().get("listaproducto.filtro.nombre"));
-
-        // Botón y etiqueta traducidos
-        btnListar.setText(Contexto.getHandler().get("listaproducto.boton"));
-        lblTipo.setText(Contexto.getHandler().get("listaproducto.etiqueta"));
+        actualizarIdioma();
     }
 
-    public void recargarTextos() {
-        setTitle(Contexto.getHandler().get("listaproducto.titulo"));
+    public void actualizarIdioma() {
+        var handler = Contexto.getHandler();
+
+        setTitle(handler.get("listaproducto.titulo"));
+        lblTipo.setText(handler.get("listaproducto.etiqueta"));
+        btnListar.setText(handler.get("listaproducto.boton"));
+
         modelo.setColumnIdentifiers(new Object[]{
-                Contexto.getHandler().get("listaproducto.columna.id"),
-                Contexto.getHandler().get("listaproducto.columna.nombre"),
-                Contexto.getHandler().get("listaproducto.columna.precio")
+                handler.get("listaproducto.columna.id"),
+                handler.get("listaproducto.columna.nombre"),
+                handler.get("listaproducto.columna.precio")
         });
 
-        // Recargar combo y otros textos
         cmbTipo.removeAllItems();
-        cmbTipo.addItem("");
-        cmbTipo.addItem(Contexto.getHandler().get("listaproducto.filtro.codigo"));
-        cmbTipo.addItem(Contexto.getHandler().get("listaproducto.filtro.nombre"));
+        cmbTipo.addItem(""); // vacío
+        cmbTipo.addItem(handler.get("listaproducto.filtro.codigo"));
+        cmbTipo.addItem(handler.get("listaproducto.filtro.nombre"));
 
-        btnListar.setText(Contexto.getHandler().get("listaproducto.boton"));
-        lblTipo.setText(Contexto.getHandler().get("listaproducto.etiqueta"));
+        Border border = panelGeneral.getBorder();
+        if (border instanceof TitledBorder) {
+            ((TitledBorder) border).setTitle(handler.get("listaproducto.borde"));
+            panelGeneral.repaint();
+        }
     }
 
     public JPanel getPanelGeneral() {
@@ -89,7 +86,7 @@ public class ListaProducto extends JInternalFrame{
     public void cargarProductos(List<Producto> productos) {
         modelo.setNumRows(0); // Limpia la tabla
         for (Producto producto : productos) {
-            Object[] filaProducto = {producto.getCodigo(), producto.getNombre(), producto.getPrecio()};
+            Object[] filaProducto = {producto.getCodigo(), producto.getNombre(), FormateadorUtils.formatearMoneda(producto.getPrecio(), Contexto.getLocale())};
             modelo.addRow(filaProducto);
         }
     }

@@ -4,11 +4,14 @@ import ec.edu.ups.dao.PreguntaDAO;
 import ec.edu.ups.dao.UsuarioDAO;
 import ec.edu.ups.modelo.*;
 import ec.edu.ups.util.Contexto;
+import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.vista.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.*;
 
 public class UsuarioController {
@@ -22,6 +25,8 @@ public class UsuarioController {
     private RegistrarUsuario registrarUsuario;
     private PreguntasSeguridad preguntasSeguridad;
     private RecuperarClave recuperarClave;
+    private Usuario usuarioAEditar; // usado solo en modo edición
+
 
     // === Constructor ===
     public UsuarioController(UsuarioDAO usuarioDAO, PreguntaDAO preguntaDAO) {
@@ -59,9 +64,7 @@ public class UsuarioController {
         return usuario;
     }
 
-    // ===============================================================
-    // ===================== EVENTOS PRINCIPALES =====================
-    // ===============================================================
+    //eventosVistas
 
     public void eventosLogin() {
         loginView.getBtnLogin().addActionListener(e -> autenticar());
@@ -70,12 +73,12 @@ public class UsuarioController {
             public void actionPerformed(ActionEvent e) {
                 loginView.setVisible(false);
                 registrarUsuario.setVisible(true);
-                eventoRegistrarUsuario();
+                eventoRegistrarUsuario(false);
             }
         });
         loginView.getBtnRecuperar().addActionListener(e -> {
             loginView.setVisible(false);
-            preguntasSeguridad.setVisible(true);
+            recuperarClave.setVisible(true);
             eventoRecuperarClave();
         });
     }
@@ -87,84 +90,64 @@ public class UsuarioController {
         activarAccionesEnTablaUsuarios();
     }
 
-    private void eventoRegistrarUsuario() {
+    private void eventoRegistrarUsuario(boolean modo) {
+        registrarUsuario.limpiarCampos();
+
+        registrarUsuario.ejemplos();
+        registrarUsuario.actualizarIdioma();
+        // Ejemplo de formato de fecha para ayudar al usuario
+        Date ejemploFecha = new Date();
+        String formatoEjemplo = FormateadorUtils.formatearFecha(ejemploFecha, Contexto.getLocale());
+        registrarUsuario.getTxtFecha().setText(formatoEjemplo);
+        registrarUsuario.getTxtFecha().setToolTipText("Ejemplo: " + formatoEjemplo);
 
         registrarUsuario.getBtnSiguiente().addActionListener(e -> {
+            var handler = Contexto.getHandler();
+
             String nombre = registrarUsuario.getTxtNombre().getText();
-            String fechaNacimiento = registrarUsuario.getTxtFecha().getText();
+            String fechaTexto = registrarUsuario.getTxtFecha().getText();
             String correo = registrarUsuario.getTxtCorreo().getText();
             String telefono = registrarUsuario.getTxtTelefono().getText();
             String usuario = registrarUsuario.getTxtUsuario().getText();
             String contrasenia = registrarUsuario.getTxtPassword().getText();
 
+            GregorianCalendar fechaNacimiento = new GregorianCalendar();
+            try {
+                DateFormat formato = DateFormat.getDateInstance(DateFormat.MEDIUM, Contexto.getLocale());
+                Date fecha = formato.parse(fechaTexto);
+                fechaNacimiento.setTime(fecha);
+            } catch (ParseException i) {
+                String mensaje = String.format(
+                        handler.get("usuario.fecha.invalida"),
+                        formatoEjemplo
+                );
+                registrarUsuario.mostrarMensaje(mensaje);
+                return;
+            }
+
             Usuario usuariocreado = new Usuario(usuario, contrasenia, Rol.USUARIO);
+            if (modo) {
+                usuariocreado = usuarioAEditar;
+                registrarUsuario.getTxtUsuario().setEnabled(false);
+                registrarUsuario.getTxtPassword().setEnabled(false);
+            } else {
+                usuariocreado = new Usuario(usuario, contrasenia, Rol.USUARIO);
+            }
             usuariocreado.setNombre(nombre);
             usuariocreado.setCorreo(correo);
             usuariocreado.setTelefono(telefono);
+            usuariocreado.setFechanacimiento(fechaNacimiento);
 
             registrarUsuario.setVisible(false);
-            eventoPreguntasSeguridad(usuariocreado);
+            eventoPreguntasSeguridad(usuariocreado, modo);
         });
     }
 
-    private void eventoRecuperarClave(){
-        final Usuario[] usuarioEncontrado = new Usuario[1];
+    public void eventoPreguntasSeguridad(Usuario usuariocreado, boolean modo) {
+        var handler = Contexto.getHandler();
+        preguntasSeguridad.limpiarCampos();
+        preguntasSeguridad.actualizarIdioma();
 
-        recuperarClave.getBtnBuscar().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String username = recuperarClave.getTxtUsuario().getText();
-                Usuario usuario = usuarioDAO.buscarPorUsername(username);
-                if(usuario != null){
-                    usuarioEncontrado[0] = usuario;
-                    Pregunta pregunta = usuario.obtenerPreguntaParaRecuperacion();
-                    recuperarClave.getLblPregunta().setText(pregunta.getTexto());
-                    recuperarClave.getTxtUsuario().setEnabled(false);
-                    recuperarClave.getBtnBuscar().setEnabled(false);
-                } else {
-                    recuperarClave.mostrarMensaje("Usuario no encontrado");
-                }
-            }
-        });
-
-        recuperarClave.getBtnRecuperar().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(usuarioEncontrado[0] != null) {
-                    String respuesta = recuperarClave.getTxtPregunta().getText();
-                    if(usuarioEncontrado[0].verificarRespuesta(respuesta)){
-                        recuperarClave.mostrarMensaje("Respuesta correcta. Aquí se podrá cambiar la clave");
-                    } else {
-                        recuperarClave.mostrarMensaje("Respuesta incorrecta");
-                    }
-                } else {
-                    recuperarClave.mostrarMensaje("Primero busque un usuario");
-                }
-            }
-        });
-    }
-
-    // ===============================================================
-    // ========================== LOGIN ==============================
-    // ===============================================================
-
-    private void autenticar() {
-        String username = loginView.getTxtUsername().getText();
-        String contrasenia = loginView.getTxtPassword().getText();
-        usuario = usuarioDAO.autenticar(username, contrasenia);
-
-        if (usuario == null) {
-            loginView.mostrarMensaje(Contexto.getHandler().get("usuario.contrasena.incorrectos"));
-        } else {
-            loginView.dispose();
-        }
-    }
-
-    // ===============================================================
-    // ================= REGISTRO DE USUARIO Y PREGUNTAS =============
-    // ===============================================================
-
-    public void eventoPreguntasSeguridad(Usuario usuariocreado) {
         preguntasSeguridad.cargarPreguntas(preguntaDAO.obtenerPreguntas());
         preguntasSeguridad.cargarCheckBox(preguntaDAO.obtenerTipos());
         preguntasSeguridad.setVisible(true);
@@ -220,101 +203,124 @@ public class UsuarioController {
             }
         });
 
+        preguntasSeguridad.getBtnRegistrarse().setVisible(!modo);
+        preguntasSeguridad.getBtnActualizar().setVisible(modo);
+
         // Reemplaza el ActionListener del botón "Registrarse" (línea 276 aproximadamente)
         preguntasSeguridad.getBtnRegistrarse().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                List<Respuesta> respuestas = new ArrayList<>();
 
-                // Recolectar todas las respuestas no vacías
-                if(preguntasSeguridad.getTxtPregunta().getText() != null &&
-                        !preguntasSeguridad.getTxtPregunta().getText().trim().isEmpty()){
-                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta().getText());
-                    String respuesta = preguntasSeguridad.getTxtPregunta().getText().trim();
-                    respuestas.add(new Respuesta(pregunta, respuesta));
-                }
-                if(preguntasSeguridad.getTxtPregunta2().getText() != null &&
-                        !preguntasSeguridad.getTxtPregunta2().getText().trim().isEmpty()){
-                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta2().getText());
-                    String respuesta = preguntasSeguridad.getTxtPregunta2().getText().trim();
-                    respuestas.add(new Respuesta(pregunta, respuesta));
-                }
-                if(preguntasSeguridad.getTxtPregunta3().getText() != null &&
-                        !preguntasSeguridad.getTxtPregunta3().getText().trim().isEmpty()){
-                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta3().getText());
-                    String respuesta = preguntasSeguridad.getTxtPregunta3().getText().trim();
-                    respuestas.add(new Respuesta(pregunta, respuesta));
-                }
-                if(preguntasSeguridad.getTxtPregunta4().getText() != null &&
-                        !preguntasSeguridad.getTxtPregunta4().getText().trim().isEmpty()){
-                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta4().getText());
-                    String respuesta = preguntasSeguridad.getTxtPregunta4().getText().trim();
-                    respuestas.add(new Respuesta(pregunta, respuesta));
-                }
-                if(preguntasSeguridad.getTxtPregunta5().getText() != null &&
-                        !preguntasSeguridad.getTxtPregunta5().getText().trim().isEmpty()){
-                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta5().getText());
-                    String respuesta = preguntasSeguridad.getTxtPregunta5().getText().trim();
-                    respuestas.add(new Respuesta(pregunta, respuesta));
-                }
-                if(preguntasSeguridad.getTxtPregunta6().getText() != null &&
-                        !preguntasSeguridad.getTxtPregunta6().getText().trim().isEmpty()){
-                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta6().getText());
-                    String respuesta = preguntasSeguridad.getTxtPregunta6().getText().trim();
-                    respuestas.add(new Respuesta(pregunta, respuesta));
-                }
-                if(preguntasSeguridad.getTxtPregunta7().getText() != null &&
-                        !preguntasSeguridad.getTxtPregunta7().getText().trim().isEmpty()){
-                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta7().getText());
-                    String respuesta = preguntasSeguridad.getTxtPregunta7().getText().trim();
-                    respuestas.add(new Respuesta(pregunta, respuesta));
-                }
-                if(preguntasSeguridad.getTxtPregunta8().getText() != null &&
-                        !preguntasSeguridad.getTxtPregunta8().getText().trim().isEmpty()){
-                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta8().getText());
-                    String respuesta = preguntasSeguridad.getTxtPregunta8().getText().trim();
-                    respuestas.add(new Respuesta(pregunta, respuesta));
-                }
-                if(preguntasSeguridad.getTxtPregunta9().getText() != null &&
-                        !preguntasSeguridad.getTxtPregunta9().getText().trim().isEmpty()){
-                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta9().getText());
-                    String respuesta = preguntasSeguridad.getTxtPregunta9().getText().trim();
-                    respuestas.add(new Respuesta(pregunta, respuesta));
-                }
-                if(preguntasSeguridad.getTxtPregunta10().getText() != null &&
-                        !preguntasSeguridad.getTxtPregunta10().getText().trim().isEmpty()){
-                    Pregunta pregunta = preguntaDAO.obtenerPregunta(preguntasSeguridad.getLblPregunta10().getText());
-                    String respuesta = preguntasSeguridad.getTxtPregunta10().getText().trim();
-                    respuestas.add(new Respuesta(pregunta, respuesta));
-                }
-
+                List<Respuesta> respuestas = recolectarRespuestas();
                 // Validar que se hayan respondido al menos 3 preguntas
                 if(respuestas.size() >= 3){
                     usuariocreado.setRespuestas(respuestas);
 
-                    // *** AQUÍ ESTÁ LA CORRECCIÓN PRINCIPAL ***
                     // Guardar el usuario en la base de datos
                     try {
                         usuarioDAO.crear(usuariocreado);
-                        preguntasSeguridad.mostrarMensaje("Usuario registrado exitosamente");
+                        preguntasSeguridad.mostrarMensaje(handler.get("usuario.actualizado.exito"));
                         preguntasSeguridad.setVisible(false);
                         loginView.setVisible(true);
                     } catch (Exception ex) {
-                        preguntasSeguridad.mostrarMensaje("Error al registrar usuario: " + ex.getMessage());
+                        preguntasSeguridad.mostrarMensaje(handler.get("usuario.registro.error") + ex.getMessage());
                     }
                 } else {
-                    preguntasSeguridad.mostrarMensaje("Mínimo conteste 3 preguntas");
+                    preguntasSeguridad.mostrarMensaje(handler.get("usuario.preguntas.minimas"));
+                }
+            }
+        });
+        preguntasSeguridad.getBtnActualizar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (usuarioAEditar == null) {
+                    preguntasSeguridad.mostrarMensaje("usuario.actualizar.sinusuario");
+                    return;
+                }
+
+                List<Respuesta> respuestas = recolectarRespuestas();
+                if (respuestas.size() < 3) {
+                    preguntasSeguridad.mostrarMensaje("usuario.preguntas.minimas");
+                    return;
+                }
+
+                usuarioAEditar.setRespuestas(respuestas);
+
+                try {
+                    usuarioDAO.actualizar(usuarioAEditar);
+                    preguntasSeguridad.mostrarMensaje(handler.get("usuario.actualizado.exito"));
+                    preguntasSeguridad.setVisible(false);
+                    gestionUsuarios.setVisible(true); // puedes regresar al panel de gestión
+                } catch (Exception ex) {
+                    preguntasSeguridad.mostrarMensaje(handler.get("usuario.actualizar.error") + ex.getMessage());
                 }
             }
         });
     }
 
-    // ===============================================================
-    // ================ GESTIÓN DE USUARIOS (ADMIN) ==================
-    // ===============================================================
+    private void eventoRecuperarClave(){
+        var handler = Contexto.getHandler();
+        recuperarClave.limpiarCampos();
+        recuperarClave.actualizarIdioma();
+        final Usuario[] usuarioEncontrado = new Usuario[1];
+
+        recuperarClave.getBtnBuscar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = recuperarClave.getTxtUsuario().getText();
+                Usuario usuario = usuarioDAO.buscarPorUsername(username);
+                if(usuario != null){
+                    usuarioEncontrado[0] = usuario;
+                    Pregunta pregunta = usuario.obtenerPreguntaParaRecuperacion();
+                    recuperarClave.getLblPregunta().setText(pregunta.getTexto());
+                    recuperarClave.getTxtUsuario().setEnabled(false);
+                    recuperarClave.getBtnBuscar().setEnabled(false);
+                } else {
+                    recuperarClave.mostrarMensaje(handler.get("mensaje.usuario.noencontrado"));
+                }
+            }
+        });
+
+        recuperarClave.getBtnRecuperar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(usuarioEncontrado[0] != null) {
+                    String respuesta = recuperarClave.getTxtPregunta().getText();
+                    if(usuarioEncontrado[0].verificarRespuesta(respuesta)){
+                        recuperarClave.mostrarMensaje(handler.get("usuario.clave.correcta"));
+                    } else {
+                        recuperarClave.mostrarMensaje(handler.get("usuario.respuestas.incorrectas"));
+                    }
+                } else {
+                    recuperarClave.mostrarMensaje("usuario.buscar.primero");
+                }
+            }
+        });
+
+    }
+
+    //metodosLogin
+    private void autenticar() {
+        String username = loginView.getTxtUsername().getText();
+        String contrasenia = loginView.getTxtPassword().getText();
+        usuario = usuarioDAO.autenticar(username, contrasenia);
+
+        if (usuario == null) {
+            loginView.mostrarMensaje(Contexto.getHandler().get("usuario.contrasena.incorrectos"));
+        } else {
+            loginView.dispose();
+        }
+    }
+
+    // meotodsGesionUsuarios
 
     private void buscarUsuario() {
-        String username = gestionUsuarios.getTxtBusqueda().getText();
+        String username = gestionUsuarios.getTxtBusqueda().getText().trim();
+        if (username.isEmpty()) {
+            JOptionPane.showMessageDialog(null, Contexto.getHandler().get("usuario.buscar.vacio"));
+            return;
+        }
+
         Usuario encontrado = usuarioDAO.buscarPorUsername(username);
         if (encontrado != null) {
             cargarUsuarioEncontrado(encontrado);
@@ -325,9 +331,11 @@ public class UsuarioController {
 
     private void listar() {
         String seleccion = gestionUsuarios.getCmbLista().getSelectedItem().toString();
-        if (seleccion.equals(Contexto.getHandler().get("usuario.normal"))) {
+
+        if(seleccion.equals("")){
+        } else if (seleccion.equals(Contexto.getHandler().get("gestionusuarios.combo.usuarios"))) {
             cargarClientes();
-        } else if (seleccion.equals(Contexto.getHandler().get("usuario.administrador"))) {
+        } else if (seleccion.equals(Contexto.getHandler().get("gestionusuarios.combo.admins"))) {
             cargarAdministradores();
         } else {
             cargarUsuarios();
@@ -336,31 +344,40 @@ public class UsuarioController {
 
     private void cargarUsuarioEncontrado(Usuario usuario) {
         DefaultTableModel modelo = (DefaultTableModel) gestionUsuarios.getTblUsuarios().getModel();
+        // Clear the table first
         modelo.setRowCount(0);
+        // Add the found user
         modelo.addRow(new Object[]{usuario.getRol(), usuario.getUsername(), usuario.getPassword()});
+        // Clear the search field
         gestionUsuarios.getTxtBusqueda().setText("");
     }
 
-    private void cargarAdministradores() {
-        cargarUsuariosPorRol(Contexto.getHandler().get("usuario.adminstrador"));
-    }
-
     private void cargarClientes() {
-        cargarUsuariosPorRol("USUARIO");
-    }
-
-    private void cargarUsuarios() {
         DefaultTableModel modelo = (DefaultTableModel) gestionUsuarios.getTblUsuarios().getModel();
+        // Clear the table first
         modelo.setRowCount(0);
-        for (Usuario u : usuarioDAO.listarTodos()) {
+        // Load users with USUARIO role
+        for (Usuario u : usuarioDAO.listarPorRol("USUARIO")) {
             modelo.addRow(new Object[]{u.getRol(), u.getUsername(), u.getPassword()});
         }
     }
 
-    private void cargarUsuariosPorRol(String rol) {
+    private void cargarAdministradores() {
         DefaultTableModel modelo = (DefaultTableModel) gestionUsuarios.getTblUsuarios().getModel();
+        // Clear the table first
         modelo.setRowCount(0);
-        for (Usuario u : usuarioDAO.listarPorRol(rol)) {
+        // Load users with ADMINISTRADOR role
+        for (Usuario u : usuarioDAO.listarPorRol("ADMINISTRADOR")) {
+            modelo.addRow(new Object[]{u.getRol(), u.getUsername(), u.getPassword()});
+        }
+    }
+
+    private void cargarUsuarios() {
+        DefaultTableModel modelo = (DefaultTableModel) gestionUsuarios.getTblUsuarios().getModel();
+        // Clear the table first
+        modelo.setRowCount(0);
+        // Load all users
+        for (Usuario u : usuarioDAO.listarTodos()) {
             modelo.addRow(new Object[]{u.getRol(), u.getUsername(), u.getPassword()});
         }
     }
@@ -394,17 +411,33 @@ public class UsuarioController {
     }
 
     public void editarUsuario(String usernameOriginal, Rol rol) {
-        String nuevoUsername = JOptionPane.showInputDialog(null,
-                Contexto.getHandler().get("usuario.ingrese.nuevo.username"), usernameOriginal);
-        if (nuevoUsername == null || nuevoUsername.trim().isEmpty()) return;
+        usuarioAEditar = usuarioDAO.buscarPorUsername(usernameOriginal); // Evita usar strings sueltos
 
-        String nuevaPassword = JOptionPane.showInputDialog(null,
-                Contexto.getHandler().get("usuario.ingrese.nueva.contrasena"));
-        if (nuevaPassword == null || nuevaPassword.trim().isEmpty()) return;
+        if (usuarioAEditar == null) {
+            JOptionPane.showMessageDialog(null, Contexto.getHandler().get("usuario.no.encontrado"));
+            return;
+        }
 
-        JOptionPane.showMessageDialog(null, Contexto.getHandler().get("usuario.actualizado.exito"));
-        listar();
+        registrarUsuario.limpiarCampos();
+        registrarUsuario.actualizarIdioma();
+
+        // Cargar datos en los campos
+        registrarUsuario.getTxtNombre().setText(usuarioAEditar.getNombre());
+        registrarUsuario.getTxtCorreo().setText(usuarioAEditar.getCorreo());
+        registrarUsuario.getTxtTelefono().setText(usuarioAEditar.getTelefono());
+        registrarUsuario.getTxtUsuario().setText(usuarioAEditar.getUsername());
+        registrarUsuario.getTxtUsuario().setEnabled(false); // ¡Muy importante! No permitir cambiar username
+        registrarUsuario.getTxtPassword().setText(usuarioAEditar.getPassword());
+
+        String fechaStr = FormateadorUtils.formatearFecha(
+                usuarioAEditar.getFechanacimiento().getTime(), Contexto.getLocale());
+        registrarUsuario.getTxtFecha().setText(fechaStr);
+
+        registrarUsuario.setVisible(true);
+
+        eventoRegistrarUsuario(true); // modo edición
     }
+
 
     private void eliminarUsuario(String username) {
         int confirm = JOptionPane.showConfirmDialog(null,
@@ -459,4 +492,42 @@ public class UsuarioController {
             }
         }
     }
+
+    private List<Respuesta> recolectarRespuestas() {
+        List<Respuesta> respuestas = new ArrayList<>();
+        JTextField[] campos = {
+                preguntasSeguridad.getTxtPregunta(),
+                preguntasSeguridad.getTxtPregunta2(),
+                preguntasSeguridad.getTxtPregunta3(),
+                preguntasSeguridad.getTxtPregunta4(),
+                preguntasSeguridad.getTxtPregunta5(),
+                preguntasSeguridad.getTxtPregunta6(),
+                preguntasSeguridad.getTxtPregunta7(),
+                preguntasSeguridad.getTxtPregunta8(),
+                preguntasSeguridad.getTxtPregunta9(),
+                preguntasSeguridad.getTxtPregunta10()
+        };
+        JLabel[] etiquetas = {
+                preguntasSeguridad.getLblPregunta(),
+                preguntasSeguridad.getLblPregunta2(),
+                preguntasSeguridad.getLblPregunta3(),
+                preguntasSeguridad.getLblPregunta4(),
+                preguntasSeguridad.getLblPregunta5(),
+                preguntasSeguridad.getLblPregunta6(),
+                preguntasSeguridad.getLblPregunta7(),
+                preguntasSeguridad.getLblPregunta8(),
+                preguntasSeguridad.getLblPregunta9(),
+                preguntasSeguridad.getLblPregunta10()
+        };
+
+        for (int i = 0; i < campos.length; i++) {
+            if (campos[i].getText() != null && !campos[i].getText().trim().isEmpty()) {
+                Pregunta p = preguntaDAO.obtenerPregunta(etiquetas[i].getText());
+                respuestas.add(new Respuesta(p, campos[i].getText().trim()));
+            }
+        }
+
+        return respuestas;
+    }
+
 }

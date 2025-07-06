@@ -3,6 +3,8 @@ package ec.edu.ups.vista;
 import ec.edu.ups.util.Contexto;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 
 public class EliminarProducto extends JInternalFrame {
     private JPanel panelGeneral;
@@ -28,23 +30,25 @@ public class EliminarProducto extends JInternalFrame {
         txtNombre.setEnabled(false);
         txtPrecio.setEnabled(false);
 
-        // Traducción inicial
-        lblCodigo.setText(Contexto.getHandler().get("eliminarproducto.etiqueta.codigo"));
-        lblNombre.setText(Contexto.getHandler().get("eliminarproducto.etiqueta.nombre"));
-        lblPrecio.setText(Contexto.getHandler().get("eliminarproducto.etiqueta.precio"));
-        btnSeleccionar.setText(Contexto.getHandler().get("eliminarproducto.boton.seleccionar"));
-        btnEliminar.setText(Contexto.getHandler().get("eliminarproducto.boton.eliminar"));
+        actualizarIdioma();
     }
 
-    public void recargarTextos() {
-        setTitle(Contexto.getHandler().get("eliminarproducto.titulo"));
-        lblCodigo.setText(Contexto.getHandler().get("eliminarproducto.etiqueta.codigo"));
-        lblNombre.setText(Contexto.getHandler().get("eliminarproducto.etiqueta.nombre"));
-        lblPrecio.setText(Contexto.getHandler().get("eliminarproducto.etiqueta.precio"));
-        btnSeleccionar.setText(Contexto.getHandler().get("eliminarproducto.boton.seleccionar"));
-        btnEliminar.setText(Contexto.getHandler().get("eliminarproducto.boton.eliminar"));
-    }
+    public void actualizarIdioma() {
+        var handler = Contexto.getHandler();
 
+        setTitle(handler.get("eliminarproducto.titulo"));
+        lblCodigo.setText(handler.get("eliminarproducto.etiqueta.codigo"));
+        lblNombre.setText(handler.get("eliminarproducto.etiqueta.nombre"));
+        lblPrecio.setText(handler.get("eliminarproducto.etiqueta.precio"));
+        btnSeleccionar.setText(handler.get("eliminarproducto.boton.seleccionar"));
+        btnEliminar.setText(handler.get("eliminarproducto.boton.eliminar"));
+
+        Border border = panelGeneral.getBorder();
+        if (border instanceof TitledBorder) {
+            ((TitledBorder) border).setTitle(handler.get("eliminarproducto.borde"));
+            panelGeneral.repaint();
+        }
+    }
 
     public JPanel getPanelGeneral() {
         return panelGeneral;
@@ -71,7 +75,7 @@ public class EliminarProducto extends JInternalFrame {
         return opcion;
     }
 
-    public void productoEncontrado(String nombre, double precio){
+    public void cargarProductoEncontrado(String nombre, double precio){
         txtNombre.setText(nombre);
         txtPrecio.setText(Double.toString(precio));
     }

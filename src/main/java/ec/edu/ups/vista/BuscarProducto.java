@@ -2,9 +2,12 @@ package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.util.Contexto;
+import ec.edu.ups.util.FormateadorUtils;
 
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -31,20 +34,9 @@ public class BuscarProducto extends JInternalFrame {
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 
         modelo = new DefaultTableModel();
-        Object[] columnas = {
-                Contexto.getHandler().get("buscarproducto.columna.id"),
-                Contexto.getHandler().get("buscarproducto.columna.nombre"),
-                Contexto.getHandler().get("buscarproducto.columna.precio")
-        };
-        modelo.setColumnIdentifiers(columnas);
         tblProducto.setModel(modelo);
 
-        cmbBusqueda.addItem("");
-        cmbBusqueda.addItem(Contexto.getHandler().get("buscarproducto.combo.codigo"));
-        cmbBusqueda.addItem(Contexto.getHandler().get("buscarproducto.combo.nombre"));
-
-        setVisible(true);
-
+        actualizarIdioma();
         cmbBusqueda.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -58,12 +50,35 @@ public class BuscarProducto extends JInternalFrame {
                 }
             }
         });
-
-        labelBusqueda.setText(Contexto.getHandler().get("buscarproducto.label"));
-        btnBuscar.setText(Contexto.getHandler().get("buscarproducto.boton"));
     }
-    
 
+    public void actualizarIdioma() {
+        var handler = Contexto.getHandler();
+        setTitle(handler.get("buscarproducto.titulo"));
+        labelBusqueda.setText(handler.get("buscarproducto.label"));
+        btnBuscar.setText(handler.get("buscarproducto.boton"));
+
+        // Actualizar columnas de la tabla
+        String[] columnas = {
+                handler.get("buscarproducto.columna.id"),
+                handler.get("buscarproducto.columna.nombre"),
+                handler.get("buscarproducto.columna.precio")
+        };
+        modelo.setColumnIdentifiers(columnas);
+
+        // Actualizar opciones del combo
+        cmbBusqueda.removeAllItems();
+        cmbBusqueda.addItem("");
+        cmbBusqueda.addItem(handler.get("buscarproducto.combo.codigo"));
+        cmbBusqueda.addItem(handler.get("buscarproducto.combo.nombre"));
+
+        // Actualizar título del panel general si tiene un borde
+        Border border = panelGeneral.getBorder();
+        if (border instanceof TitledBorder) {
+            ((TitledBorder) border).setTitle(handler.get("buscarproducto.borde"));
+            panelGeneral.repaint();
+        }
+    }
 
     public JPanel getPanelGeneral() {
         return panelGeneral;
@@ -89,21 +104,22 @@ public class BuscarProducto extends JInternalFrame {
         JOptionPane.showMessageDialog(null, mensaje);
     }
 
-    public void eliminarCampos (){
+    public void limpiarCampos(){
         txtBusqueda.setText("");
         modelo.setNumRows(0);
     }
 
-    public void cargarProducto(Producto producto){
+    public void cargarProductoBuscado(Producto producto){
+        String precioFormateado = FormateadorUtils.formatearMoneda(producto.getPrecio(), Contexto.getLocale());
         modelo.setNumRows(0);
-        Object[] filaProducto={producto.getCodigo(),producto.getNombre(),producto.getPrecio()};
+        Object[] filaProducto={producto.getCodigo(),producto.getNombre(),precioFormateado};
         modelo.addRow(filaProducto);
     }
 
-    public void cargarProductos(List<Producto> productos) {
+    public void cargarProductosListados(List<Producto> productos) {
         modelo.setNumRows(0); // Limpia la tabla
         for (Producto producto : productos) {
-            Object[] filaProducto = {producto.getCodigo(), producto.getNombre(), producto.getPrecio()};
+            Object[] filaProducto = {producto.getCodigo(), producto.getNombre(), FormateadorUtils.formatearMoneda(producto.getPrecio(), Contexto.getLocale())};
             modelo.addRow(filaProducto);
         }
     }

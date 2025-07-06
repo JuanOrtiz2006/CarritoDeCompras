@@ -11,19 +11,11 @@ public class Carrito {
     private GregorianCalendar fecha;
     private List<ItemCarrito> items;
     private final double IVA = 0.12;
-    private static int contador = 1;
 
     public Carrito(){
         this.items = new ArrayList<>();
     }
 
-    public static int generarCodigo() {
-        return contador++;
-    }
-
-    public static int getContadorActual() {
-        return contador;
-    }
 
     public Usuario getUsuario() {
         return usuario;
@@ -58,8 +50,30 @@ public class Carrito {
         this.items = items;
     }
 
+
+
+    public boolean contieneProducto(int codigoProducto) {
+        return items.stream().anyMatch(item -> item.getProducto().getCodigo() == codigoProducto);
+    }
+
     public void agregarProducto(Producto producto, int cantidad) {
+        // Verificar si el producto ya existe
+        for (ItemCarrito item : items) {
+            if (item.getProducto().getCodigo() == producto.getCodigo()) {
+                // Si existe, actualizar la cantidad
+                item.setCantidad(item.getCantidad() + cantidad);
+                return;
+            }
+        }
+        // Si no existe, agregar nuevo item
         items.add(new ItemCarrito(producto, cantidad));
+    }
+
+    public ItemCarrito obtenerItemPorCodigo(int codigoProducto) {
+        return items.stream()
+                .filter(item -> item.getProducto().getCodigo() == codigoProducto)
+                .findFirst()
+                .orElse(null);
     }
 
     public void eliminarProducto(int codigoProducto) {
@@ -90,8 +104,17 @@ public class Carrito {
         return items;
     }
 
+
     public boolean estaVacio() {
         return items.isEmpty();
+    }
+
+    public boolean esValido() {
+        return !estaVacio() && usuario != null;
+    }
+
+    public boolean perteneceAUsuario(Usuario usuario) {
+        return this.usuario != null && this.usuario.equals(usuario);
     }
 
     public double calcularSubtotal() {

@@ -1,8 +1,10 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.util.Contexto;
+import ec.edu.ups.util.FormateadorUtils;
 
 import javax.swing.*;
+import java.util.Date;
 
 public class RegistrarUsuario extends JFrame {
     private JPanel panelGeneral;
@@ -31,6 +33,7 @@ public class RegistrarUsuario extends JFrame {
     private JLabel lblTitulo2;
     private JLabel lblUsuario;
     private JLabel lblPassword;
+    private boolean modoEdicion = false;
 
     public RegistrarUsuario(){
         setContentPane(panelGeneral);
@@ -39,15 +42,28 @@ public class RegistrarUsuario extends JFrame {
         setSize(600, 400);
         setLocationRelativeTo(null);
 
-        lblTitulo.setText(Contexto.getHandler().get("lbl.titulo"));
-        lblNombre.setText(Contexto.getHandler().get("lbl.nombrepersonal"));
-        lblFecha.setText(Contexto.getHandler().get("lbl.fecha"));
-        lblCorreo.setText(Contexto.getHandler().get("lbl.correo"));
-        lblTelefono.setText(Contexto.getHandler().get("lbl.telefono"));
-        lblTitulo2.setText(Contexto.getHandler().get("lbl.titulo2"));
-        lblUsuario.setText(Contexto.getHandler().get("lbl.usuario"));
-        lblPassword.setText(Contexto.getHandler().get("lbl.password"));
-        btnGuardar.setText(Contexto.getHandler().get("btn.siguiente"));
+        actualizarIdioma();
+    }
+
+    public void actualizarIdioma() {
+        var handler = Contexto.getHandler();
+
+        setTitle(handler.get("login.titulo"));
+        lblTitulo.setText(handler.get("lbl.titulo"));
+        lblNombre.setText(handler.get("lbl.nombrepersonal"));
+        lblFecha.setText(handler.get("lbl.fecha"));
+        lblCorreo.setText(handler.get("lbl.correo"));
+        lblTelefono.setText(handler.get("lbl.telefono"));
+        lblTitulo2.setText(handler.get("lbl.titulo2"));
+        lblUsuario.setText(handler.get("lbl.usuario"));
+        lblPassword.setText(handler.get("lbl.password"));
+        btnGuardar.setText(handler.get("btn.siguiente"));
+
+        var border = panelGeneral.getBorder();
+        if (border instanceof javax.swing.border.TitledBorder) {
+            ((javax.swing.border.TitledBorder) border).setTitle(handler.get("registrarusuario.borde"));
+            panelGeneral.repaint();
+        }
     }
 
     public JPanel getPanelGeneral() {
@@ -82,6 +98,59 @@ public class RegistrarUsuario extends JFrame {
         return btnGuardar;
     }
 
+    public void setTxtNombre(JTextField txtNombre) {
+        this.txtNombre = txtNombre;
+    }
+
+    public void setTxtFecha(JTextField txtFecha) {
+        this.txtFecha = txtFecha;
+    }
+
+    public void setTxtCorreo(JTextField txtCorreo) {
+        this.txtCorreo = txtCorreo;
+    }
+
+    public void setTxtTelefono(JTextField txtTelefono) {
+        this.txtTelefono = txtTelefono;
+    }
+
+    public void setTxtUsuario(JTextField txtUsuario) {
+        this.txtUsuario = txtUsuario;
+    }
+
+    public void setTxtPassword(JTextField txtPassword) {
+        this.txtPassword = txtPassword;
+    }
+
+    public void activarModoEdicion() {
+        this.modoEdicion = true;
+    }
+
+    public void activarModoRegistro() {
+        this.modoEdicion = false;
+        limpiarCampos();
+    }
+
+    public boolean isModoEdicion() {
+        return modoEdicion;
+    }
+
+    public void ejemplos(){
+        txtNombre.setToolTipText("Ejemplo: Juan Pérez");
+        txtCorreo.setToolTipText("Ejemplo: juan@example.com");
+        txtTelefono.setToolTipText("Ejemplo: +593 99 123 4567");
+        txtUsuario.setToolTipText("Ejemplo: jperez2025");
+        txtPassword.setToolTipText("Ejemplo: ********");
+        txtFecha.setToolTipText("Ejemplo: " + FormateadorUtils.formatearFecha(new Date(), Contexto.getLocale()));
+    }
+    public void limpiarCampos(){
+        txtNombre.setText("");
+        txtFecha.setText("");
+        txtCorreo.setText("");
+        txtTelefono.setText("");
+        txtUsuario.setText("");
+        txtPassword.setText("");
+    }
     public void mostrarMensaje(String mensaje){
         JOptionPane.showMessageDialog(null,mensaje);
 

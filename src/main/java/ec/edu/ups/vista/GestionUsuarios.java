@@ -3,6 +3,8 @@ package ec.edu.ups.vista;
 import ec.edu.ups.util.Contexto;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class GestionUsuarios extends JInternalFrame{
@@ -31,49 +33,39 @@ public class GestionUsuarios extends JInternalFrame{
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 
-        lblBusqueda.setText(Contexto.getHandler().get("gestionusuarios.etiqueta.busqueda"));
-        lblLista.setText(Contexto.getHandler().get("gestionusuarios.etiqueta.lista"));
-        btnBuscar.setText(Contexto.getHandler().get("gestionusuarios.boton.buscar"));
-        btnListar.setText(Contexto.getHandler().get("gestionusuarios.boton.listar"));
-        btnListar.setText(Contexto.getHandler().get("gestionusuarios.boton.listarTodos"));
-        btnCrear.setText(Contexto.getHandler().get("gestionusuarios.boton.crear"));
-
         modelo = new DefaultTableModel();
-        Object[] columnas = {
-                Contexto.getHandler().get("gestionusuarios.columna.rol"),
-                Contexto.getHandler().get("gestionusuarios.columna.usuario"),
-                Contexto.getHandler().get("gestionusuarios.columna.password")
-        };
-        modelo.setColumnIdentifiers(columnas);
         tblUsuarios.setModel(modelo);
 
-        cmbLista.removeAllItems();
-        cmbLista.addItem("");
-        cmbLista.addItem(Contexto.getHandler().get("gestionusuarios.combo.usuarios"));
-        cmbLista.addItem(Contexto.getHandler().get("gestionusuarios.combo.admins"));
-        cmbLista.addItem(Contexto.getHandler().get("gestionusuarios.combo.todos"));
-
+        actualizarIdioma();
     }
 
-    public void recargarTextos() {
-        setTitle(Contexto.getHandler().get("gestionusuarios.titulo"));
-        lblBusqueda.setText(Contexto.getHandler().get("gestionusuarios.etiqueta.busqueda"));
-        lblLista.setText(Contexto.getHandler().get("gestionusuarios.etiqueta.lista"));
-        btnBuscar.setText(Contexto.getHandler().get("gestionusuarios.boton.buscar"));
-        btnListar.setText(Contexto.getHandler().get("gestionusuarios.boton.listar"));
-        btnCrear.setText(Contexto.getHandler().get("gestionusuarios.boton.crear"));
+    public void actualizarIdioma() {
+        var handler = Contexto.getHandler();
+
+        setTitle(handler.get("gestionusuarios.titulo"));
+        lblBusqueda.setText(handler.get("gestionusuarios.etiqueta.busqueda"));
+        lblLista.setText(handler.get("gestionusuarios.etiqueta.lista"));
+        btnBuscar.setText(handler.get("gestionusuarios.boton.buscar"));
+        btnListar.setText(handler.get("gestionusuarios.boton.listar"));
+        btnCrear.setText(handler.get("gestionusuarios.boton.crear"));
 
         modelo.setColumnIdentifiers(new Object[]{
-                Contexto.getHandler().get("gestionusuarios.columna.rol"),
-                Contexto.getHandler().get("gestionusuarios.columna.usuario"),
-                Contexto.getHandler().get("gestionusuarios.columna.password")
+                handler.get("gestionusuarios.columna.rol"),
+                handler.get("gestionusuarios.columna.usuario"),
+                handler.get("gestionusuarios.columna.password")
         });
 
         cmbLista.removeAllItems();
         cmbLista.addItem("");
-        cmbLista.addItem(Contexto.getHandler().get("gestionusuarios.combo.usuarios"));
-        cmbLista.addItem(Contexto.getHandler().get("gestionusuarios.combo.admins"));
-        cmbLista.addItem(Contexto.getHandler().get("gestionusuarios.combo.todos"));
+        cmbLista.addItem(handler.get("gestionusuarios.combo.usuarios"));
+        cmbLista.addItem(handler.get("gestionusuarios.combo.admins"));
+        cmbLista.addItem(handler.get("gestionusuarios.combo.todos"));
+
+        Border border = panelGeneral.getBorder();
+        if (border instanceof TitledBorder) {
+            ((TitledBorder) border).setTitle(handler.get("gestionusuarios.borde"));
+            panelGeneral.repaint();
+        }
     }
 
     public JTextField getTxtBusqueda() {
@@ -100,16 +92,8 @@ public class GestionUsuarios extends JInternalFrame{
         return btnCrear;
     }
 
-    public int mostrarConfirmDialog(String mensaje, String[] opciones) {
-        return JOptionPane.showOptionDialog(
-                null,
-                mensaje,
-                Contexto.getHandler().get("gestionusuarios.titulo.dialogo"),
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                opciones,
-                opciones[0]
-        );
+    public void mostrarMensaje(String mensaje){
+        JOptionPane.showMessageDialog(null,mensaje);
+
     }
 }

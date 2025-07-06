@@ -62,7 +62,6 @@ public class Main {
                         CrearCarrito crearCarritoView = new CrearCarrito();
                         ListaCarrito listaCarritoView = new ListaCarrito();
 
-                        GestionUsuarios gestionUsuarios = new GestionUsuarios();
 
                         // Usar las mismas instancias de DAOs para TODOS los controladores
                         ProductoController productoController = new ProductoController(productoDAO);
@@ -82,11 +81,17 @@ public class Main {
                         productoController.eventoListarProductos();
 
                         // Similar para carritoController (así sucesivamente)
+                        carritoController.setCrearCarrito(crearCarritoView);
+                        carritoController.setListaCarrito(listaCarritoView);
+
 
                         MenuController menuController = new MenuController(menuView, usuarioAutenticado);
                         menuController.setUsuarioController(usuarioController);
                         menuController.setCarritoController(carritoController);
                         menuController.setProductoController(productoController);
+                        menuController.setLoginView(loginView);
+                        menuController.setRegistrarUsuario(registrarUsuario);
+                        menuController.setPreguntasSeguridad(preguntasSeguridad);
                         menuController.construirMenus();
 
                         menuView.setVisible(true);
@@ -94,12 +99,14 @@ public class Main {
                         menuController.getMenuCerrarSesion().addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
+                                var handler = Contexto.getHandler();
                                 int opcion = JOptionPane.showConfirmDialog(
                                         menuView,
-                                        "¿Está seguro que desea cerrar sesión?",
-                                        "Confirmar cierre de sesión",
+                                        handler.get("usuario.confirmar.cerrarsesion"),
+                                        handler.get("confirmacion"),
                                         JOptionPane.YES_NO_OPTION
                                 );
+
 
                                 if (opcion == JOptionPane.YES_OPTION) {
                                     // Limpiar usuario en controladores

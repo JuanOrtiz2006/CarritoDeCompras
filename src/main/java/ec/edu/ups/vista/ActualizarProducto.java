@@ -3,6 +3,8 @@ package ec.edu.ups.vista;
 import ec.edu.ups.util.Contexto;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 
 public class ActualizarProducto extends JInternalFrame{
     private JPanel panelGeneral;
@@ -24,12 +26,26 @@ public class ActualizarProducto extends JInternalFrame{
         setClosable(true);
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        lblCodigo.setText(Contexto.getHandler().get("actualizarproducto.lbl.codigo"));
-        lblNombre.setText(Contexto.getHandler().get("actualizarproducto.lbl.nombre"));
-        lblPrecio.setText(Contexto.getHandler().get("actualizarproducto.lbl.precio"));
-        btnSeleccionar.setText(Contexto.getHandler().get("actualizarproducto.btn.seleccionar"));
-        btnActualizar.setText(Contexto.getHandler().get("actualizarproducto.btn.actualizar"));
+        actualizarIdioma();
     }
+
+    public void actualizarIdioma() {
+        var handler = Contexto.getHandler();
+        setTitle(handler.get("actualizarproducto.titulo"));
+        lblCodigo.setText(handler.get("actualizarproducto.lbl.codigo"));
+        lblNombre.setText(handler.get("actualizarproducto.lbl.nombre"));
+        lblPrecio.setText(handler.get("actualizarproducto.lbl.precio"));
+        btnSeleccionar.setText(handler.get("actualizarproducto.btn.seleccionar"));
+        btnActualizar.setText(handler.get("actualizarproducto.btn.actualizar"));
+
+        // Cambiar título del borde, si lo hay
+        Border border = panelGeneral.getBorder();
+        if (border instanceof TitledBorder) {
+            ((TitledBorder) border).setTitle(handler.get("actualizarproducto.borde"));
+            panelGeneral.repaint();
+        }
+    }
+
     public JPanel getPanelGeneral() {
         return panelGeneral;
     }

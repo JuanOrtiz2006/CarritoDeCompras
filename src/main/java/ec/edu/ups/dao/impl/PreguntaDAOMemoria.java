@@ -14,16 +14,17 @@ public class PreguntaDAOMemoria implements PreguntaDAO {
     List<Pregunta> preguntas;
      public PreguntaDAOMemoria(){
          preguntas = new ArrayList<>();
+         crear(new Pregunta(Contexto.getHandler().get("lbl.preguntas.nombremascota"), TipoPregunta.PERSONAL));
+         crear(new Pregunta(Contexto.getHandler().get("lbl.pregunta.peliculafavorita"), TipoPregunta.PERSONAL));
          crear(new Pregunta(Contexto.getHandler().get("lbl.preguntas.nombremadre"), TipoPregunta.FAMILIAR));
          crear(new Pregunta(Contexto.getHandler().get("lbl.pregunta.mejoramigo"), TipoPregunta.FAMILIAR));
-         crear(new Pregunta(Contexto.getHandler().get("lbl.pregunta.primermaestro"), TipoPregunta.TRABAJO));
-         crear(new Pregunta(Contexto.getHandler().get("lbl.pregunta.primertrabajo"), TipoPregunta.TRABAJO));
-         crear(new Pregunta(Contexto.getHandler().get("lbl.pregunta.calleinfancia"), TipoPregunta.LUGAR));
-         crear(new Pregunta(Contexto.getHandler().get("lbl.pregunta.peliculafavorita"), TipoPregunta.LUGAR));
-         crear(new Pregunta(Contexto.getHandler().get("lbl.preguntas.nombremascota"), TipoPregunta.PERSONAL));
-         crear(new Pregunta(Contexto.getHandler().get("lbl.pregunta.ciudad"), TipoPregunta.PERSONAL));
          crear(new Pregunta(Contexto.getHandler().get("lbl.pregunta.comida"), TipoPregunta.HISTORICA));
          crear(new Pregunta(Contexto.getHandler().get("lbl.pregunta.apodoinfancia"), TipoPregunta.HISTORICA));
+         crear(new Pregunta(Contexto.getHandler().get("lbl.pregunta.calleinfancia"), TipoPregunta.LUGAR));
+         crear(new Pregunta(Contexto.getHandler().get("lbl.pregunta.ciudad"), TipoPregunta.LUGAR));
+         crear(new Pregunta(Contexto.getHandler().get("lbl.pregunta.primermaestro"), TipoPregunta.TRABAJO));
+         crear(new Pregunta(Contexto.getHandler().get("lbl.pregunta.primertrabajo"), TipoPregunta.TRABAJO));
+
      }
     @Override
     public void crear(Pregunta pregunta) {
