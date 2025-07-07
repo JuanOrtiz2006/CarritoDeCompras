@@ -27,7 +27,6 @@ public class UsuarioController {
     private RecuperarClave recuperarClave;
     private Usuario usuarioAEditar; // usado solo en modo edición
 
-
     // === Constructor ===
     public UsuarioController(UsuarioDAO usuarioDAO, PreguntaDAO preguntaDAO) {
         this.usuarioDAO = usuarioDAO;
@@ -92,14 +91,21 @@ public class UsuarioController {
 
     private void eventoRegistrarUsuario(boolean modo) {
         registrarUsuario.limpiarCampos();
-
-        registrarUsuario.ejemplos();
         registrarUsuario.actualizarIdioma();
-        // Ejemplo de formato de fecha para ayudar al usuario
-        Date ejemploFecha = new Date();
-        String formatoEjemplo = FormateadorUtils.formatearFecha(ejemploFecha, Contexto.getLocale());
-        registrarUsuario.getTxtFecha().setText(formatoEjemplo);
-        registrarUsuario.getTxtFecha().setToolTipText("Ejemplo: " + formatoEjemplo);
+
+        if (modo) {
+            // modo edición
+            registrarUsuario.getTxtUsuario().setEnabled(false);
+            registrarUsuario.getTxtPassword().setEnabled(false);
+        } else {
+            // modo registro
+            registrarUsuario.getTxtUsuario().setEnabled(true);
+            registrarUsuario.getTxtPassword().setEnabled(true);
+            registrarUsuario.ejemplos();
+        }
+        for (ActionListener al : registrarUsuario.getBtnSiguiente().getActionListeners()) {
+            registrarUsuario.getBtnSiguiente().removeActionListener(al);
+        }
 
         registrarUsuario.getBtnSiguiente().addActionListener(e -> {
             var handler = Contexto.getHandler();
@@ -118,21 +124,14 @@ public class UsuarioController {
                 fechaNacimiento.setTime(fecha);
             } catch (ParseException i) {
                 String mensaje = String.format(
-                        handler.get("usuario.fecha.invalida"),
-                        formatoEjemplo
+                        handler.get("usuario.fecha.invalida")
                 );
                 registrarUsuario.mostrarMensaje(mensaje);
                 return;
             }
 
             Usuario usuariocreado = new Usuario(usuario, contrasenia, Rol.USUARIO);
-            if (modo) {
-                usuariocreado = usuarioAEditar;
-                registrarUsuario.getTxtUsuario().setEnabled(false);
-                registrarUsuario.getTxtPassword().setEnabled(false);
-            } else {
-                usuariocreado = new Usuario(usuario, contrasenia, Rol.USUARIO);
-            }
+
             usuariocreado.setNombre(nombre);
             usuariocreado.setCorreo(correo);
             usuariocreado.setTelefono(telefono);
@@ -147,11 +146,30 @@ public class UsuarioController {
         var handler = Contexto.getHandler();
         preguntasSeguridad.limpiarCampos();
         preguntasSeguridad.actualizarIdioma();
-
         preguntasSeguridad.cargarPreguntas(preguntaDAO.obtenerPreguntas());
         preguntasSeguridad.cargarCheckBox(preguntaDAO.obtenerTipos());
         preguntasSeguridad.setVisible(true);
-
+        for (ActionListener al : preguntasSeguridad.getBtnRegistrarse().getActionListeners()) {
+            preguntasSeguridad.getBtnRegistrarse().removeActionListener(al);
+        }
+        for (ActionListener al : preguntasSeguridad.getBtnActualizar().getActionListeners()) {
+            preguntasSeguridad.getBtnActualizar().removeActionListener(al);
+        }
+        for (ActionListener al : preguntasSeguridad.getCkbTipo1().getActionListeners()) {
+            preguntasSeguridad.getCkbTipo1().removeActionListener(al);
+        }
+        for (ActionListener al : preguntasSeguridad.getCkbTipo2().getActionListeners()) {
+            preguntasSeguridad.getCkbTipo2().removeActionListener(al);
+        }
+        for (ActionListener al : preguntasSeguridad.getCkbTipo3().getActionListeners()) {
+            preguntasSeguridad.getCkbTipo3().removeActionListener(al);
+        }
+        for (ActionListener al : preguntasSeguridad.getCkbTipo4().getActionListeners()) {
+            preguntasSeguridad.getCkbTipo4().removeActionListener(al);
+        }
+        for (ActionListener al : preguntasSeguridad.getCkbTipo5().getActionListeners()) {
+            preguntasSeguridad.getCkbTipo5().removeActionListener(al);
+        }
         preguntasSeguridad.getCkbTipo1().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -202,10 +220,8 @@ public class UsuarioController {
                 }
             }
         });
-
         preguntasSeguridad.getBtnRegistrarse().setVisible(!modo);
         preguntasSeguridad.getBtnActualizar().setVisible(modo);
-
         // Reemplaza el ActionListener del botón "Registrarse" (línea 276 aproximadamente)
         preguntasSeguridad.getBtnRegistrarse().addActionListener(new ActionListener() {
             @Override
@@ -218,6 +234,10 @@ public class UsuarioController {
 
                     // Guardar el usuario en la base de datos
                     try {
+                        if (usuarioDAO.buscarPorUsername(usuariocreado.getUsername()) != null) {
+                            preguntasSeguridad.mostrarMensaje(handler.get("usuario.ya.existe"));
+                            return;
+                        }
                         usuarioDAO.crear(usuariocreado);
                         preguntasSeguridad.mostrarMensaje(handler.get("usuario.actualizado.exito"));
                         preguntasSeguridad.setVisible(false);
@@ -234,18 +254,15 @@ public class UsuarioController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (usuarioAEditar == null) {
-                    preguntasSeguridad.mostrarMensaje("usuario.actualizar.sinusuario");
+                    preguntasSeguridad.mostrarMensaje(handler.get("usuario.actualizar.sinusuario"));
                     return;
                 }
-
                 List<Respuesta> respuestas = recolectarRespuestas();
                 if (respuestas.size() < 3) {
-                    preguntasSeguridad.mostrarMensaje("usuario.preguntas.minimas");
+                    preguntasSeguridad.mostrarMensaje(handler.get("usuario.preguntas.minimas"));
                     return;
                 }
-
                 usuarioAEditar.setRespuestas(respuestas);
-
                 try {
                     usuarioDAO.actualizar(usuarioAEditar);
                     preguntasSeguridad.mostrarMensaje(handler.get("usuario.actualizado.exito"));
@@ -257,26 +274,35 @@ public class UsuarioController {
             }
         });
     }
-
     private void eventoRecuperarClave(){
-        var handler = Contexto.getHandler();
         recuperarClave.limpiarCampos();
         recuperarClave.actualizarIdioma();
         final Usuario[] usuarioEncontrado = new Usuario[1];
+        final Pregunta[] preguntaActual = new Pregunta[1];
+        final Set<Pregunta> preguntasIntentadas = new HashSet<>();
 
         recuperarClave.getBtnBuscar().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String username = recuperarClave.getTxtUsuario().getText();
+                String username = recuperarClave.getTxtUsuario().getText().trim();
                 Usuario usuario = usuarioDAO.buscarPorUsername(username);
-                if(usuario != null){
+
+                if (usuario != null && !usuario.getRespuestas().isEmpty()) {
                     usuarioEncontrado[0] = usuario;
-                    Pregunta pregunta = usuario.obtenerPreguntaParaRecuperacion();
-                    recuperarClave.getLblPregunta().setText(pregunta.getTexto());
+
+                    Pregunta aleatoria = usuario.obtenerPreguntaParaRecuperacion();
+                    while (preguntasIntentadas.contains(aleatoria) && preguntasIntentadas.size() < usuario.getRespuestas().size()) {
+                        aleatoria = usuario.obtenerPreguntaParaRecuperacion(); // asegura pregunta no repetida
+                    }
+                    preguntaActual[0] = aleatoria;
+                    preguntasIntentadas.add(aleatoria);
+
+                    recuperarClave.getLblPregunta().setText(aleatoria.getTexto());
                     recuperarClave.getTxtUsuario().setEnabled(false);
                     recuperarClave.getBtnBuscar().setEnabled(false);
+                    recuperarClave.getPanelAutenticar().setVisible(true);
                 } else {
-                    recuperarClave.mostrarMensaje(handler.get("mensaje.usuario.noencontrado"));
+                    recuperarClave.mostrarMensaje(Contexto.getHandler().get("mensaje.usuario.noencontrado"));
                 }
             }
         });
@@ -284,15 +310,53 @@ public class UsuarioController {
         recuperarClave.getBtnRecuperar().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(usuarioEncontrado[0] != null) {
-                    String respuesta = recuperarClave.getTxtPregunta().getText();
-                    if(usuarioEncontrado[0].verificarRespuesta(respuesta)){
-                        recuperarClave.mostrarMensaje(handler.get("usuario.clave.correcta"));
+                var handler = Contexto.getHandler();
+                if (usuarioEncontrado[0] == null || preguntaActual[0] == null) {
+                    recuperarClave.mostrarMensaje(handler.get("usuario.buscar.primero"));
+                    return;
+                }
+                String respuesta = recuperarClave.getTxtPregunta().getText().trim();
+                boolean esCorrecta = usuarioEncontrado[0].verificarRespuesta(respuesta);
+
+                if (esCorrecta) {
+                    String nuevaClave = JOptionPane.showInputDialog(
+                            recuperarClave,
+                            handler.get("usuario.clave.correcta"),
+                            handler.get("usuario.registro.titulo"),
+                            JOptionPane.PLAIN_MESSAGE
+                    );
+
+                    if (nuevaClave != null && !nuevaClave.trim().isEmpty()) {
+                        usuarioEncontrado[0].cambiarPassword(nuevaClave);
+                        usuarioDAO.actualizar(usuarioEncontrado[0]);
+
+                        recuperarClave.mostrarMensaje(handler.get("usuario.clave.actualizada"));
                     } else {
-                        recuperarClave.mostrarMensaje(handler.get("usuario.respuestas.incorrectas"));
+                        recuperarClave.mostrarMensaje(handler.get("usuario.clave.vacia"));
                     }
+
+                    recuperarClave.setVisible(false);
+                    loginView.setVisible(true);
+
                 } else {
-                    recuperarClave.mostrarMensaje("usuario.buscar.primero");
+                    if (preguntasIntentadas.size() < 2) {
+                        Pregunta nueva = usuarioEncontrado[0].obtenerPreguntaParaRecuperacion();
+                        while (preguntasIntentadas.contains(nueva) && preguntasIntentadas.size() < usuarioEncontrado[0].getRespuestas().size()) {
+                            nueva = usuarioEncontrado[0].obtenerPreguntaParaRecuperacion();
+                        }
+                        preguntaActual[0] = nueva;
+                        preguntasIntentadas.add(nueva);
+
+                        recuperarClave.getLblPregunta().setText(nueva.getTexto());
+                        recuperarClave.getTxtPregunta().setText("");
+                        recuperarClave.mostrarMensaje(handler.get("usuario.respuestas.incorrectas"));
+                    } else {
+                        recuperarClave.mostrarMensaje(handler.get("usuario.registro.error"));
+                        recuperarClave.getBtnBuscar().setEnabled(true);
+                        recuperarClave.getPanelAutenticar().setVisible(false);
+                        recuperarClave.setVisible(false);
+                        loginView.setVisible(true);
+                    }
                 }
             }
         });
@@ -303,6 +367,12 @@ public class UsuarioController {
     private void autenticar() {
         String username = loginView.getTxtUsername().getText();
         String contrasenia = loginView.getTxtPassword().getText();
+
+        if (username.isEmpty() || contrasenia.isEmpty()) {
+            loginView.mostrarMensaje(Contexto.getHandler().get("usuario.campos.vacios"));
+            return;
+        }
+
         usuario = usuarioDAO.autenticar(username, contrasenia);
 
         if (usuario == null) {
@@ -429,9 +499,13 @@ public class UsuarioController {
         registrarUsuario.getTxtUsuario().setEnabled(false); // ¡Muy importante! No permitir cambiar username
         registrarUsuario.getTxtPassword().setText(usuarioAEditar.getPassword());
 
-        String fechaStr = FormateadorUtils.formatearFecha(
-                usuarioAEditar.getFechanacimiento().getTime(), Contexto.getLocale());
-        registrarUsuario.getTxtFecha().setText(fechaStr);
+        if (usuarioAEditar.getFechanacimiento() != null) {
+            String fechaStr = FormateadorUtils.formatearFecha(
+                    usuarioAEditar.getFechanacimiento().getTime(), Contexto.getLocale());
+            registrarUsuario.getTxtFecha().setText(fechaStr);
+        } else {
+            registrarUsuario.getTxtFecha().setText("");
+        }
 
         registrarUsuario.setVisible(true);
 

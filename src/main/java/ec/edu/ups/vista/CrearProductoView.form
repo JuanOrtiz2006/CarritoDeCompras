@@ -40,7 +40,7 @@
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <font name="Courier New" size="14" style="1"/>
+                  <font name="Courier New" style="0"/>
                   <foreground color="-67073"/>
                   <text value="Codigo:"/>
                 </properties>
@@ -53,6 +53,7 @@
                 </constraints>
                 <properties>
                   <columns value="0"/>
+                  <font name="Courier New"/>
                   <toolTipText value="Ingresa el codigo (ej. 1001)"/>
                 </properties>
               </component>
@@ -61,7 +62,7 @@
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <font name="Courier New" size="14" style="1"/>
+                  <font name="Courier New" style="0"/>
                   <foreground color="-67073"/>
                   <text value="Nombre:"/>
                 </properties>
@@ -73,6 +74,7 @@
                   </grid>
                 </constraints>
                 <properties>
+                  <font name="Courier New"/>
                   <toolTipText value="Ingresa el nombre (ej. Producto 1)"/>
                 </properties>
               </component>
@@ -81,7 +83,7 @@
                   <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <font name="Courier New" size="14" style="1"/>
+                  <font name="Courier New" style="0"/>
                   <foreground color="-67073"/>
                   <text value="Precio:"/>
                 </properties>
@@ -93,6 +95,7 @@
                   </grid>
                 </constraints>
                 <properties>
+                  <font name="Courier New"/>
                   <toolTipText value="Ingresa el precio"/>
                 </properties>
               </component>

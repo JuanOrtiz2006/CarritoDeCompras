@@ -9,8 +9,10 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.net.URL;
 import java.util.List;
 
 public class BuscarProducto extends JInternalFrame {
@@ -33,8 +35,11 @@ public class BuscarProducto extends JInternalFrame {
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 
+
         modelo = new DefaultTableModel();
         tblProducto.setModel(modelo);
+
+        btnBuscar.setIcon(cargarIcono("search.png"));
 
         actualizarIdioma();
         cmbBusqueda.addItemListener(new ItemListener() {
@@ -123,4 +128,16 @@ public class BuscarProducto extends JInternalFrame {
             modelo.addRow(filaProducto);
         }
     }
+
+    public ImageIcon cargarIcono(String nombreArchivo) {
+        URL url = getClass().getClassLoader().getResource("icons/" + nombreArchivo);
+        if (url != null) {
+            Image img = new ImageIcon(url).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+            return new ImageIcon(img);
+        } else {
+            System.err.println("Icono no encontrado: iconos/" + nombreArchivo);
+            return null;
+        }
+    }
+
 }

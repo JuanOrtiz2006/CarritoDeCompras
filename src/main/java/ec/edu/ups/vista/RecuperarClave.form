@@ -72,7 +72,9 @@
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <font name="Courier New"/>
+            </properties>
             <border type="none"/>
             <children>
               <grid id="e9bc5" binding="panelPregunta" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -101,6 +103,7 @@
                     </constraints>
                     <properties>
                       <font name="Courier New"/>
+                      <foreground color="-12241615"/>
                     </properties>
                   </component>
                 </children>

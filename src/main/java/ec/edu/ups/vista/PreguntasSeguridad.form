@@ -8,6 +8,8 @@
     <properties>
       <background color="-67073"/>
       <enabled value="true"/>
+      <font name="Courier New"/>
+      <foreground color="-12241615"/>
     </properties>
     <border type="line">
       <color color="-12241615"/>
@@ -89,7 +91,8 @@
                       </grid>
                     </constraints>
                     <properties>
-                      <font name="Courier New" style="0"/>
+                      <font name="Courier New"/>
+                      <foreground color="-12241615"/>
                     </properties>
                   </component>
                 </children>
@@ -121,7 +124,8 @@
                       </grid>
                     </constraints>
                     <properties>
-                      <font name="Courier New" style="0"/>
+                      <font name="Courier New"/>
+                      <foreground color="-12241615"/>
                     </properties>
                   </component>
                 </children>
@@ -153,7 +157,8 @@
                       </grid>
                     </constraints>
                     <properties>
-                      <font name="Courier New" style="0"/>
+                      <font name="Courier New"/>
+                      <foreground color="-12241615"/>
                     </properties>
                   </component>
                 </children>
@@ -185,7 +190,8 @@
                       </grid>
                     </constraints>
                     <properties>
-                      <font name="Courier New" style="0"/>
+                      <font name="Courier New"/>
+                      <foreground color="-12241615"/>
                     </properties>
                   </component>
                 </children>
@@ -217,7 +223,8 @@
                       </grid>
                     </constraints>
                     <properties>
-                      <font name="Courier New" style="0"/>
+                      <font name="Courier New"/>
+                      <foreground color="-12241615"/>
                     </properties>
                   </component>
                 </children>
@@ -249,7 +256,8 @@
                       </grid>
                     </constraints>
                     <properties>
-                      <font name="Courier New" style="0"/>
+                      <font name="Courier New"/>
+                      <foreground color="-12241615"/>
                     </properties>
                   </component>
                 </children>
@@ -281,7 +289,8 @@
                       </grid>
                     </constraints>
                     <properties>
-                      <font name="Courier New" style="0"/>
+                      <font name="Courier New"/>
+                      <foreground color="-12241615"/>
                     </properties>
                   </component>
                 </children>
@@ -313,7 +322,8 @@
                       </grid>
                     </constraints>
                     <properties>
-                      <font name="Courier New" style="0"/>
+                      <font name="Courier New"/>
+                      <foreground color="-12241615"/>
                     </properties>
                   </component>
                 </children>
@@ -345,7 +355,8 @@
                       </grid>
                     </constraints>
                     <properties>
-                      <font name="Courier New" style="0"/>
+                      <font name="Courier New"/>
+                      <foreground color="-12241615"/>
                     </properties>
                   </component>
                 </children>
@@ -377,7 +388,8 @@
                       </grid>
                     </constraints>
                     <properties>
-                      <font name="Courier New" style="0"/>
+                      <font name="Courier New"/>
+                      <foreground color="-12241615"/>
                     </properties>
                   </component>
                 </children>

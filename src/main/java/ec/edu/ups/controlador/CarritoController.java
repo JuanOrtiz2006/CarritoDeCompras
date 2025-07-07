@@ -1,10 +1,7 @@
 package ec.edu.ups.controlador;
 
 import ec.edu.ups.dao.*;
-import ec.edu.ups.modelo.Carrito;
-import ec.edu.ups.modelo.ItemCarrito;
-import ec.edu.ups.modelo.Producto;
-import ec.edu.ups.modelo.Usuario;
+import ec.edu.ups.modelo.*;
 import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.vista.*;
 
@@ -203,7 +200,7 @@ public class CarritoController {
         carrito.setUsuario(usuario);
 
         carritoDAO.crear(carrito);
-        crearCarrito.mostrarMensaje(String.format("%s %s", handler.get("mensaje.carrito.creado"), usuario.getUsername()));
+        crearCarrito.mostrarMensaje(String.format(handler.get("mensaje.carrito.creado"), usuario.getUsername()));
         crearCarrito.limpiarFormulario();
         crearCarrito.setVisible(false);
         modoEdicion = false;
@@ -259,8 +256,15 @@ public class CarritoController {
         DefaultTableModel modelo = (DefaultTableModel) listaCarrito.getTblCarritos().getModel();
         modelo.setRowCount(0);
 
-        // CAMBIO: Mostrar solo carritos del usuario actual
-        for (Carrito c : carritoDAO.listarCarritosPorUsuario(this.usuario)) {
+        List<Carrito> listaCarritos;
+
+        if (usuario != null && usuario.getRol() == Rol.ADMINISTRADOR) {
+            listaCarritos = carritoDAO.listarCarritos(); // todos
+        } else {
+            listaCarritos = carritoDAO.listarCarritosPorUsuario(this.usuario); // solo suyos
+        }
+
+        for (Carrito c : listaCarritos) {
             modelo.addRow(new Object[]{
                     c.getUsuario().getUsername(),
                     c.getCodigo(),
@@ -268,6 +272,7 @@ public class CarritoController {
                     FormateadorUtils.formatearMoneda(c.calcularTotal(), Contexto.getLocale())
             });
         }
+
     }
 
     private void cargarCarritoEnTabla(Carrito c) {

@@ -4,6 +4,8 @@ import ec.edu.ups.util.Contexto;
 import ec.edu.ups.util.FormateadorUtils;
 
 import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
 import java.util.Date;
 
 public class RegistrarUsuario extends JFrame {
@@ -41,6 +43,8 @@ public class RegistrarUsuario extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
         setLocationRelativeTo(null);
+
+        btnGuardar.setIcon(cargarIcono("save.png"));
 
         actualizarIdioma();
     }
@@ -155,5 +159,17 @@ public class RegistrarUsuario extends JFrame {
         JOptionPane.showMessageDialog(null,mensaje);
 
     }
+
+    public ImageIcon cargarIcono(String nombreArchivo) {
+        URL url = getClass().getClassLoader().getResource("icons/" + nombreArchivo);
+        if (url != null) {
+            Image img = new ImageIcon(url).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+            return new ImageIcon(img);
+        } else {
+            System.err.println("Icono no encontrado: iconos/" + nombreArchivo);
+            return null;
+        }
+    }
+
 
 }

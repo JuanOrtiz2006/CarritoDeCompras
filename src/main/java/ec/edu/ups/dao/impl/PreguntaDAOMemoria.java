@@ -33,11 +33,6 @@ public class PreguntaDAOMemoria implements PreguntaDAO {
     }
 
     @Override
-    public List<Pregunta> listarTodos() {
-        return preguntas;
-    }
-
-    @Override
     public String[] obtenerPreguntas() {
         int size=preguntas.size();
         String[] preguntasString = new String[size];

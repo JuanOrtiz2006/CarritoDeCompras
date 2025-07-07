@@ -7,6 +7,8 @@
     </constraints>
     <properties>
       <background color="-67073"/>
+      <font name="Courier New"/>
+      <foreground color="-12241615"/>
     </properties>
     <border type="line" title="Registrar Usuario" title-justification="2">
       <font name="Courier New" size="22" style="0"/>
@@ -62,6 +64,7 @@
                     </constraints>
                     <properties>
                       <font name="Courier New"/>
+                      <foreground color="-12241615"/>
                     </properties>
                   </component>
                 </children>
@@ -94,6 +97,7 @@
                     </constraints>
                     <properties>
                       <font name="Courier New"/>
+                      <foreground color="-12241615"/>
                     </properties>
                   </component>
                 </children>
@@ -126,6 +130,7 @@
                     </constraints>
                     <properties>
                       <font name="Courier New"/>
+                      <foreground color="-12241615"/>
                     </properties>
                   </component>
                 </children>
@@ -158,6 +163,7 @@
                     </constraints>
                     <properties>
                       <font name="Courier New"/>
+                      <foreground color="-12241615"/>
                     </properties>
                   </component>
                 </children>
@@ -222,6 +228,7 @@
                     </constraints>
                     <properties>
                       <font name="Courier New"/>
+                      <foreground color="-12241615"/>
                     </properties>
                   </component>
                 </children>
@@ -254,6 +261,7 @@
                     </constraints>
                     <properties>
                       <font name="Courier New"/>
+                      <foreground color="-12241615"/>
                     </properties>
                   </component>
                 </children>

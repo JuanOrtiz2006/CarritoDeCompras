@@ -5,6 +5,8 @@ import ec.edu.ups.util.Contexto;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.net.URL;
 
 public class CrearProductoView extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -27,6 +29,7 @@ public class CrearProductoView extends JInternalFrame {
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 
+        btnAceptar.setIcon(cargarIcono("product.png"));
         actualizarIdioma();
     }
 
@@ -45,6 +48,8 @@ public class CrearProductoView extends JInternalFrame {
             ((TitledBorder) border).setTitle(handler.get("crearproducto.borde"));
             panelPrincipal.repaint(); // Para que se refleje el nuevo texto
         }
+
+        btnAceptar.setIcon(cargarIcono("product.png"));
     }
 
     public JTextField getTxtPrecio() {
@@ -71,6 +76,17 @@ public class CrearProductoView extends JInternalFrame {
         txtCodigo.setText("");
         txtNombre.setText("");
         txtPrecio.setText("");
+    }
+
+    public ImageIcon cargarIcono(String nombreArchivo) {
+        URL url = getClass().getClassLoader().getResource("icons/" + nombreArchivo);
+        if (url != null) {
+            Image img = new ImageIcon(url).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+            return new ImageIcon(img);
+        } else {
+            System.err.println("Icono no encontrado: iconos/" + nombreArchivo);
+            return null;
+        }
     }
 
 }

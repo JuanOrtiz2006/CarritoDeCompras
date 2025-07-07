@@ -5,6 +5,8 @@ import ec.edu.ups.util.Contexto;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.net.URL;
 
 public class ActualizarProducto extends JInternalFrame{
     private JPanel panelGeneral;
@@ -26,6 +28,9 @@ public class ActualizarProducto extends JInternalFrame{
         setClosable(true);
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+
+        btnSeleccionar.setIcon(cargarIcono("check.png"));
+        btnActualizar.setIcon(cargarIcono("update.png"));
         actualizarIdioma();
     }
 
@@ -87,4 +92,16 @@ public class ActualizarProducto extends JInternalFrame{
     public void limpiarCampos() {
         txtCodigo.setText("");
     }
+
+    public ImageIcon cargarIcono(String nombreArchivo) {
+        URL url = getClass().getClassLoader().getResource("icons/" + nombreArchivo);
+        if (url != null) {
+            Image img = new ImageIcon(url).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+            return new ImageIcon(img);
+        } else {
+            System.err.println("Icono no encontrado: iconos/" + nombreArchivo);
+            return null;
+        }
+    }
+
 }

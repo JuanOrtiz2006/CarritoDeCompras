@@ -8,6 +8,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.net.URL;
 import java.util.List;
 
 public class ListaProducto extends JInternalFrame{
@@ -28,6 +30,7 @@ public class ListaProducto extends JInternalFrame{
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 
+        btnListar.setIcon(cargarIcono("list.png"));
         modelo = new DefaultTableModel();
         tblProductos.setModel(modelo);
 
@@ -88,6 +91,17 @@ public class ListaProducto extends JInternalFrame{
         for (Producto producto : productos) {
             Object[] filaProducto = {producto.getCodigo(), producto.getNombre(), FormateadorUtils.formatearMoneda(producto.getPrecio(), Contexto.getLocale())};
             modelo.addRow(filaProducto);
+        }
+    }
+
+    public ImageIcon cargarIcono(String nombreArchivo) {
+        URL url = getClass().getClassLoader().getResource("icons/" + nombreArchivo);
+        if (url != null) {
+            Image img = new ImageIcon(url).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+            return new ImageIcon(img);
+        } else {
+            System.err.println("Icono no encontrado: iconos/" + nombreArchivo);
+            return null;
         }
     }
 }

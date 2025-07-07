@@ -30,14 +30,14 @@ public class MenuView extends JFrame {
 
     public MenuView() {
         setTitle("Menú");
-        setSize(520, 560);
+        setSize(920, 560);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         jDesktopPane = new PanelGrafico();
         menuBar = new JMenuBar();
         setContentPane(jDesktopPane);
-        setJMenuBar(menuBar); // No cambiar esto, JFrame usa javax.swing.JMenuBar
+        setJMenuBar(menuBar);
     }
     // Getters y Setters para que el controlador configure la vista
     public JDesktopPane getjDesktopPane() {

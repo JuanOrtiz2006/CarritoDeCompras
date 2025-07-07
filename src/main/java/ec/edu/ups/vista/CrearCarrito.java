@@ -7,6 +7,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.net.URL;
 
 public class CrearCarrito extends JInternalFrame{
     private JPanel panelGeneral;
@@ -42,7 +44,7 @@ public class CrearCarrito extends JInternalFrame{
     public CrearCarrito(){
         setContentPane(panelGeneral);
         setTitle(Contexto.getHandler().get("crearcarrito.titulo"));
-        setSize(800, 500);
+        setSize(900, 500);
         setClosable(true);
         setMaximizable(true);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
@@ -51,6 +53,17 @@ public class CrearCarrito extends JInternalFrame{
         tblProductos.setModel(modeloItems);
         modeloTotales = new DefaultTableModel();
         tblTotal.setModel(modeloTotales);
+
+
+        btnSeleccionar.setIcon(cargarIcono("check.png"));
+        btnAgregar.setIcon(cargarIcono("plus.png"));
+        btnVaciar.setIcon(cargarIcono("clear.png"));
+        btnGuardar.setIcon(cargarIcono("shoppingCart.png"));
+        btnEditar.setIcon(cargarIcono("edit.png"));
+
+        actualizarIdioma();
+
+
 
         actualizarIdioma();
 
@@ -191,4 +204,16 @@ public class CrearCarrito extends JInternalFrame{
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
+
+    public ImageIcon cargarIcono(String nombreArchivo) {
+        URL url = getClass().getClassLoader().getResource("icons/" + nombreArchivo);
+        if (url != null) {
+            Image img = new ImageIcon(url).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+            return new ImageIcon(img);
+        } else {
+            System.err.println("Icono no encontrado: iconos/" + nombreArchivo);
+            return null;
+        }
+    }
+
 }

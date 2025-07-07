@@ -19,7 +19,6 @@ public class MenuController {
     private LoginView loginView;
     private RegistrarUsuario registrarUsuario;
     private PreguntasSeguridad preguntasSeguridad;
-    private RecuperarClave recuperarClave;
 
     public MenuController(MenuView menuView, Usuario usuario) {
         this.menuView = menuView;
@@ -202,7 +201,5 @@ public class MenuController {
         this.preguntasSeguridad = preguntasSeguridad;
     }
 
-    public void setRecuperarClave(RecuperarClave recuperarClave) {
-        this.recuperarClave = recuperarClave;
-    }
+
 }

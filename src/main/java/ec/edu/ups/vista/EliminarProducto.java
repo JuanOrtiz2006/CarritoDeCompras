@@ -5,6 +5,8 @@ import ec.edu.ups.util.Contexto;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.net.URL;
 
 public class EliminarProducto extends JInternalFrame {
     private JPanel panelGeneral;
@@ -29,6 +31,9 @@ public class EliminarProducto extends JInternalFrame {
 
         txtNombre.setEnabled(false);
         txtPrecio.setEnabled(false);
+
+        btnSeleccionar.setIcon(cargarIcono("check.png"));
+        btnEliminar.setIcon(cargarIcono("delete.png"));
 
         actualizarIdioma();
     }
@@ -82,5 +87,16 @@ public class EliminarProducto extends JInternalFrame {
 
     public void limpiarCampos() {
         txtCodigo.setText("");
+    }
+
+    public ImageIcon cargarIcono(String nombreArchivo) {
+        URL url = getClass().getClassLoader().getResource("icons/" + nombreArchivo);
+        if (url != null) {
+            Image img = new ImageIcon(url).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+            return new ImageIcon(img);
+        } else {
+            System.err.println("Icono no encontrado: iconos/" + nombreArchivo);
+            return null;
+        }
     }
 }

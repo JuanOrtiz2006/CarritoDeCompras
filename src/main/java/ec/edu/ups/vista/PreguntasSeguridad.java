@@ -3,6 +3,8 @@ package ec.edu.ups.vista;
 import ec.edu.ups.util.Contexto;
 
 import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
 
 public class PreguntasSeguridad extends JFrame {
     private JPanel panelGeneral;
@@ -70,6 +72,9 @@ public class PreguntasSeguridad extends JFrame {
         deshabilitarPreguntasTipo4();
         deshabilitarPreguntasTipo5();
 
+        btnRegistrarse.setIcon(cargarIcono("addUser.png"));
+        btnActualizar.setIcon(cargarIcono("upload.png"));
+
         actualizarIdioma();
 
     }
@@ -78,6 +83,7 @@ public class PreguntasSeguridad extends JFrame {
         var handler = Contexto.getHandler();
 
         setTitle(handler.get("lbl.preguntas.titulo"));
+        lblTitulo.setText(handler.get("lbl.preguntas.titulo"));
         btnRegistrarse.setText(handler.get("login.registrar"));
         btnActualizar.setText(handler.get("usuario.btn.guardar"));
 
@@ -93,7 +99,6 @@ public class PreguntasSeguridad extends JFrame {
                 handler.get("lbl.pregunta.peliculafavorita"),
                 handler.get("lbl.pregunta.apodoinfancia")
         });
-
         cargarCheckBox(new String[]{
                 handler.get("tipo.pregunta.1"),
                 handler.get("tipo.pregunta.2"),
@@ -290,24 +295,6 @@ public class PreguntasSeguridad extends JFrame {
         ckbTipo5.setText(tipos[4]);
     }
 
-    public void activarModoEdicion() {
-        this.modoEdicion = true;
-    }
-
-    public void activarModoRegistro() {
-        this.modoEdicion = false;
-        limpiarCampos();
-    }
-
-    public boolean isModoEdicion() {
-        return modoEdicion;
-    }
-
-    public void cambiarTextoBotonRegistro(String texto) {
-        btnRegistrarse.setText(texto);
-    }
-
-
     public void limpiarCampos(){
         ckbTipo1.setSelected(false);
         ckbTipo2.setSelected(false);
@@ -327,4 +314,16 @@ public class PreguntasSeguridad extends JFrame {
         txtPregunta10.setText("");
 
     }
+
+    public ImageIcon cargarIcono(String nombreArchivo) {
+        URL url = getClass().getClassLoader().getResource("icons/" + nombreArchivo);
+        if (url != null) {
+            Image img = new ImageIcon(url).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+            return new ImageIcon(img);
+        } else {
+            System.err.println("Icono no encontrado: iconos/" + nombreArchivo);
+            return null;
+        }
+    }
+
 }

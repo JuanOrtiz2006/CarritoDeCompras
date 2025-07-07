@@ -5,6 +5,8 @@ import ec.edu.ups.util.Contexto;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.net.URL;
 
 public class LoginView extends JFrame{
     private JPanel panelGeneral;
@@ -23,8 +25,12 @@ public class LoginView extends JFrame{
         setContentPane(panelGeneral);
         setTitle(Contexto.getHandler().get("login.titulo"));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 400);
+        setSize(600, 200);
         setLocationRelativeTo(null);
+
+        btnLogin.setIcon(cargarIcono("login.png"));
+        btnRecuperar.setIcon(cargarIcono("restore.png"));
+        btnRegistrar.setIcon(cargarIcono("registration.png"));
 
         actualizarIdioma();
     }
@@ -71,5 +77,20 @@ public class LoginView extends JFrame{
     public void mostrarMensaje(String mensaje){
         JOptionPane.showMessageDialog(null,mensaje);
     }
+
+
+    public ImageIcon cargarIcono(String nombreArchivo) {
+        URL url = getClass().getClassLoader().getResource("icons/" + nombreArchivo);
+        if (url != null) {
+            Image img = new ImageIcon(url).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+            return new ImageIcon(img);
+        } else {
+            System.err.println("Icono no encontrado: iconos/" + nombreArchivo);
+            return null;
+        }
+    }
+
+
+
 
 }

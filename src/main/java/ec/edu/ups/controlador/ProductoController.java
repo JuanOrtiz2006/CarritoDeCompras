@@ -182,6 +182,7 @@ public class ProductoController {
                 productoDAO.actualizar(new Producto(codigo, nombre, precio));
                 actualizarProducto.limpiarCampos();
                 JOptionPane.showMessageDialog(null, handler.get("mensaje.producto.actualizado"));
+                actualizarProducto.limpiarCampos();
             } catch (NumberFormatException e) {
                 actualizarProducto.mostrarMensaje(handler.get("mensaje.producto.errorcodigo"));
             }
