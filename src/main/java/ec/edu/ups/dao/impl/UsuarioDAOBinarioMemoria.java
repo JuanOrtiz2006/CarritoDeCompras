@@ -24,7 +24,7 @@ public class UsuarioDAOBinarioMemoria implements UsuarioDAO {
         this.rutaArchivo = carpeta + File.separator + "usuarios.dat";
         this.usuarios = leerUsuariosDesdeArchivo();
         crear(new Usuario("0103527966","Jp1034506_Ot        ",Rol.ADMINISTRADOR));
-    }
+}
 
     /**
      * Autentica un usuario comparando el nombre de usuario y la contraseña.

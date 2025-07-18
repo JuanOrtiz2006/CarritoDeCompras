@@ -1,5 +1,7 @@
 package ec.edu.ups.modelo;
 
+import java.io.Serializable;
+
 /**
  * Clase que representa un producto en el sistema.
  * Contiene información básica como código, nombre y precio.
@@ -7,7 +9,9 @@ package ec.edu.ups.modelo;
  * @author JuanOrtiz2006
  * @version 1.0
  */
-public class Producto {
+public class Producto implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     /**
      * Código único del producto.
      */

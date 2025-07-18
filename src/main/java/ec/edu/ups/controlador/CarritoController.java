@@ -10,6 +10,7 @@ import ec.edu.ups.util.Contexto;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -499,13 +500,13 @@ public class CarritoController {
                 carrito.actualizarProducto(new ItemCarrito(producto, cantidad));
             }
             String fechaTexto = crearCarrito.getTxtFecha().getText();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            Date fecha = sdf.parse(fechaTexto);
+            DateFormat formato = DateFormat.getDateInstance(DateFormat.MEDIUM, Contexto.getLocale());
+            Date fecha = formato.parse(fechaTexto);
             GregorianCalendar fechaGC = new GregorianCalendar();
             fechaGC.setTime(fecha);
             carrito.setFecha(fechaGC);
         } catch (ParseException e) {
-            crearCarrito.mostrarMensaje(Contexto.getHandler().get("error de formato de fecha"));
+            crearCarrito.mostrarMensaje(Contexto.getHandler().get("error.de.formato.de.fecha"));
             return;
         }
 
