@@ -1,12 +1,30 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.util.Contexto;
+import ec.edu.ups.util.LimiteCaracter;
 
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
 import java.awt.*;
 import java.net.URL;
 
+/**
+ * Vista (JFrame) para la recuperación de contraseña de usuario.
+ * <p>
+ * Esta clase representa la ventana donde el usuario puede ingresar su nombre de usuario
+ * para buscar la pregunta de seguridad y recuperar su clave. Incluye campos para el usuario,
+ * la pregunta de seguridad y botones para buscar y recuperar la contraseña.
+ * <p>
+ * Soporta internacionalización de textos y validaciones de formato en los campos.
+ *
+ * @author JuanOrtiz2006
+ * @version 1.0
+ */
+
 public class RecuperarClave extends JFrame {
+    /**
+     * Componentes de la interfaz gráfica.
+     */
     private JPanel panelGeneral;
     private JPanel panelCentral;
     private JTextField txtUsuario;
@@ -19,6 +37,10 @@ public class RecuperarClave extends JFrame {
     private JPanel panelPregunta;
     private JLabel lblPregunta;
 
+    /**
+     * Constructor de la clase RecuperarClave.
+     * Configura la ventana, los botones y los campos de texto.
+     */
     public RecuperarClave(){
         setContentPane(panelGeneral);
         setTitle(Contexto.getHandler().get("lbl.preguntas.titulo"));
@@ -29,11 +51,15 @@ public class RecuperarClave extends JFrame {
         btnBuscar.setIcon(cargarIcono("search.png"));
         btnRecuperar.setIcon(cargarIcono("restore.png"));
 
-
+        validaciones();
         actualizarIdioma();
         panelAutenticar.setVisible(false);
     }
 
+    /**
+     * Actualiza los textos de la interfaz gráfica según el idioma configurado.
+     * Utiliza el manejador de contexto para obtener los textos localizados.
+     */
     public void actualizarIdioma() {
         var handler = Contexto.getHandler();
 
@@ -43,12 +69,19 @@ public class RecuperarClave extends JFrame {
         btnRecuperar.setText(handler.get("usuario.btn.guardar"));
     }
 
+    /**
+     * Limpia los campos de texto de usuario y pregunta.
+     * Este metodo se utiliza para reiniciar el formulario después de una operación.
+     */
     public void limpiarCampos(){
         txtUsuario.setText("");
         txtPregunta.setText("");
 
     }
 
+    /**
+     * getters para acceder a los componentes de la interfaz gráfica.
+     */
     public JTextField getTxtUsuario() {
         return txtUsuario;
     }
@@ -73,6 +106,13 @@ public class RecuperarClave extends JFrame {
         return panelAutenticar;
     }
 
+
+    /**
+     * Muestra un mensaje en un cuadro de diálogo.
+     * Utiliza JOptionPane para mostrar mensajes al usuario.
+     *
+     * @param mensaje El mensaje a mostrar.
+     */
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(null, mensaje);
     }
@@ -88,5 +128,14 @@ public class RecuperarClave extends JFrame {
         }
     }
 
+    /**
+     * Configura los filtros de validación para los campos de texto.
+     * Establece límites de caracteres y formatos específicos para cada campo.
+     * Utiliza LimiteCaracter para restringir la entrada del usuario.
+     */
+    public void validaciones(){
+        ((AbstractDocument) txtUsuario.getDocument()).setDocumentFilter(new LimiteCaracter(10,true));
+        ((AbstractDocument) txtPregunta.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));
 
+    }
 }

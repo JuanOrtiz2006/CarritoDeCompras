@@ -14,6 +14,14 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.*;
 
+/**
+ * Controlador para la gestión de usuarios.
+ * Administra la autenticación, registro, edición, eliminación y recuperación de usuarios,
+ * así como la interacción con las vistas y los DAOs correspondientes.
+ *
+ * @author JuanOrtiz2006
+ * @version 1.0
+ */
 public class UsuarioController {
 
     // === Atributos ===
@@ -28,6 +36,12 @@ public class UsuarioController {
     private Usuario usuarioAEditar; // usado solo en modo edición
 
     // === Constructor ===
+    /**
+     * Constructor que inicializa el controlador con los DAOs de usuario y pregunta.
+     *
+     * @param usuarioDAO DAO para usuarios.
+     * @param preguntaDAO DAO para preguntas de seguridad.
+     */
     public UsuarioController(UsuarioDAO usuarioDAO, PreguntaDAO preguntaDAO) {
         this.usuarioDAO = usuarioDAO;
         this.preguntaDAO = preguntaDAO;
@@ -35,36 +49,67 @@ public class UsuarioController {
     }
 
     // === Setters de vistas ===
+    /**
+     * Asigna la vista de login.
+     * @param loginView Vista de login.
+     */
     public void setLoginView(LoginView loginView) {
         this.loginView = loginView;
     }
 
+    /**
+     * Asigna la vista de gestión de usuarios.
+     * @param gestionUsuarios Vista de gestión de usuarios.
+     */
     public void setGestionUsuarios(GestionUsuarios gestionUsuarios) {
         this.gestionUsuarios = gestionUsuarios;
     }
 
+    /**
+     * Asigna la vista de registro de usuario.
+     * @param registrarUsuario Vista de registro.
+     */
     public void setRegistrarUsuario(RegistrarUsuario registrarUsuario) {
         this.registrarUsuario = registrarUsuario;
     }
 
+    /**
+     * Asigna la vista de preguntas de seguridad.
+     * @param preguntasSeguridad Vista de preguntas de seguridad.
+     */
     public void setPreguntasSeguridad(PreguntasSeguridad preguntasSeguridad) {
         this.preguntasSeguridad = preguntasSeguridad;
     }
 
+    /**
+     * Asigna el usuario autenticado.
+     * @param usuario Usuario autenticado.
+     */
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
 
+    /**
+     * Asigna la vista de recuperación de clave.
+     * @param recuperarClave Vista de recuperación de clave.
+     */
     public void setRecuperarClave(RecuperarClave recuperarClave) {
         this.recuperarClave = recuperarClave;
     }
 
+    /**
+     * Obtiene el usuario autenticado actualmente.
+     * @return Usuario autenticado.
+     */
     public Usuario getUsuarioAutenticado() {
         return usuario;
     }
 
     //eventosVistas
 
+    /**
+     * Configura los eventos de la vista de login.
+     */
     public void eventosLogin() {
         loginView.getBtnLogin().addActionListener(e -> autenticar());
         loginView.getBtnRegistrar().addActionListener(new ActionListener() {
@@ -82,6 +127,9 @@ public class UsuarioController {
         });
     }
 
+    /**
+     * Configura los eventos de la vista de gestión de usuarios.
+     */
     public void eventosGestionUsuario() {
         gestionUsuarios.getBtnBuscar().addActionListener(e -> buscarUsuario());
         gestionUsuarios.getBtnListar().addActionListener(e -> listar());
@@ -89,6 +137,10 @@ public class UsuarioController {
         activarAccionesEnTablaUsuarios();
     }
 
+    /**
+     * Configura el evento para registrar o editar usuario.
+     * @param modo true para edición, false para registro.
+     */
     private void eventoRegistrarUsuario(boolean modo) {
         registrarUsuario.limpiarCampos();
         registrarUsuario.actualizarIdioma();
@@ -103,6 +155,7 @@ public class UsuarioController {
             registrarUsuario.getTxtPassword().setEnabled(true);
             registrarUsuario.ejemplos();
         }
+
         for (ActionListener al : registrarUsuario.getBtnSiguiente().getActionListeners()) {
             registrarUsuario.getBtnSiguiente().removeActionListener(al);
         }
@@ -110,38 +163,92 @@ public class UsuarioController {
         registrarUsuario.getBtnSiguiente().addActionListener(e -> {
             var handler = Contexto.getHandler();
 
-            String nombre = registrarUsuario.getTxtNombre().getText();
-            String fechaTexto = registrarUsuario.getTxtFecha().getText();
-            String correo = registrarUsuario.getTxtCorreo().getText();
-            String telefono = registrarUsuario.getTxtTelefono().getText();
-            String usuario = registrarUsuario.getTxtUsuario().getText();
-            String contrasenia = registrarUsuario.getTxtPassword().getText();
+            String nombre = registrarUsuario.getTxtNombre().getText().trim();
+            String fechaTexto = registrarUsuario.getTxtFecha().getText().trim();
+            String correo = registrarUsuario.getTxtCorreo().getText().trim();
+            String telefono = registrarUsuario.getTxtTelefono().getText().trim();
+            String usuario = registrarUsuario.getTxtUsuario().getText().trim(); // cédula
+            String contrasenia = registrarUsuario.getTxtPassword().getText().trim();
 
+            //Validar campos vacíos
+            if (nombre.isEmpty() || fechaTexto.isEmpty() || correo.isEmpty() || telefono.isEmpty()
+                    || usuario.isEmpty() || contrasenia.isEmpty()) {
+                registrarUsuario.mostrarMensaje(handler.get("usuario.campos.vacios")); // Mensaje: "Todos los campos son obligatorios."
+                return;
+            }
+
+            //Validar fecha
             GregorianCalendar fechaNacimiento = new GregorianCalendar();
             try {
                 DateFormat formato = DateFormat.getDateInstance(DateFormat.MEDIUM, Contexto.getLocale());
                 Date fecha = formato.parse(fechaTexto);
                 fechaNacimiento.setTime(fecha);
             } catch (ParseException i) {
-                String mensaje = String.format(
-                        handler.get("usuario.fecha.invalida")
-                );
-                registrarUsuario.mostrarMensaje(mensaje);
+                registrarUsuario.mostrarMensaje(handler.get("usuario.fecha.invalida")); // "Formato de fecha inválido"
                 return;
             }
 
+            //Crear usuario para aplicar validaciones del modelo
             Usuario usuariocreado = new Usuario(usuario, contrasenia, Rol.USUARIO);
-
             usuariocreado.setNombre(nombre);
             usuariocreado.setCorreo(correo);
             usuariocreado.setTelefono(telefono);
             usuariocreado.setFechanacimiento(fechaNacimiento);
 
+            // 4. Validaciones de mínimo/máximo
+            if (nombre.length() < 3) {
+                registrarUsuario.mostrarMensaje("El nombre debe tener al menos 3 caracteres.");
+                return;
+            }
+
+            if (telefono.length() != 10 || !telefono.matches("\\d+")) {
+                registrarUsuario.mostrarMensaje("El teléfono debe tener exactamente 10 dígitos numéricos.");
+                return;
+            }
+
+            if (usuario.length() != 10 || !usuario.matches("\\d+")) {
+                registrarUsuario.mostrarMensaje("La cédula debe tener exactamente 10 dígitos.");
+                return;
+            }
+
+            if (!usuariocreado.validarCedulaEcuatoriana()) {
+                registrarUsuario.mostrarMensaje("La cédula ingresada no es válida.");
+                return;
+            }
+
+            if (!usuariocreado.validarCorreoElectronico()) {
+                registrarUsuario.mostrarMensaje("El correo electrónico no tiene un formato válido.");
+                return;
+            }
+
+            if (!usuariocreado.validarPasswordSegura()) {
+                registrarUsuario.mostrarMensaje("La contraseña debe tener al menos 6 caracteres, una mayúscula, una minúscula y un símbolo (@, _, -, .).");
+                return;
+            }
+
+            //Rellenar los campos a longitud fija
+            nombre = String.format("%-20s", nombre);
+            correo = String.format("%-15s", correo);
+            contrasenia = String.format("%-20s", contrasenia);
+
+            usuariocreado.setNombre(nombre);
+            usuariocreado.setCorreo(correo);
+            usuariocreado.setPassword(contrasenia);
+
+
+            //Sitodo es valido continuar al siguiente paso
             registrarUsuario.setVisible(false);
             eventoPreguntasSeguridad(usuariocreado, modo);
         });
+
+
     }
 
+    /**
+     * Configura el evento para preguntas de seguridad en registro o edición.
+     * @param usuariocreado Usuario a registrar o editar.
+     * @param modo true para edición, false para registro.
+     */
     public void eventoPreguntasSeguridad(Usuario usuariocreado, boolean modo) {
         var handler = Contexto.getHandler();
         preguntasSeguridad.limpiarCampos();
@@ -237,17 +344,17 @@ public class UsuarioController {
                         if (usuarioDAO.buscarPorUsername(usuariocreado.getUsername()) != null) {
                             preguntasSeguridad.mostrarMensaje(handler.get("usuario.ya.existe"));
                             return;
-                        }
-                        usuarioDAO.crear(usuariocreado);
-                        preguntasSeguridad.mostrarMensaje(handler.get("usuario.actualizado.exito"));
-                        preguntasSeguridad.setVisible(false);
-                        loginView.setVisible(true);
-                    } catch (Exception ex) {
-                        preguntasSeguridad.mostrarMensaje(handler.get("usuario.registro.error") + ex.getMessage());
                     }
-                } else {
-                    preguntasSeguridad.mostrarMensaje(handler.get("usuario.preguntas.minimas"));
+                    usuarioDAO.crear(usuariocreado);
+                    preguntasSeguridad.mostrarMensaje(handler.get("usuario.actualizado.exito"));
+                    preguntasSeguridad.setVisible(false);
+                    loginView.setVisible(true);
+                } catch (Exception ex) {
+                    preguntasSeguridad.mostrarMensaje(handler.get("usuario.registro.error") + ex.getMessage());
                 }
+            } else {
+                preguntasSeguridad.mostrarMensaje(handler.get("usuario.preguntas.minimas"));
+            }
             }
         });
         preguntasSeguridad.getBtnActualizar().addActionListener(new ActionListener() {
@@ -274,6 +381,10 @@ public class UsuarioController {
             }
         });
     }
+
+    /**
+     * Configura el evento para recuperación de clave.
+     */
     private void eventoRecuperarClave(){
         recuperarClave.limpiarCampos();
         recuperarClave.actualizarIdioma();
@@ -286,6 +397,7 @@ public class UsuarioController {
             public void actionPerformed(ActionEvent e) {
                 String username = recuperarClave.getTxtUsuario().getText().trim();
                 Usuario usuario = usuarioDAO.buscarPorUsername(username);
+
 
                 if (usuario != null && !usuario.getRespuestas().isEmpty()) {
                     usuarioEncontrado[0] = usuario;
@@ -327,15 +439,35 @@ public class UsuarioController {
                     );
 
                     if (nuevaClave != null && !nuevaClave.trim().isEmpty()) {
-                        usuarioEncontrado[0].cambiarPassword(nuevaClave);
-                        usuarioDAO.actualizar(usuarioEncontrado[0]);
+                        if (Usuario.validarPasswordSegura(nuevaClave)) {
+                            try {
+                                usuarioEncontrado[0].cambiarPassword(nuevaClave);
+                                usuarioDAO.actualizar(usuarioEncontrado[0]);
+                                recuperarClave.mostrarMensaje(handler.get("usuario.clave.actualizada"));
 
-                        recuperarClave.mostrarMensaje(handler.get("usuario.clave.actualizada"));
-                    } else {
-                        recuperarClave.mostrarMensaje(handler.get("usuario.clave.vacia"));
+                                recuperarClave.setVisible(false);
+                                recuperarClave.getTxtUsuario().setEnabled(true);
+                                recuperarClave.getBtnBuscar().setEnabled(true);
+                                recuperarClave.getPanelAutenticar().setVisible(false);
+                                loginView.getTxtUsername().setText("");
+                                loginView.getTxtPassword().setText("");
+                                loginView.setVisible(true);
+                            } catch (Exception ex) {
+                                preguntasSeguridad.mostrarMensaje(handler.get("usuario.actualizar.error") + ex.getMessage());
+                            }
+                        } else {
+                            recuperarClave.getTxtUsuario().setEnabled(true);
+                            recuperarClave.getBtnBuscar().setEnabled(true);
+                            recuperarClave.getPanelAutenticar().setVisible(false);
+                            loginView.getTxtUsername().setText("");
+                            loginView.getTxtPassword().setText("");
+                            recuperarClave.mostrarMensaje("La contraseña debe tener al menos 6 caracteres, una mayúscula, una minúscula y un símbolo (@, _, -, .).");
+                        }
                     }
 
                     recuperarClave.setVisible(false);
+                    loginView.getTxtUsername().setText("");
+                    loginView.getTxtPassword().setText("");
                     loginView.setVisible(true);
 
                 } else {
@@ -364,10 +496,14 @@ public class UsuarioController {
     }
 
     //metodosLogin
+    /**
+     * Autentica al usuario con los datos ingresados en la vista de login.
+     */
     private void autenticar() {
         String username = loginView.getTxtUsername().getText();
-        String contrasenia = loginView.getTxtPassword().getText();
 
+        String contrasenia = loginView.getTxtPassword().getText();
+        contrasenia = String.format("%-20s", contrasenia);
         if (username.isEmpty() || contrasenia.isEmpty()) {
             loginView.mostrarMensaje(Contexto.getHandler().get("usuario.campos.vacios"));
             return;
@@ -384,6 +520,9 @@ public class UsuarioController {
 
     // meotodsGesionUsuarios
 
+    /**
+     * Busca un usuario por nombre en la vista de gestión de usuarios.
+     */
     private void buscarUsuario() {
         String username = gestionUsuarios.getTxtBusqueda().getText().trim();
         if (username.isEmpty()) {
@@ -399,6 +538,9 @@ public class UsuarioController {
         }
     }
 
+    /**
+     * Lista los usuarios según la selección en la vista de gestión de usuarios.
+     */
     private void listar() {
         String seleccion = gestionUsuarios.getCmbLista().getSelectedItem().toString();
 
@@ -412,6 +554,10 @@ public class UsuarioController {
         }
     }
 
+    /**
+     * Carga los datos del usuario encontrado en la tabla de la vista de gestión.
+     * @param usuario Usuario encontrado.
+     */
     private void cargarUsuarioEncontrado(Usuario usuario) {
         DefaultTableModel modelo = (DefaultTableModel) gestionUsuarios.getTblUsuarios().getModel();
         // Clear the table first
@@ -422,6 +568,9 @@ public class UsuarioController {
         gestionUsuarios.getTxtBusqueda().setText("");
     }
 
+    /**
+     * Carga los usuarios con rol USUARIO en la tabla.
+     */
     private void cargarClientes() {
         DefaultTableModel modelo = (DefaultTableModel) gestionUsuarios.getTblUsuarios().getModel();
         // Clear the table first
@@ -432,6 +581,9 @@ public class UsuarioController {
         }
     }
 
+    /**
+     * Carga los usuarios con rol ADMINISTRADOR en la tabla.
+     */
     private void cargarAdministradores() {
         DefaultTableModel modelo = (DefaultTableModel) gestionUsuarios.getTblUsuarios().getModel();
         // Clear the table first
@@ -442,6 +594,9 @@ public class UsuarioController {
         }
     }
 
+    /**
+     * Carga todos los usuarios en la tabla.
+     */
     private void cargarUsuarios() {
         DefaultTableModel modelo = (DefaultTableModel) gestionUsuarios.getTblUsuarios().getModel();
         // Clear the table first
@@ -452,6 +607,9 @@ public class UsuarioController {
         }
     }
 
+    /**
+     * Activa las acciones de edición y eliminación en la tabla de usuarios.
+     */
     private void activarAccionesEnTablaUsuarios() {
         gestionUsuarios.getTblUsuarios().addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -467,6 +625,11 @@ public class UsuarioController {
         });
     }
 
+    /**
+     * Muestra las opciones de edición o eliminación para un usuario seleccionado.
+     * @param username Nombre de usuario.
+     * @param rol Rol del usuario.
+     */
     private void mostrarOpcionesUsuario(String username, Rol rol) {
         String[] opciones = {Contexto.getHandler().get("opciones.editar"), Contexto.getHandler().get("opciones.eliminar"), Contexto.getHandler().get("opciones.cancelar")};
         int opcion = JOptionPane.showOptionDialog(null,
@@ -480,6 +643,11 @@ public class UsuarioController {
         else if (opcion == 1) eliminarUsuario(username);
     }
 
+    /**
+     * Edita los datos de un usuario seleccionado.
+     * @param usernameOriginal Nombre de usuario original.
+     * @param rol Rol del usuario.
+     */
     public void editarUsuario(String usernameOriginal, Rol rol) {
         usuarioAEditar = usuarioDAO.buscarPorUsername(usernameOriginal); // Evita usar strings sueltos
 
@@ -492,8 +660,7 @@ public class UsuarioController {
         registrarUsuario.actualizarIdioma();
 
         // Cargar datos en los campos
-        registrarUsuario.getTxtNombre().setText(usuarioAEditar.getNombre());
-        registrarUsuario.getTxtCorreo().setText(usuarioAEditar.getCorreo());
+        registrarUsuario.getTxtNombre().setText(usuarioAEditar.getNombre().trim());            registrarUsuario.getTxtCorreo().setText(usuarioAEditar.getCorreo());
         registrarUsuario.getTxtTelefono().setText(usuarioAEditar.getTelefono());
         registrarUsuario.getTxtUsuario().setText(usuarioAEditar.getUsername());
         registrarUsuario.getTxtUsuario().setEnabled(false); // ¡Muy importante! No permitir cambiar username
@@ -513,6 +680,10 @@ public class UsuarioController {
     }
 
 
+    /**
+     * Elimina un usuario por nombre.
+     * @param username Nombre de usuario.
+     */
     private void eliminarUsuario(String username) {
         int confirm = JOptionPane.showConfirmDialog(null,
                 Contexto.getHandler().get("usuario.confirmar.eliminar") + " '" + username + "'?",
@@ -526,6 +697,9 @@ public class UsuarioController {
         }
     }
 
+    /**
+     * Crea un nuevo usuario desde la vista de gestión.
+     */
     private void crearUsuarios() {
         JTextField nombreField = new JTextField();
         JPasswordField passwordField = new JPasswordField();
@@ -567,6 +741,10 @@ public class UsuarioController {
         }
     }
 
+    /**
+     * Recolecta las respuestas de seguridad ingresadas en la vista.
+     * @return Lista de respuestas.
+     */
     private List<Respuesta> recolectarRespuestas() {
         List<Respuesta> respuestas = new ArrayList<>();
         JTextField[] campos = {

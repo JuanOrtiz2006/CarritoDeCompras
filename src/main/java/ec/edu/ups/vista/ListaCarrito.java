@@ -9,7 +9,20 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.net.URL;
 
+/**
+ * Vista (JInternalFrame) para la lista y filtrado de carritos de compras.
+ * <p>
+ * Esta clase representa una ventana interna donde se muestran los carritos en una tabla,
+ * permitiendo buscar por código de carrito y listar los resultados. Incluye soporte
+ * para internacionalización de textos y carga dinámica de carritos.
+ *
+ * @author JuanOrtiz2006
+ * @version 1.0
+ */
 public class ListaCarrito extends JInternalFrame{
+    /**
+     * Componentes de la interfaz gráfica.
+     */
     private JPanel panelGeneral;
     private JTextField txtCodigo;
     private JButton btnBuscar;
@@ -22,6 +35,10 @@ public class ListaCarrito extends JInternalFrame{
     private JScrollPane scrTabla;
     private DefaultTableModel modelo;
 
+    /**
+     * Constructor que inicializa la vista de lista de carritos.
+     * Configura el título, tamaño, iconos y modelo de la tabla.
+     */
     public ListaCarrito() {
         setContentPane(panelGeneral);
         setTitle(Contexto.getHandler().get("listacarrito.titulo"));
@@ -40,6 +57,10 @@ public class ListaCarrito extends JInternalFrame{
         actualizarIdioma();
     }
 
+    /**
+     * Actualiza los textos de la interfaz gráfica según el idioma configurado en el contexto.
+     * Modifica títulos, etiquetas y columnas de la tabla.
+     */
     public void actualizarIdioma() {
         var handler = Contexto.getHandler();
 
@@ -62,6 +83,9 @@ public class ListaCarrito extends JInternalFrame{
         }
     }
 
+    /**
+     * Getters para los componentes de la interfaz.
+     */
     public JTextField getTxtCodigo() {
         return txtCodigo;
     }
@@ -78,6 +102,13 @@ public class ListaCarrito extends JInternalFrame{
         return tblCarritos;
     }
 
+    /**
+     * Muestra un diálogo de confirmación con opciones personalizadas.
+     *
+     * @param mensaje  El mensaje a mostrar en el diálogo.
+     * @param opciones Las opciones disponibles para el usuario.
+     * @return El índice de la opción seleccionada, o -1 si se cierra el diálogo sin selección.
+     */
     public int mostrarConfirmDialog(String mensaje, String[] opciones) {
         int seleccion = JOptionPane.showOptionDialog(
                 null,
@@ -92,10 +123,21 @@ public class ListaCarrito extends JInternalFrame{
         return seleccion;
     }
 
+    /**
+     * Muestra un mensaje en un cuadro de diálogo.
+     *
+     * @param mensaje El mensaje a mostrar.
+     */
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(null, mensaje);
     }
 
+    /**
+     * Carga un icono desde el directorio de recursos.
+     *
+     * @param nombreArchivo El nombre del archivo del icono a cargar.
+     * @return Un objeto ImageIcon con el icono cargado, o null si no se encuentra.
+     */
     public ImageIcon cargarIcono(String nombreArchivo) {
         URL url = getClass().getClassLoader().getResource("icons/" + nombreArchivo);
         if (url != null) {

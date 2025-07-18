@@ -3,8 +3,22 @@ package ec.edu.ups.vista;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Vista personalizada (JDesktopPane) que dibuja un paisaje minimalista.
+ * Incluye cielo, pradera, árboles, banco de parque y lago.
+ * Utiliza gráficos 2D para renderizar los elementos visuales.
+ *
+ * @author JuanOrtiz2006
+ * @version 1.0
+ */
 public class PanelGrafico extends JDesktopPane {
 
+    /**
+     * Sobrescribe el método de pintura para dibujar el paisaje.
+     * Dibuja el fondo, suelo, árboles, banco y lago.
+     *
+     * @param g El contexto gráfico proporcionado por Swing.
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -48,6 +62,14 @@ public class PanelGrafico extends JDesktopPane {
         g2.fillOval(lagoX, lagoY, lagoW, lagoH);
     }
 
+    /**
+     * Dibuja un árbol minimalista en la posición indicada.
+     * El árbol consiste en un tronco y una copa ovalada.
+     *
+     * @param g2     El contexto gráfico 2D.
+     * @param x      Posición horizontal del árbol.
+     * @param baseY  Posición vertical de la base del tronco.
+     */
     private void dibujarArbolMinimalista(Graphics2D g2, int x, int baseY) {
         // Tronco
         g2.setColor(new Color(139, 69, 19)); // marrón oscuro

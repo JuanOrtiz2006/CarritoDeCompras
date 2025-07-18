@@ -1,0 +1,2 @@
+0103527966,null,0000-00-00,null,null,Jp1034506_Ot,ADMINISTRADOR
+0107591752,Juan Pablo Ortiz    ,2006-12-18,juan@gmail.com ,0998120501,Jp1034596_o         ,USUARIO,PERSONAL,¿Cuál fue el nombre de tu primera mascota?,Neko,PERSONAL,¿Cuál es tu película favorita?,Titanic,HISTORICA,¿Qué apodo tenías cuando eras pequeño?,Juan

@@ -4,7 +4,24 @@ import ec.edu.ups.util.Contexto;
 
 import javax.swing.*;
 
+
+/**
+ * Vista (JFrame) principal del menú de la aplicación.
+ * <p>
+ * Esta clase representa la ventana principal donde se muestran los menús de productos,
+ * carrito, idiomas y usuario. Los ítems de los menús se construyen dinámicamente
+ * según el rol del usuario (administrador o cliente).
+ * <p>
+ * Soporta internacionalización de los textos de los menús y permite la gestión
+ * de productos, carritos y usuarios desde la interfaz gráfica.
+ *
+ * @author JuanOrtiz2006
+ * @version 1.0
+ */
 public class MenuView extends JFrame {
+    /**
+     * Componentes de la interfaz gráfica.
+     */
     private JDesktopPane jDesktopPane;
     private JMenuBar menuBar;
     private JPanel panelGeneral;
@@ -28,6 +45,11 @@ public class MenuView extends JFrame {
     private JMenuItem menuCerrarSesion;
     private JMenuItem menuGestiosUsuarios;
 
+    /**
+     * Constructor de la vista del menú.
+     * Configura el título, tamaño, ubicación y comportamiento de cierre de la ventana.
+     * Inicializa el panel principal y la barra de menús.
+     */
     public MenuView() {
         setTitle("Menú");
         setSize(920, 560);
@@ -40,6 +62,10 @@ public class MenuView extends JFrame {
         setJMenuBar(menuBar);
     }
     // Getters y Setters para que el controlador configure la vista
+
+    /**
+     * Getters y setters para acceder a los componentes de la vista.
+     */
     public JDesktopPane getjDesktopPane() {
         return jDesktopPane;
     }
@@ -96,6 +122,15 @@ public class MenuView extends JFrame {
         return menuGestiosUsuarios;
     }
 
+
+    /**
+     * Construye los menús de la aplicación según el rol del usuario.
+     * <p>
+     * Crea los menús de Producto, Carrito, Idiomas y Usuario, añadiendo los ítems
+     * correspondientes según si el usuario es administrador o cliente.
+     *
+     * @param rol El rol del usuario (ADMINISTRADOR o CLIENTE).
+     */
     public void construirMenus(String rol) {
         var handler = Contexto.getHandler();
         menuBar.removeAll();
@@ -153,6 +188,14 @@ public class MenuView extends JFrame {
         repaint();
     }
 
+    /**
+     * Actualiza los menús de la vista según el rol del usuario.
+     * <p>
+     * Este metodo se llama cuando se cambia el idioma o se inicia sesión con un nuevo rol,
+     * para reconstruir los menús con los textos actualizados.
+     *
+     * @param rol El rol del usuario (ADMINISTRADOR o CLIENTE).
+     */
     public void actualizarIdioma(String rol) {
         construirMenus(rol);
     }
