@@ -1,3 +1,0 @@
-1,Computadora,201.0,
-2,Celular,101.0,
-3,Banana,20.1,
