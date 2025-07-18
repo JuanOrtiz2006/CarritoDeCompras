@@ -660,7 +660,8 @@ public class UsuarioController {
         registrarUsuario.actualizarIdioma();
 
         // Cargar datos en los campos
-        registrarUsuario.getTxtNombre().setText(usuarioAEditar.getNombre().trim());            registrarUsuario.getTxtCorreo().setText(usuarioAEditar.getCorreo());
+        registrarUsuario.getTxtNombre().setText(usuarioAEditar.getNombre().trim());
+        registrarUsuario.getTxtCorreo().setText(usuarioAEditar.getCorreo());
         registrarUsuario.getTxtTelefono().setText(usuarioAEditar.getTelefono());
         registrarUsuario.getTxtUsuario().setText(usuarioAEditar.getUsername());
         registrarUsuario.getTxtUsuario().setEnabled(false); // ¡Muy importante! No permitir cambiar username

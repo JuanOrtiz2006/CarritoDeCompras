@@ -25,6 +25,7 @@ public class Usuario implements Serializable {
     private List<Respuesta> respuestas;
     private String correo;
     private String telefono;
+    private String username;
     private GregorianCalendar fechanacimiento;
 
     /**
@@ -41,25 +42,27 @@ public class Usuario implements Serializable {
      * @param rol Rol del usuario.
      */
     public Usuario(String username, String password, Rol rol) {
-        this.nombre = username;
+        this.username = username;
         this.password = password;
         this.rol = rol;
         this.respuestas = new ArrayList<>();
     }
+
+
 
     /**
      * Obtiene el nombre de usuario.
      *
      * @return Nombre de usuario.
      */
-    public String getUsername() { return nombre; }
+    public String getUsername() { return username; }
 
     /**
      * Establece el nombre de usuario.
      *
      * @param username Nombre de usuario a establecer.
      */
-    public void setUsername(String username) { this.nombre = username; }
+    public void setUsername(String username) { this.username = username; }
 
     /**
      * Obtiene la contraseña del usuario.
@@ -118,6 +121,8 @@ public class Usuario implements Serializable {
     public String getNombre() {
         return nombre;
     }
+
+
 
     /**
      * Establece el número de teléfono del usuario.
@@ -212,12 +217,12 @@ public class Usuario implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Usuario usuario = (Usuario) o;
-        return Objects.equals(nombre, usuario.nombre);
+        return Objects.equals(username, usuario.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nombre);
+        return Objects.hash(username);
     }
 
     /**
@@ -226,14 +231,23 @@ public class Usuario implements Serializable {
      * @return true si la cédula es válida, false en caso contrario.
      */
     public boolean validarCedulaEcuatoriana() {
-        if (nombre == null || !nombre.matches("\\d{10}")) return false;
+        if (username == null || !username.matches("\\d{10}")) return false;
+        int provincia = Integer.parseInt(username.substring(0, 2));
+        int tercerDigito = Integer.parseInt(username.substring(2, 3));
+        if (provincia < 1 || provincia > 24) return false;
+        if (tercerDigito >= 6) return false;
+
         int suma = 0;
         for (int i = 0; i < 9; i++) {
-            int num = Character.getNumericValue(nombre.charAt(i));
-            suma += (i % 2 == 0) ? ((num * 2 > 9) ? num * 2 - 9 : num * 2) : num;
+            int num = Character.getNumericValue(username.charAt(i));
+            if (i % 2 == 0) {
+                num *= 2;
+                if (num > 9) num -= 9;
+            }
+            suma += num;
         }
         int digitoVerificador = (10 - (suma % 10)) % 10;
-        return digitoVerificador == Character.getNumericValue(nombre.charAt(9));
+        return digitoVerificador == Character.getNumericValue(username.charAt(9));
     }
 
     /**
@@ -265,14 +279,7 @@ public class Usuario implements Serializable {
         return correo != null && correo.matches("^[\\w\\.-]+@[\\w\\.-]+\\.\\w{2,}$");
     }
 
-    /**
-     * Valida un número de teléfono.
-     *
-     * @return true si el número de teléfono es válido, false en caso contrario.
-     */
-    public boolean validarTelefonoNumerico() {
-        return telefono != null && telefono.matches("\\d+");
-    }
+
 
     /**
      * Valida si un usuario es válido.
@@ -282,8 +289,7 @@ public class Usuario implements Serializable {
     public boolean esUsuarioValido() {
         return validarCedulaEcuatoriana()
                 && validarPasswordSegura()
-                && validarCorreoElectronico()
-                && validarTelefonoNumerico();
+                && validarCorreoElectronico();
     }
 
 }
