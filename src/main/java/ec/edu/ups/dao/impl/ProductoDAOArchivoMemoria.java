@@ -34,15 +34,13 @@ public class ProductoDAOArchivoMemoria implements ProductoDAO {
             System.out.println("Error creando archivo de productos: " + e.getMessage());
         }
 
-        this.productos = new ArrayList<>(); // INICIALIZA LA LISTA
-
-        crear(new Producto(1,"Computadora",201));
-        crear(new Producto(2,"Celular",101));
-        crear(new Producto(3,"Banana",20.1));
+        this.productos = new ArrayList<>();
 
         List<Producto> leidas = lecturaProductos();
         if (!leidas.isEmpty()) {
             this.productos = leidas;
+        } else {
+            crearProductosPorDefecto();
         }
 
     }
@@ -140,4 +138,9 @@ public class ProductoDAOArchivoMemoria implements ProductoDAO {
         }
     }
 
+    private void crearProductosPorDefecto() {
+        crear(new Producto(1,"Computadora",201));
+        crear(new Producto(2,"Celular",101));
+        crear(new Producto(3,"Banana",20.1));
+    }
 }

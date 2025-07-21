@@ -226,6 +226,10 @@ public class UsuarioController {
                 return;
             }
 
+            if (!esMayorDeEdad(fechaNacimiento)) {
+                registrarUsuario.mostrarMensaje(handler.get("usuario.menor.edad")); // "Debe ser mayor de 18 años."
+                return;
+            }
             //Rellenar los campos a longitud fija
             nombre = String.format("%-20s", nombre);
             correo = String.format("%-20s", correo);
@@ -830,4 +834,20 @@ public class UsuarioController {
         return respuestas;
     }
 
+    /**
+     * Valida si una fecha de nacimiento corresponde a una persona mayor de edad.
+     * @param fechaNacimiento Fecha de nacimiento del usuario.
+     * @return true si es mayor de edad (18 años o más), false en caso contrario.
+     */
+    private boolean esMayorDeEdad(GregorianCalendar fechaNacimiento) {
+        GregorianCalendar fechaActual = new GregorianCalendar();
+        GregorianCalendar fechaLimite = new GregorianCalendar();
+
+        // Calcular la fecha hace 18 años
+        fechaLimite.setTime(fechaActual.getTime());
+        fechaLimite.add(GregorianCalendar.YEAR, -18);
+
+        // Verificar si la fecha de nacimiento es anterior o igual a la fecha límite
+        return fechaNacimiento.compareTo(fechaLimite) <= 0;
+    }
 }

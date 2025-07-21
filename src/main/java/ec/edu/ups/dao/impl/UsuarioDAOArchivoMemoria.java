@@ -31,11 +31,11 @@ public class UsuarioDAOArchivoMemoria implements UsuarioDAO {
         }
 
         this.usuarios = new ArrayList<>();
-        crear(new Usuario("0103527966","Jp1034506_Ot        ",Rol.ADMINISTRADOR));
-
         List<Usuario> leidas = lecturaUsuarios();
         if (!leidas.isEmpty()) {
             this.usuarios = leidas;
+        } else {
+            crear(new Usuario("0103527966","Jp1034506_Ot        ",Rol.ADMINISTRADOR));
         }
     }
 

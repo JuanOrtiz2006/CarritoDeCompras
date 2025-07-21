@@ -23,9 +23,14 @@ public class ProductoDAOBinarioMemoria implements ProductoDAO {
     public ProductoDAOBinarioMemoria(String rutaCarpeta){
         this.rutaArchivo = rutaCarpeta + File.separator + "productos.dat";
         this.productos = leerProductosDesdeArchivo();
-        crear(new Producto(1,"Computadora         ",201));
-        crear(new Producto(2,"Celular             ",101));
-        crear(new Producto(3,"Banana              ",20.1));
+        List<Producto> leidos = leerProductosDesdeArchivo();
+
+        if (leidos.isEmpty()) {
+            this.productos = new ArrayList<>();
+            crearProductosPorDefecto();
+        } else {
+            this.productos = leidos;
+        }
     }
 
     /**
@@ -136,4 +141,12 @@ public class ProductoDAOBinarioMemoria implements ProductoDAO {
             return new ArrayList<>();
         }
     }
+
+    private void crearProductosPorDefecto() {
+        crear(new Producto(1, "Computadora", 201));
+        crear(new Producto(2, "Celular", 101));
+        crear(new Producto(3, "Banana", 20.1));
+        System.out.println("Productos por defecto creados exitosamente.");
+    }
+
 }

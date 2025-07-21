@@ -23,8 +23,11 @@ public class UsuarioDAOBinarioMemoria implements UsuarioDAO {
     public UsuarioDAOBinarioMemoria(String carpeta) {
         this.rutaArchivo = carpeta + File.separator + "usuarios.dat";
         this.usuarios = leerUsuariosDesdeArchivo();
-        crear(new Usuario("0103527966","Jp1034506_Ot        ",Rol.ADMINISTRADOR));
-}
+        if (usuarios.isEmpty()) {
+            crearUsuarioAdministradorPorDefecto();
+        }
+
+    }
 
     /**
      * Autentica un usuario comparando el nombre de usuario y la contraseña.
@@ -154,5 +157,12 @@ public class UsuarioDAOBinarioMemoria implements UsuarioDAO {
             System.out.println("Error leyendo archivo binario: " + e.getMessage());
             return new ArrayList<>();
         }
+    }
+
+    private void crearUsuarioAdministradorPorDefecto() {
+        Usuario adminPorDefecto = new Usuario("0103527966", "Jp1034506_Ot        ", Rol.ADMINISTRADOR);
+        usuarios.add(adminPorDefecto);
+        escribirUsuariosEnArchivo();
+        System.out.println("Usuario administrador por defecto creado exitosamente.");
     }
 }

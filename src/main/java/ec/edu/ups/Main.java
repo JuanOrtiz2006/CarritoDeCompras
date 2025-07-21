@@ -41,11 +41,21 @@ public class Main {
 
             archivoVista.setVisible(true);
 
+            archivoVista.getCmbArchivo().addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int seleccion = archivoVista.getCmbArchivo().getSelectedIndex();
+                    // Si selecciona "MEMORIA" (índice 3), deshabilita el botón de archivo
+                    boolean habilitarArchivo = seleccion != 3;
+                    archivoVista.getBtnArchivo().setEnabled(habilitarArchivo);
+                }
+            });
+
             archivoVista.getBtnArchivo().addActionListener(e -> {
                 JFileChooser chooser = new JFileChooser();
                 chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); // Solo carpetas
                 chooser.setAcceptAllFileFilterUsed(false); // No permitir "Todos los archivos"
-
+                Object tipo = archivoVista.getBtnArchivo().getSelectedObjects();
                 int resultado = chooser.showOpenDialog(archivoVista);
 
                 if (resultado == JFileChooser.APPROVE_OPTION) {
@@ -55,6 +65,7 @@ public class Main {
                 } else {
                     System.out.println("Selección cancelada.");
                 }
+
             });
 
             archivoVista.getBtnEleccion().addActionListener(new ActionListener() {
