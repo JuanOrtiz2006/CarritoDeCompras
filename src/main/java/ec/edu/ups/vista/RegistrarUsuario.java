@@ -231,7 +231,7 @@ public class RegistrarUsuario extends JFrame {
      */
     public void validaciones(){
         ((AbstractDocument) txtNombre.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));
-        ((AbstractDocument) txtCorreo.getDocument()).setDocumentFilter(new LimiteCaracter(15,false));
+        ((AbstractDocument) txtCorreo.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));
         ((AbstractDocument) txtTelefono.getDocument()).setDocumentFilter(new LimiteCaracter(10,true));
         ((AbstractDocument) txtUsuario.getDocument()).setDocumentFilter(new LimiteCaracter(10,true));
         ((AbstractDocument) txtPassword.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));

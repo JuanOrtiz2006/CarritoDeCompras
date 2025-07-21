@@ -3,12 +3,14 @@ package ec.edu.ups.vista;
 import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.util.Contexto;
 import ec.edu.ups.util.FormateadorUtils;
+import ec.edu.ups.util.LimiteCaracter;
 
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.AbstractDocument;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;

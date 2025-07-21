@@ -78,6 +78,7 @@ public class CrearCarrito extends JInternalFrame{
         btnEditar.setIcon(cargarIcono("edit.png"));
 
         actualizarIdioma();
+        validaciones();
 
         txtCodigoCarrito.setEnabled(false);
         txtNombre.setEnabled(false);
@@ -272,4 +273,9 @@ public class CrearCarrito extends JInternalFrame{
         }
     }
 
+    public void validaciones(){
+        ((AbstractDocument) txtCodigo.getDocument()).setDocumentFilter(new LimiteCaracter(4,true));
+        ((AbstractDocument) txtCantidad.getDocument()).setDocumentFilter(new LimiteCaracter(4,true));
+
+    }
 }

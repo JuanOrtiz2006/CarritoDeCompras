@@ -197,38 +197,38 @@ public class UsuarioController {
 
             // 4. Validaciones de mínimo/máximo
             if (nombre.length() < 3) {
-                registrarUsuario.mostrarMensaje("El nombre debe tener al menos 3 caracteres.");
+                registrarUsuario.mostrarMensaje(handler.get("usuario.nombre.minimo"));
                 return;
             }
 
             if (telefono.length() != 10 || !telefono.matches("\\d+")) {
-                registrarUsuario.mostrarMensaje("El teléfono debe tener exactamente 10 dígitos numéricos.");
+                registrarUsuario.mostrarMensaje(handler.get("usuario.telefono.invalido"));
                 return;
             }
 
             if (usuario.length() != 10 || !usuario.matches("\\d+")) {
-                registrarUsuario.mostrarMensaje("La cédula debe tener exactamente 10 dígitos.");
+                registrarUsuario.mostrarMensaje(handler.get("usuario.cedula.invalida"));
                 return;
             }
 
             if (!usuariocreado.validarCedulaEcuatoriana()) {
-                registrarUsuario.mostrarMensaje("La cédula ingresada no es válida.");
+                registrarUsuario.mostrarMensaje(handler.get("usuario.cedula.invalida"));
                 return;
             }
 
             if (!usuariocreado.validarCorreoElectronico()) {
-                registrarUsuario.mostrarMensaje("El correo electrónico no tiene un formato válido.");
+                registrarUsuario.mostrarMensaje(handler.get("usuario.correo.invalido"));
                 return;
             }
 
             if (!usuariocreado.validarPasswordSegura()) {
-                registrarUsuario.mostrarMensaje("La contraseña debe tener al menos 6 caracteres, una mayúscula, una minúscula y un símbolo (@, _, -, .).");
+                registrarUsuario.mostrarMensaje(handler.get("usuario.contrasenia.invalida"));
                 return;
             }
 
             //Rellenar los campos a longitud fija
             nombre = String.format("%-20s", nombre);
-            correo = String.format("%-15s", correo);
+            correo = String.format("%-20s", correo);
             contrasenia = String.format("%-20s", contrasenia);
 
             usuariocreado.setNombre(nombre);
@@ -343,6 +343,8 @@ public class UsuarioController {
                     try {
                         if (usuarioDAO.buscarPorUsername(usuariocreado.getUsername()) != null) {
                             preguntasSeguridad.mostrarMensaje(handler.get("usuario.ya.existe"));
+                            preguntasSeguridad.setVisible(false);
+                            loginView.setVisible(true);
                             return;
                     }
                     usuarioDAO.crear(usuariocreado);
@@ -371,6 +373,27 @@ public class UsuarioController {
                 }
                 usuarioAEditar.setRespuestas(respuestas);
                 try {
+                    String nombre = registrarUsuario.getTxtNombre().getText().trim();
+                    String fechaTexto = registrarUsuario.getTxtFecha().getText().trim();
+                    String correo = registrarUsuario.getTxtCorreo().getText().trim();
+                    String telefono = registrarUsuario.getTxtTelefono().getText().trim();
+
+                    // Validar y convertir la fecha
+                    GregorianCalendar fechaNacimiento = new GregorianCalendar();
+                    try {
+                        DateFormat formato = DateFormat.getDateInstance(DateFormat.MEDIUM, Contexto.getLocale());
+                        Date fecha = formato.parse(fechaTexto);
+                        fechaNacimiento.setTime(fecha);
+                        usuarioAEditar.setFechanacimiento(fechaNacimiento);
+                    } catch (ParseException ex) {
+                        preguntasSeguridad.mostrarMensaje(handler.get("usuario.fecha.invalida"));
+                        return;
+                    }
+
+                    // Asignar los nuevos valores
+                    usuarioAEditar.setNombre(String.format("%-20s", nombre));
+                    usuarioAEditar.setCorreo(String.format("%-20s", correo));
+                    usuarioAEditar.setTelefono(telefono);
                     usuarioDAO.actualizar(usuarioAEditar);
                     preguntasSeguridad.mostrarMensaje(handler.get("usuario.actualizado.exito"));
                     preguntasSeguridad.setVisible(false);
@@ -461,7 +484,7 @@ public class UsuarioController {
                             recuperarClave.getPanelAutenticar().setVisible(false);
                             loginView.getTxtUsername().setText("");
                             loginView.getTxtPassword().setText("");
-                            recuperarClave.mostrarMensaje("La contraseña debe tener al menos 6 caracteres, una mayúscula, una minúscula y un símbolo (@, _, -, .).");
+                            recuperarClave.mostrarMensaje(handler.get("usuario.contrasenia.invalida"));
                         }
                     }
 
@@ -563,7 +586,7 @@ public class UsuarioController {
         // Clear the table first
         modelo.setRowCount(0);
         // Add the found user
-        modelo.addRow(new Object[]{usuario.getRol(), usuario.getUsername(), usuario.getPassword()});
+        modelo.addRow(new Object[]{usuario.getRol(), usuario.getUsername(), usuario.getNombre(), usuario.getPassword()});
         // Clear the search field
         gestionUsuarios.getTxtBusqueda().setText("");
     }
@@ -577,7 +600,7 @@ public class UsuarioController {
         modelo.setRowCount(0);
         // Load users with USUARIO role
         for (Usuario u : usuarioDAO.listarPorRol("USUARIO")) {
-            modelo.addRow(new Object[]{u.getRol(), u.getUsername(), u.getPassword()});
+            modelo.addRow(new Object[]{u.getRol(), u.getUsername(),u.getNombre(), u.getPassword()});
         }
     }
 
@@ -590,7 +613,7 @@ public class UsuarioController {
         modelo.setRowCount(0);
         // Load users with ADMINISTRADOR role
         for (Usuario u : usuarioDAO.listarPorRol("ADMINISTRADOR")) {
-            modelo.addRow(new Object[]{u.getRol(), u.getUsername(), u.getPassword()});
+            modelo.addRow(new Object[]{u.getRol(), u.getUsername(),u.getNombre(), u.getPassword()});
         }
     }
 
@@ -603,7 +626,7 @@ public class UsuarioController {
         modelo.setRowCount(0);
         // Load all users
         for (Usuario u : usuarioDAO.listarTodos()) {
-            modelo.addRow(new Object[]{u.getRol(), u.getUsername(), u.getPassword()});
+            modelo.addRow(new Object[]{u.getRol(), u.getUsername(),u.getNombre(), u.getPassword()});
         }
     }
 
@@ -702,7 +725,7 @@ public class UsuarioController {
      * Crea un nuevo usuario desde la vista de gestión.
      */
     private void crearUsuarios() {
-        JTextField nombreField = new JTextField();
+        JTextField cedulaField = new JTextField();
         JPasswordField passwordField = new JPasswordField();
         JComboBox<String> rolBox = new JComboBox<>(new String[]{
                 Contexto.getHandler().get("usuario.normal"),
@@ -711,8 +734,8 @@ public class UsuarioController {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(new JLabel(Contexto.getHandler().get("usuario.nombre")));
-        panel.add(nombreField);
+        panel.add(new JLabel(Contexto.getHandler().get("usuario.cedula")));
+        panel.add(cedulaField);
         panel.add(Box.createVerticalStrut(10));
         panel.add(new JLabel(Contexto.getHandler().get("usuario.contrasena")));
         panel.add(passwordField);
@@ -725,19 +748,43 @@ public class UsuarioController {
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            String nombre = nombreField.getText().trim();
+            String cedula = cedulaField.getText().trim();
             String password = new String(passwordField.getPassword()).trim();
             String rolSeleccionado = rolBox.getSelectedItem().toString();
 
-            if (!nombre.isEmpty() && !password.isEmpty()) {
-                Rol rol = rolSeleccionado.equals(Contexto.getHandler().get("usuario.administrador"))
-                        ? Rol.ADMINISTRADOR : Rol.USUARIO;
-                Usuario nuevoUsuario = new Usuario(nombre, password, rol);
+            // Validaciones
+            if (cedula.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(null, Contexto.getHandler().get("usuario.campos.vacios"));
+                return;
+            }
+
+            if (!cedula.matches("\\d{10}")) {
+                JOptionPane.showMessageDialog(null, Contexto.getHandler().get("usuario.cedula.invalida"));
+                return;
+            }
+
+            Usuario nuevoUsuario = new Usuario(cedula, password, rolSeleccionado.equals(Contexto.getHandler().get("usuario.administrador")) ? Rol.ADMINISTRADOR : Rol.USUARIO);
+
+            if (!nuevoUsuario.validarCedulaEcuatoriana()) {
+                JOptionPane.showMessageDialog(null, Contexto.getHandler().get("usuario.cedula.invalida"));
+                return;
+            }
+
+            if (!Usuario.validarPasswordSegura(password)) {
+                JOptionPane.showMessageDialog(null, Contexto.getHandler().get("usuario.contrasenia.invalida"));
+                return;
+            }
+
+            // Rellenar campos a longitud fija
+            password = String.format("%-20s", password);
+            nuevoUsuario.setPassword(password);
+
+            try {
                 usuarioDAO.crear(nuevoUsuario);
                 JOptionPane.showMessageDialog(null, Contexto.getHandler().get("usuario.registro.exito"));
                 listar();
-            } else {
-                JOptionPane.showMessageDialog(null, Contexto.getHandler().get("usuario.campos.obligatorios"));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, Contexto.getHandler().get("usuario.registro.error") + e.getMessage());
             }
         }
     }

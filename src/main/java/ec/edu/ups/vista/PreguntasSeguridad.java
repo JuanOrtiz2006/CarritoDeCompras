@@ -378,7 +378,7 @@ public class PreguntasSeguridad extends JFrame {
             Image img = new ImageIcon(url).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
             return new ImageIcon(img);
         } else {
-            System.err.println("Icono no encontrado: iconos/" + nombreArchivo);
+            System.err.println("Icono no encontrado: icons/" + nombreArchivo);
             return null;
         }
     }

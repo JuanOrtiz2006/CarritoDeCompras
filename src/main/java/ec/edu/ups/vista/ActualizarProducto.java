@@ -47,7 +47,8 @@ public class ActualizarProducto extends JInternalFrame{
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 
         btnSeleccionar.setIcon(cargarIcono("check.png"));
-        btnActualizar.setIcon(cargarIcono("update.png"));
+        btnActualizar.setIcon(cargarIcono("upload.png"));
+
         validaciones();
         actualizarIdioma();
     }

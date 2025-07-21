@@ -108,7 +108,7 @@ public class ProductoController {
             try {
                 int codigo = Integer.parseInt(eliminarProducto.getTxtCodigo().getText());
                 if (codigo < 0) {
-                    eliminarProducto.mostrarMensaje("El código debe ser positivo.");
+                    eliminarProducto.mostrarMensaje(handler.get("mensaje.producto.errorcodigo"));
                     return;
                 }
                 Producto producto = productoDAO.buscarPorCodigo(codigo);
@@ -120,7 +120,7 @@ public class ProductoController {
             } catch (NumberFormatException ex) {
                 eliminarProducto.mostrarMensaje(handler.get("mensaje.producto.errorcodigo"));
             } catch (Exception ex) {
-                eliminarProducto.mostrarMensaje("Error al buscar el producto: " + ex.getMessage());
+                eliminarProducto.mostrarMensaje(handler.get("mensaje.producto.errorbusqueda") + ex.getMessage());
             }
         });
 
@@ -174,36 +174,42 @@ public class ProductoController {
             String nombre = crearProductoView.getTxtNombre().getText().trim();
             String precioStr = crearProductoView.getTxtPrecio().getText().trim();
 
-            //Validación de campos vacíos
+            // Validación de campos vacíos
             if (codigoStr.isEmpty() || nombre.isEmpty() || precioStr.isEmpty()) {
                 crearProductoView.mostrarMensaje(handler.get("mensaje.producto.camposvacios"));
                 return;
             }
 
-            //Validación de codigo numerico
-
+            // Validación de código numérico
             int codigo;
-            try{
+            try {
                 codigo = Integer.parseInt(codigoStr);
-                if(codigo<0){
-                    crearProductoView.mostrarMensaje("Codigo invalido.");
+                if (codigo <= 0) {
+                    crearProductoView.mostrarMensaje(handler.get("mensaje.producto.errorcodigo"));
                     return;
                 }
             } catch (NumberFormatException ex) {
-                crearProductoView.mostrarMensaje("El codigo debe ser un número válido.");
+                crearProductoView.mostrarMensaje(handler.get("mensaje.producto.errorcodigo"));
                 return;
             }
 
-            //Validar duplicados
+            // Validar duplicados de código
             Producto productoExistente = productoDAO.buscarPorCodigo(codigo);
             if (productoExistente != null) {
-                crearProductoView.mostrarMensaje("Ya existe un producto con este código.");
+                crearProductoView.mostrarMensaje(handler.get("mensaje.producto.duplicado"));
                 return;
             }
 
-            //Validar nombre mínimo
-            if (nombre.length() < 3) {
-                crearProductoView.mostrarMensaje("El nombre debe tener al menos 3 caracteres.");
+
+            // Validar que el nombre solo contenga letras, números, espacios y algunos caracteres especiales
+            if (!nombre.matches("^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9 .,-]+$")) {
+                crearProductoView.mostrarMensaje(handler.get("mensaje.producto.nombre.invalido"));
+                return;
+            }
+
+            // Validar que el nombre no sea solo espacios o caracteres especiales
+            if (!nombre.matches(".*[A-Za-zÁÉÍÓÚáéíóúÑñ0-9].*")) {
+                crearProductoView.mostrarMensaje(handler.get("mensaje.producto.nombre.invalido"));
                 return;
             }
 
@@ -211,31 +217,69 @@ public class ProductoController {
             double precio;
             try {
                 precio = Double.parseDouble(precioStr);
-                if(precio<0){
-                    crearProductoView.mostrarMensaje("Precio invalido.");
+                if (precio <= 0) {
+                    crearProductoView.mostrarMensaje(handler.get("mensaje.producto.precio.invalido"));
                     return;
                 }
+                // Validar que el precio no tenga más de 2 decimales
+                if (precioStr.matches(".*\\.\\d{3,}")) {
+                    crearProductoView.mostrarMensaje(handler.get("mensaje.producto.precio.decimales"));
+                    return;
+                }
+
             } catch (NumberFormatException ex) {
-                crearProductoView.mostrarMensaje("El precio debe ser un número válido.");
+                crearProductoView.mostrarMensaje(handler.get("mensaje.producto.precio.formato"));
                 return;
             }
 
-            // 5. Rellenar campos con espacios si no cumplen el largo máximo
-            String nombreRellenado = String.format("%-20s", nombre); // Rellenar a 20 caracteres
+            // Normalizar el nombre (capitalizar primera letra de cada palabra)
+            String nombreNormalizado = normalizarNombre(nombre);
 
-            Producto producto = new Producto(codigo, nombreRellenado, precio);
+            // Crear el producto
+            Producto producto = new Producto(codigo, nombreNormalizado, precio);
+
             try {
                 productoDAO.crear(producto);
                 crearProductoView.limpiarCampos();
-                String mensaje = String.format(handler.get("mensaje.producto.creado"), nombre);
+                String mensaje = String.format(handler.get("mensaje.producto.creado"), nombreNormalizado);
                 crearProductoView.mostrarMensaje(mensaje);
             } catch (Exception e) {
-                crearProductoView.mostrarMensaje("Error al crear el producto: " + e.getMessage());
+                crearProductoView.mostrarMensaje(handler.get("mensaje.producto.error.crear") + e.getMessage());
             }
 
         } catch (Exception e) {
-            crearProductoView.mostrarMensaje(handler.get("mensaje.producto.errorcodigo"));
+            crearProductoView.mostrarMensaje(handler.get("mensaje.valores.invalidos"));
         }
+    }
+
+    /**
+     * Normaliza el nombre del producto capitalizando la primera letra de cada palabra
+     * @param nombre El nombre a normalizar
+     * @return El nombre normalizado
+     */
+    private String normalizarNombre(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            return nombre;
+        }
+
+        String[] palabras = nombre.toLowerCase().split("\\s+");
+        StringBuilder nombreNormalizado = new StringBuilder();
+
+        for (int i = 0; i < palabras.length; i++) {
+            if (i > 0) {
+                nombreNormalizado.append(" ");
+            }
+
+            String palabra = palabras[i];
+            if (!palabra.isEmpty()) {
+                nombreNormalizado.append(Character.toUpperCase(palabra.charAt(0)));
+                if (palabra.length() > 1) {
+                    nombreNormalizado.append(palabra.substring(1));
+                }
+            }
+        }
+
+        return nombreNormalizado.toString();
     }
 
     /**

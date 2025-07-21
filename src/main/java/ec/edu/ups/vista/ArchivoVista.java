@@ -40,7 +40,7 @@ public class ArchivoVista extends JFrame {
         setContentPane(panelGeneral);
         //setTitle(Contexto.getHandler().get("login.titulo"));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 200);
+        setSize(600, 300);
         setLocationRelativeTo(null);
 
         cmbArchivo.addItem("");

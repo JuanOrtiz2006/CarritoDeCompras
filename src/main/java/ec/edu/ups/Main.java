@@ -37,6 +37,7 @@ public class Main {
             RegistrarUsuario registrarUsuario = new RegistrarUsuario();
             PreguntasSeguridad preguntasSeguridad = new PreguntasSeguridad();
             RecuperarClave recuperarClave = new RecuperarClave();
+            GestionUsuarios gestionUsuarios = new GestionUsuarios();
 
             archivoVista.setVisible(true);
 
@@ -96,6 +97,8 @@ public class Main {
                         usuarioController.setRegistrarUsuario(registrarUsuario);
                         usuarioController.setPreguntasSeguridad(preguntasSeguridad);
                         usuarioController.setRecuperarClave(recuperarClave);
+                        usuarioController.setGestionUsuarios(gestionUsuarios);
+
                         usuarioController.eventosLogin();
 
                         archivoVista.setVisible(false);

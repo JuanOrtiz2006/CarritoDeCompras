@@ -78,6 +78,7 @@ public class GestionUsuarios extends JInternalFrame{
 
         modelo.setColumnIdentifiers(new Object[]{
                 handler.get("gestionusuarios.columna.rol"),
+                handler.get("gestionusuarios.columna.cedula"),
                 handler.get("gestionusuarios.columna.usuario"),
                 handler.get("gestionusuarios.columna.password")
         });

@@ -325,10 +325,16 @@ public class CarritoController {
             String nuevaCantidadStr = JOptionPane.showInputDialog(handler.get("mensaje.item.cantidad") + item.getProducto().getNombre(), item.getCantidad());
             try {
                 int nuevaCantidad = Integer.parseInt(nuevaCantidadStr);
-                carrito.actualizarProducto(new ItemCarrito(item.getProducto(), nuevaCantidad));
-                cargarProductosEnTabla();
-                mostrarTotalesEnTabla();
-                crearCarrito.mostrarMensaje(handler.get("mensaje.item.actualizarcantidad"));
+                if (nuevaCantidad> 0) {
+                    carrito.actualizarProducto(new ItemCarrito(item.getProducto(), nuevaCantidad));
+                    cargarProductosEnTabla();
+                    mostrarTotalesEnTabla();
+                    crearCarrito.mostrarMensaje(handler.get("mensaje.item.actualizarcantidad"));
+                } else {
+                    crearCarrito.mostrarMensaje(handler.get("mensaje.item.cantidad.invalida"));
+                    return;
+
+                }
             } catch (NumberFormatException e) {
                 crearCarrito.mostrarMensaje(handler.get("mensaje.item.errorcantidad"));
             }
@@ -459,6 +465,7 @@ public class CarritoController {
      * @param carritoCargado Carrito a editar.
      */
     private void cargarCarritoParaEdicion(Carrito carritoCargado) {
+        crearCarrito.actualizarIdioma();
         crearCarrito.getTxtCodigoCarrito().setText(String.valueOf(carritoCargado.getCodigo()));
         crearCarrito.getTxtFecha().setText(
                 FormateadorUtils.formatearFecha(carritoCargado.getFecha().getTime(), Contexto.getLocale())

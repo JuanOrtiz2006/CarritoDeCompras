@@ -43,9 +43,10 @@ public class MenuController {
      * Construye los menús según el rol del usuario y asigna los eventos correspondientes.
      */
     public void construirMenus() {
+        var handler = Contexto.getHandler();
         try {
             if (usuario == null || usuario.getRol() == null) {
-                throw new IllegalStateException("Usuario o rol no válido");
+                throw new IllegalStateException(handler.get("usuario.no.valido"));
             }
 
             menuView.construirMenus(usuario.getRol().toString());
@@ -363,7 +364,7 @@ public class MenuController {
      */
     private void cargarDatosUsuario() {
         if (usuario.getNombre() != null) {
-            registrarUsuario.getTxtUsuario().setText(usuario.getNombre());
+            registrarUsuario.getTxtNombre().setText(usuario.getNombre());
         }
         if (usuario.getCorreo() != null) {
             registrarUsuario.getTxtCorreo().setText(usuario.getCorreo());
@@ -397,9 +398,10 @@ public class MenuController {
      * Actualiza los menús y reasigna los eventos.
      */
     public void recargarIdioma() {
+        var handler = Contexto.getHandler();
         try {
             if (usuario == null || usuario.getRol() == null) {
-                throw new IllegalStateException("Usuario no válido para recargar idioma");
+                throw new IllegalStateException(handler.get("usuario.no.valido"));
             }
 
             menuView.actualizarIdioma(usuario.getRol().toString());
@@ -485,5 +487,7 @@ public class MenuController {
     public void setPreguntasSeguridad(PreguntasSeguridad preguntasSeguridad) {
         this.preguntasSeguridad = preguntasSeguridad;
     }
+
+
 }
 
