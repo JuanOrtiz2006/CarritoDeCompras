@@ -51,7 +51,7 @@ public class UsuarioDAOBinarioMemoria implements UsuarioDAO {
     @Override
     public void crear(Usuario usuario) {
         usuario.setNombre(String.format("%-20s", usuario.getNombre()).substring(0, 20));
-        usuario.setCorreo(String.format("%-15s", usuario.getCorreo()).substring(0, 15));
+        usuario.setCorreo(String.format("%-20s", usuario.getCorreo()).substring(0, 20));
 
         // Validación mínima (solo si no está en controllers)
         if (usuario.getUsername().trim().isEmpty() || usuario.getCorreo().trim().isEmpty()) {
@@ -96,7 +96,7 @@ public class UsuarioDAOBinarioMemoria implements UsuarioDAO {
     @Override
     public void actualizar(Usuario usuario) {
         usuario.setNombre(String.format("%-20s", usuario.getNombre()).substring(0, 20));
-        usuario.setCorreo(String.format("%-15s", usuario.getCorreo()).substring(0, 15));
+        usuario.setCorreo(String.format("%-20s", usuario.getCorreo()).substring(0, 20));
         for (int i = 0; i < usuarios.size(); i++) {
             if (usuarios.get(i).getUsername().equals(usuario.getUsername())) {
                 usuarios.set(i, usuario);
