@@ -8,6 +8,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Implementación de CarritoDAO que almacena los carritos en memoria.
+ * No persiste los datos, útil para pruebas y operaciones temporales.
+ *
+ * @author JuanOrtiz2006
+ * @version 1.0
+ */
 public class CarritoDAOMemoria implements CarritoDAO {
 
     private List<Carrito> carritos;

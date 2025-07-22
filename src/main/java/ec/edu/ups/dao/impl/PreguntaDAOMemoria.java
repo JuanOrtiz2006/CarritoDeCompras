@@ -10,6 +10,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Implementación de PreguntaDAO que almacena las preguntas en memoria.
+ * No persiste los datos, útil para pruebas y operaciones temporales.
+ *
+ * @author JuanOrtiz2006
+ * @version 1.0
+ */
 public class PreguntaDAOMemoria implements PreguntaDAO {
     List<Pregunta> preguntas;
      public PreguntaDAOMemoria(){
@@ -26,12 +33,22 @@ public class PreguntaDAOMemoria implements PreguntaDAO {
          crear(new Pregunta(Contexto.getHandler().get("lbl.pregunta.primertrabajo"), TipoPregunta.TRABAJO));
 
      }
+    /**
+     * Crea una nueva pregunta y la agrega a la lista en memoria.
+     *
+     * @param pregunta La pregunta a ser creada.
+     */
     @Override
     public void crear(Pregunta pregunta) {
          preguntas.add(pregunta);
 
     }
 
+    /**
+     * Obtiene todas las preguntas en memoria como un arreglo de Strings.
+     *
+     * @return Un arreglo de Strings con el texto de las preguntas.
+     */
     @Override
     public String[] obtenerPreguntas() {
         int size=preguntas.size();
@@ -44,6 +61,12 @@ public class PreguntaDAOMemoria implements PreguntaDAO {
         return preguntasString;
     }
 
+    /**
+     * Obtiene una pregunta en base a su texto.
+     *
+     * @param preguntaB El texto de la pregunta a buscar.
+     * @return La pregunta correspondiente al texto, o null si no se encuentra.
+     */
     @Override
     public Pregunta obtenerPregunta(String preguntaB) {
         for (Pregunta pregunta: preguntas){
@@ -54,6 +77,11 @@ public class PreguntaDAOMemoria implements PreguntaDAO {
         return null;
     }
 
+    /**
+     * Obtiene todos los tipos de preguntas únicos en memoria.
+     *
+     * @return Un arreglo de Strings con los tipos de preguntas.
+     */
     @Override
     public String[] obtenerTipos() {
         Set<String> tiposUnicos = new HashSet<>();

@@ -12,7 +12,21 @@ import java.awt.*;
 import java.net.URL;
 import java.util.List;
 
+/**
+ * Vista (JInternalFrame) para la lista y filtrado de productos.
+ * <p>
+ * Esta clase representa una ventana interna donde se muestran los productos en una tabla,
+ * permitiendo filtrar por tipo (código o nombre) y listar los resultados. Incluye soporte
+ * para internacionalización de textos y carga dinámica de productos.
+ *
+ * @author JuanOrtiz2006
+ * @version 1.0
+ */
 public class ListaProducto extends JInternalFrame{
+
+    /**
+     * Componentes de la interfaz gráfica.
+     */
     private JTable tblProductos;
     private JPanel panelLista;
     private JPanel panelGeneral;
@@ -22,6 +36,10 @@ public class ListaProducto extends JInternalFrame{
     private JLabel lblTipo;
     private DefaultTableModel modelo;
 
+    /**
+     * Constructor que inicializa la vista de lista de productos.
+     * Configura el título, tamaño, iconos y modelo de la tabla.
+     */
     public ListaProducto(){
         setContentPane(panelGeneral);
         setTitle(Contexto.getHandler().get("listaproducto.titulo"));
@@ -37,6 +55,10 @@ public class ListaProducto extends JInternalFrame{
         actualizarIdioma();
     }
 
+    /**
+     * Actualiza los textos de la interfaz gráfica según el idioma configurado en el contexto.
+     * Modifica títulos, etiquetas y columnas de la tabla.
+     */
     public void actualizarIdioma() {
         var handler = Contexto.getHandler();
 
@@ -62,6 +84,10 @@ public class ListaProducto extends JInternalFrame{
         }
     }
 
+    /**
+     * Métodos getter y setter para los componentes de la interfaz.
+     * Permiten acceder y modificar los componentes desde otras clases.
+     */
     public JPanel getPanelGeneral() {
         return panelGeneral;
     }
@@ -86,6 +112,12 @@ public class ListaProducto extends JInternalFrame{
         this.modelo = modelo;
     }
 
+    /**
+     * Carga una lista de productos en la tabla.
+     * Limpia la tabla antes de agregar los nuevos productos.
+     *
+     * @param productos Lista de productos a mostrar en la tabla.
+     */
     public void cargarProductos(List<Producto> productos) {
         modelo.setNumRows(0); // Limpia la tabla
         for (Producto producto : productos) {
@@ -94,6 +126,23 @@ public class ListaProducto extends JInternalFrame{
         }
     }
 
+    /**
+     * Muestra un mensaje en un cuadro de diálogo.
+     * Utiliza JOptionPane para mostrar mensajes al usuario.
+     *
+     * @param mensaje El mensaje a mostrar.
+     */
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(null, mensaje);
+    }
+
+    /**
+     * Carga un icono desde el directorio de recursos.
+     * Utiliza el ClassLoader para buscar el icono en la carpeta "icons".
+     *
+     * @param nombreArchivo Nombre del archivo del icono a cargar.
+     * @return Un ImageIcon con el icono cargado, o null si no se encuentra.
+     */
     public ImageIcon cargarIcono(String nombreArchivo) {
         URL url = getClass().getClassLoader().getResource("icons/" + nombreArchivo);
         if (url != null) {

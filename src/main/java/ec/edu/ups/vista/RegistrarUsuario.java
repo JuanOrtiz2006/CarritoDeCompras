@@ -7,8 +7,28 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 import java.util.Date;
+import javax.swing.text.AbstractDocument;
+import ec.edu.ups.util.LimiteCaracter;
+
+/**
+ * Vista (JFrame) para el registro y edición de usuarios.
+ * <p>
+ * Esta clase representa la ventana principal donde los usuarios pueden ingresar
+ * sus datos personales y credenciales para crear una nueva cuenta o editar una existente.
+ * Permite ingresar nombre, fecha de nacimiento, correo electrónico, teléfono, usuario y contraseña.
+ * <p>
+ * Incluye validaciones de formato y longitud en los campos, así como soporte para internacionalización
+ * de los textos de la interfaz gráfica.
+ *
+ * @author JuanOrtiz2006
+ * @version 1.0
+ */
 
 public class RegistrarUsuario extends JFrame {
+
+    /**
+     * Componentes de la interfaz gráfica.
+     */
     private JPanel panelGeneral;
     private JPanel panelCentro;
     private JTextField txtNombre;
@@ -23,7 +43,6 @@ public class RegistrarUsuario extends JFrame {
     private JTextField txtUsuario;
     private JPanel panelUsuario;
     private JPanel panelUserName;
-    private JTextField txtPassword;
     private JPanel panelPassword;
     private JButton btnGuardar;
     private JPanel panelBoton;
@@ -35,8 +54,13 @@ public class RegistrarUsuario extends JFrame {
     private JLabel lblTitulo2;
     private JLabel lblUsuario;
     private JLabel lblPassword;
+    private JPasswordField pswPassword;
     private boolean modoEdicion = false;
 
+    /**
+     * Constructor de la clase RegistrarUsuario.
+     * Configura la ventana, los componentes y las validaciones iniciales.
+     */
     public RegistrarUsuario(){
         setContentPane(panelGeneral);
         setTitle(Contexto.getHandler().get("login.titulo"));
@@ -46,9 +70,14 @@ public class RegistrarUsuario extends JFrame {
 
         btnGuardar.setIcon(cargarIcono("save.png"));
 
+        validaciones();
         actualizarIdioma();
     }
 
+    /**
+     * Actualiza los textos de la interfaz gráfica según el idioma configurado en el contexto.
+     * Utiliza el manejador de contexto para obtener las traducciones correspondientes.
+     */
     public void actualizarIdioma() {
         var handler = Contexto.getHandler();
 
@@ -70,6 +99,9 @@ public class RegistrarUsuario extends JFrame {
         }
     }
 
+    /**
+     * getters y setters para los componentes de la interfaz.
+     */
     public JPanel getPanelGeneral() {
         return panelGeneral;
     }
@@ -94,12 +126,13 @@ public class RegistrarUsuario extends JFrame {
         return txtUsuario;
     }
 
-    public JTextField getTxtPassword() {
-        return txtPassword;
-    }
 
     public JButton getBtnSiguiente() {
         return btnGuardar;
+    }
+
+    public JPasswordField getPswPassword() {
+        return pswPassword;
     }
 
     public void setTxtNombre(JTextField txtNombre) {
@@ -122,8 +155,8 @@ public class RegistrarUsuario extends JFrame {
         this.txtUsuario = txtUsuario;
     }
 
-    public void setTxtPassword(JTextField txtPassword) {
-        this.txtPassword = txtPassword;
+    public void setPswPassword(JPasswordField pswPassword) {
+        this.pswPassword = pswPassword;
     }
 
     public void activarModoEdicion() {
@@ -134,32 +167,53 @@ public class RegistrarUsuario extends JFrame {
         this.modoEdicion = false;
         limpiarCampos();
     }
-
     public boolean isModoEdicion() {
         return modoEdicion;
     }
 
+    /**
+     * Muestra ejemplos de formato en los campos de texto.
+     * Utiliza el formateador de fechas para mostrar un ejemplo de fecha.
+     */
     public void ejemplos(){
         txtNombre.setToolTipText("Ejemplo: Juan Pérez");
         txtCorreo.setToolTipText("Ejemplo: juan@example.com");
         txtTelefono.setToolTipText("Ejemplo: +593 99 123 4567");
         txtUsuario.setToolTipText("Ejemplo: jperez2025");
-        txtPassword.setToolTipText("Ejemplo: ********");
+        pswPassword.setToolTipText("Ejemplo: ********");
         txtFecha.setToolTipText("Ejemplo: " + FormateadorUtils.formatearFecha(new Date(), Contexto.getLocale()));
     }
+
+    /**
+     * Limpia los campos de texto de la interfaz.
+     * Resetea todos los campos a su estado inicial vacío.
+     */
     public void limpiarCampos(){
         txtNombre.setText("");
         txtFecha.setText("");
         txtCorreo.setText("");
         txtTelefono.setText("");
         txtUsuario.setText("");
-        txtPassword.setText("");
+        pswPassword.setText("");
     }
+
+    /**
+     * Muestra un mensaje en un cuadro de diálogo.
+     * Utiliza JOptionPane para mostrar el mensaje proporcionado.
+     *
+     * @param mensaje El mensaje a mostrar en el cuadro de diálogo.
+     */
     public void mostrarMensaje(String mensaje){
         JOptionPane.showMessageDialog(null,mensaje);
 
     }
-
+    /**
+     * Carga un icono desde el directorio de recursos.
+     * Utiliza el ClassLoader para buscar el icono en la carpeta "icons".
+     *
+     * @param nombreArchivo Nombre del archivo del icono a cargar.
+     * @return Un objeto ImageIcon con el icono cargado, o null si no se encuentra.
+     */
     public ImageIcon cargarIcono(String nombreArchivo) {
         URL url = getClass().getClassLoader().getResource("icons/" + nombreArchivo);
         if (url != null) {
@@ -169,6 +223,18 @@ public class RegistrarUsuario extends JFrame {
             System.err.println("Icono no encontrado: iconos/" + nombreArchivo);
             return null;
         }
+    }
+
+    /**
+     * Configura los filtros de validación para los campos de texto.
+     * Establece límites de caracteres y formatos específicos para cada campo.
+     * Utiliza LimiteCaracter para restringir la entrada del usuario.
+     */
+    public void validaciones(){
+        ((AbstractDocument) txtNombre.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));
+        ((AbstractDocument) txtCorreo.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));
+        ((AbstractDocument) txtTelefono.getDocument()).setDocumentFilter(new LimiteCaracter(10,true));
+        ((AbstractDocument) txtUsuario.getDocument()).setDocumentFilter(new LimiteCaracter(10,true));
     }
 
 

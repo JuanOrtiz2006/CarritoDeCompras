@@ -9,7 +9,19 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.net.URL;
 
+/**
+ * Vista (JInternalFrame) para la gestión de usuarios.
+ * <p>
+ * Esta clase representa una ventana interna donde se pueden buscar, listar y crear usuarios.
+ * Incluye soporte para internacionalización de textos y carga dinámica de iconos.
+ *
+ * @author JuanOrtiz2006
+ * @version 1.0
+ */
 public class GestionUsuarios extends JInternalFrame{
+    /**
+     * Componentes de la interfaz gráfica.
+     */
     private JPanel panelGeneral;
     private JPanel panelBusqueda;
     private JTextField txtBusqueda;
@@ -27,6 +39,10 @@ public class GestionUsuarios extends JInternalFrame{
     private JPanel panelSur;
     private DefaultTableModel modelo;
 
+    /**
+     * Constructor que inicializa la vista de gestión de usuarios.
+     * Configura el título, tamaño, iconos y modelo de la tabla.
+     */
     public GestionUsuarios(){
         setContentPane(panelGeneral);
         setTitle(Contexto.getHandler().get("gestionusuarios.titulo"));
@@ -46,6 +62,10 @@ public class GestionUsuarios extends JInternalFrame{
         actualizarIdioma();
     }
 
+    /**
+     * Actualiza los textos de la interfaz gráfica según el idioma configurado en el contexto.
+     * Modifica títulos, etiquetas y columnas de la tabla.
+     */
     public void actualizarIdioma() {
         var handler = Contexto.getHandler();
 
@@ -58,6 +78,7 @@ public class GestionUsuarios extends JInternalFrame{
 
         modelo.setColumnIdentifiers(new Object[]{
                 handler.get("gestionusuarios.columna.rol"),
+                handler.get("gestionusuarios.columna.cedula"),
                 handler.get("gestionusuarios.columna.usuario"),
                 handler.get("gestionusuarios.columna.password")
         });
@@ -75,6 +96,9 @@ public class GestionUsuarios extends JInternalFrame{
         }
     }
 
+    /**
+     * Métodos getter para acceder a los componentes de la interfaz.
+     */
     public JTextField getTxtBusqueda() {
         return txtBusqueda;
     }
@@ -99,11 +123,22 @@ public class GestionUsuarios extends JInternalFrame{
         return btnCrear;
     }
 
+    /**
+     * Muestra un mensaje en un cuadro de diálogo.
+     *
+     * @param mensaje El mensaje a mostrar.
+     */
     public void mostrarMensaje(String mensaje){
         JOptionPane.showMessageDialog(null,mensaje);
 
     }
 
+    /**
+     * Carga un icono desde el directorio de recursos.
+     *
+     * @param nombreArchivo Nombre del archivo del icono a cargar.
+     * @return Un objeto ImageIcon con el icono cargado, o null si no se encuentra.
+     */
     public ImageIcon cargarIcono(String nombreArchivo) {
         URL url = getClass().getClassLoader().getResource("icons/" + nombreArchivo);
         if (url != null) {

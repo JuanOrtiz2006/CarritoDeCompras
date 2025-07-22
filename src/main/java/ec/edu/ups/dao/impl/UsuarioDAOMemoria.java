@@ -9,13 +9,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Implementación de UsuarioDAO que almacena los usuarios en memoria.
+ * No persiste los datos, útil para pruebas y operaciones temporales.
+ *
+ * @author JuanOrtiz2006
+ * @version 1.0
+ */
 public class UsuarioDAOMemoria implements UsuarioDAO {
     private List<Usuario> usuarios;
 
     public UsuarioDAOMemoria(){
         usuarios = new ArrayList<Usuario>();
-        crear(new Usuario("admin","12345",Rol.ADMINISTRADOR));
-        crear(new Usuario("user", "12346", Rol.USUARIO));
+        crear(new Usuario("0103527966", "Jp1034506_Ot        ", Rol.ADMINISTRADOR));
     }
 
     @Override

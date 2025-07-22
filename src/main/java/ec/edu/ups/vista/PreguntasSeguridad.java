@@ -1,12 +1,25 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.util.Contexto;
+import ec.edu.ups.util.LimiteCaracter;
 
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
 import java.awt.*;
 import java.net.URL;
 
+/**
+ * Vista (JFrame) para la gestión de preguntas de seguridad.
+ * Permite a los usuarios registrar o actualizar sus preguntas de seguridad.
+ * Incluye opciones para seleccionar tipos de preguntas y campos para ingresar las respuestas.
+ *
+ * @author JuanOrtiz2006
+ * @version 1.0
+ */
 public class PreguntasSeguridad extends JFrame {
+    /**
+     * Componentes de la interfaz gráfica.
+     */
     private JPanel panelGeneral;
     private JLabel lblTitulo;
     private JPanel panelCentral;
@@ -58,6 +71,10 @@ public class PreguntasSeguridad extends JFrame {
     private JComboBox cmbTipoPregunta;
     private boolean modoEdicion = false;
 
+    /**
+     * Constructor de la clase PreguntasSeguridad.
+     * Configura la ventana, los componentes y las validaciones iniciales.
+     */
     public PreguntasSeguridad() {
         setContentPane(panelGeneral);
         setTitle(Contexto.getHandler().get("lbl.preguntas.titulo"));
@@ -74,11 +91,15 @@ public class PreguntasSeguridad extends JFrame {
 
         btnRegistrarse.setIcon(cargarIcono("addUser.png"));
         btnActualizar.setIcon(cargarIcono("upload.png"));
-
+        validaciones();
         actualizarIdioma();
 
     }
 
+    /**
+     * Actualiza los textos de la interfaz gráfica según el idioma configurado en el contexto.
+     * Utiliza el manejador de contexto para obtener las traducciones correspondientes.
+     */
     public void actualizarIdioma() {
         var handler = Contexto.getHandler();
 
@@ -110,6 +131,10 @@ public class PreguntasSeguridad extends JFrame {
 
     // ================== GETTERS ==================
 
+    /**
+     * Métodos para obtener los componentes de la interfaz gráfica.
+     * Estos métodos permiten acceder a los campos de texto, botones y etiquetas.
+     */
     public JPanel getPanelCentral() {
         return panelCentral;
     }
@@ -227,10 +252,20 @@ public class PreguntasSeguridad extends JFrame {
         return btnActualizar;
     }
 
+    /**
+     * Metodo para obtener el campo de texto del usuario.
+     *
+     * @return JTextField del usuario.
+     */
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(null, mensaje);
     }
 
+    /**
+     * Metodo para obtener el campo de texto del usuario.
+     *
+     * @return JTextField del usuario.
+     */
     public void habilitarPreguntasTipo1(){
         panelP.setVisible(true);
         panelP2.setVisible(true);
@@ -252,6 +287,10 @@ public class PreguntasSeguridad extends JFrame {
         panelP10.setVisible(true);
     }
 
+    /**
+     * Metodo para deshabilitar las preguntas de seguridad de tipo 1 a 5.
+     * Utilizado cuando no se selecciona el tipo de pregunta correspondiente.
+     */
     public void deshabilitarPreguntasTipo1(){
         panelP.setVisible(false);
         panelP2.setVisible(false);
@@ -268,12 +307,16 @@ public class PreguntasSeguridad extends JFrame {
         panelP7.setVisible(false);
         panelP8.setVisible(false);
     }
-
     public void deshabilitarPreguntasTipo5(){
         panelP9.setVisible(false);
         panelP10.setVisible(false);
     }
 
+    /**
+     * Metodo para cargar las preguntas de seguridad en los campos de texto.
+     *
+     * @param preguntas Array de String con las preguntas a cargar.
+     */
     public void cargarPreguntas(String[] preguntas){
         lblPregunta.setText(preguntas[0]);
         lblPregunta2.setText(preguntas[1]);
@@ -287,6 +330,11 @@ public class PreguntasSeguridad extends JFrame {
         lblPregunta10.setText(preguntas[9]);
     }
 
+    /**
+     * Metodo para cargar los tipos de preguntas en los checkboxes.
+     *
+     * @param tipos Array de String con los tipos de preguntas a cargar.
+     */
     public void cargarCheckBox(String[] tipos){
         ckbTipo1.setText(tipos[0]);
         ckbTipo2.setText(tipos[1]);
@@ -295,6 +343,10 @@ public class PreguntasSeguridad extends JFrame {
         ckbTipo5.setText(tipos[4]);
     }
 
+    /**
+     * Metodo para limpiar los campos de texto de la interfaz.
+     * Resetea todos los campos a su estado inicial vacío.
+     */
     public void limpiarCampos(){
         ckbTipo1.setSelected(false);
         ckbTipo2.setSelected(false);
@@ -312,18 +364,40 @@ public class PreguntasSeguridad extends JFrame {
         txtPregunta8.setText("");
         txtPregunta9.setText("");
         txtPregunta10.setText("");
-
     }
 
+    /**
+     * Carga un icono desde el directorio de recursos.
+     *
+     * @param nombreArchivo Nombre del archivo del icono a cargar.
+     * @return ImageIcon cargado o null si no se encuentra el archivo.
+     */
     public ImageIcon cargarIcono(String nombreArchivo) {
         URL url = getClass().getClassLoader().getResource("icons/" + nombreArchivo);
         if (url != null) {
             Image img = new ImageIcon(url).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
             return new ImageIcon(img);
         } else {
-            System.err.println("Icono no encontrado: iconos/" + nombreArchivo);
+            System.err.println("Icono no encontrado: icons/" + nombreArchivo);
             return null;
         }
+    }
+
+    /**
+     * Metodo para establecer validaciones en los campos de texto.
+     * Utiliza un filtro de caracteres para limitar la entrada a 20 caracteres.
+     */
+    public void validaciones(){
+        ((AbstractDocument) txtPregunta.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));
+        ((AbstractDocument) txtPregunta2.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));
+        ((AbstractDocument) txtPregunta3.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));
+        ((AbstractDocument) txtPregunta4.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));
+        ((AbstractDocument) txtPregunta5.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));
+        ((AbstractDocument) txtPregunta6.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));
+        ((AbstractDocument) txtPregunta7.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));
+        ((AbstractDocument) txtPregunta8.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));
+        ((AbstractDocument) txtPregunta9.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));
+        ((AbstractDocument) txtPregunta10.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));
     }
 
 }

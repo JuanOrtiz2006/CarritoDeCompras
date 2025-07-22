@@ -2,15 +2,28 @@ package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.ItemCarrito;
 import ec.edu.ups.util.Contexto;
+import ec.edu.ups.util.LimiteCaracter;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.AbstractDocument;
 import java.awt.*;
 import java.net.URL;
 
+/**
+ * Vista (JInternalFrame) para la creación de un carrito de compras.
+ * Permite ingresar datos del carrito, seleccionar productos y agregar items al carrito.
+ * Incluye soporte para internacionalización de textos y carga dinámica de productos.
+ *
+ * @author JuanOrtiz2006
+ * @version 1.0
+ */
 public class CrearCarrito extends JInternalFrame{
+    /**
+     * Componentes de la interfaz gráfica.
+     */
     private JPanel panelGeneral;
     private JTextField txtCodigoCarrito;
     private JTextField txtFecha;
@@ -41,6 +54,10 @@ public class CrearCarrito extends JInternalFrame{
     private DefaultTableModel modeloItems;
     private DefaultTableModel modeloTotales;
 
+    /**
+     * Constructor que inicializa la vista de creación de carrito.
+     * Configura el título, tamaño, iconos y validaciones de los campos de entrada.
+     */
     public CrearCarrito(){
         setContentPane(panelGeneral);
         setTitle(Contexto.getHandler().get("crearcarrito.titulo"));
@@ -54,7 +71,6 @@ public class CrearCarrito extends JInternalFrame{
         modeloTotales = new DefaultTableModel();
         tblTotal.setModel(modeloTotales);
 
-
         btnSeleccionar.setIcon(cargarIcono("check.png"));
         btnAgregar.setIcon(cargarIcono("plus.png"));
         btnVaciar.setIcon(cargarIcono("clear.png"));
@@ -62,10 +78,7 @@ public class CrearCarrito extends JInternalFrame{
         btnEditar.setIcon(cargarIcono("edit.png"));
 
         actualizarIdioma();
-
-
-
-        actualizarIdioma();
+        validaciones();
 
         txtCodigoCarrito.setEnabled(false);
         txtNombre.setEnabled(false);
@@ -74,6 +87,10 @@ public class CrearCarrito extends JInternalFrame{
 
     }
 
+    /**
+     * Configura las validaciones de los campos de texto.
+     * Limita la cantidad de caracteres y establece un filtro para el campo de cantidad.
+     */
     public void actualizarIdioma() {
         var handler = Contexto.getHandler();
         setTitle(handler.get("crearcarrito.titulo"));
@@ -123,6 +140,10 @@ public class CrearCarrito extends JInternalFrame{
         }
     }
 
+    /**
+     * Configura las validaciones de los campos de texto.
+     * Limita la cantidad de caracteres y establece un filtro para el campo de cantidad.
+     */
     public JTextField getTxtCodigo() {
         return txtCodigo;
     }
@@ -167,12 +188,21 @@ public class CrearCarrito extends JInternalFrame{
         return btnEditar;
     }
 
+    /**
+     * Configura las validaciones de los campos de texto.
+     * Limita la cantidad de caracteres y establece un filtro para el campo de cantidad.
+     */
     public void cargarProductoEncontrado(String nombre, double precio) {
         txtNombre.setText(nombre);
         txtPrecio.setText(String.valueOf(precio));
     }
 
 
+    /**
+     * Limpia los campos de entrada de datos del formulario.
+     * Resetea los campos de código, nombre, precio y cantidad a cadenas vacías.
+     * También limpia las tablas de productos y totales.
+     */
     public void limpiarFormulario() {
         txtCodigo.setText("");
         txtNombre.setText("");
@@ -182,18 +212,32 @@ public class CrearCarrito extends JInternalFrame{
         modeloTotales.setRowCount(0);
     }
 
+    /**
+     * Activa el modo de edición de la vista.
+     * Oculta el botón de guardar y muestra el botón de editar.
+     * También oculta el panel norte que contiene los datos del carrito.
+     */
     public void activarModoEdicion() {
         btnGuardar.setVisible(false);
         btnEditar.setVisible(true);
         panelNorte.setVisible(false);
     }
 
+    /**
+     * Activa el modo de creación de la vista.
+     * Muestra el botón de guardar y oculta el botón de editar.
+     * También muestra el panel norte que contiene los datos del carrito.
+     */
     public void activarModoCreacion() {
         btnGuardar.setVisible(true);
         btnEditar.setVisible(false);
         panelNorte.setVisible(true);
     }
 
+    /**
+     * Limpia los campos de entrada de datos del item del carrito.
+     * Resetea los campos de código, cantidad, nombre y precio a cadenas vacías.
+     */
     public void limpiarCamposItem(){
         txtCodigo.setText("");
         txtCantidad.setText("");
@@ -201,10 +245,23 @@ public class CrearCarrito extends JInternalFrame{
         txtPrecio.setText("");
     }
 
+    /**
+     * Muestra un mensaje en un cuadro de diálogo.
+     * Utiliza JOptionPane para mostrar el mensaje proporcionado.
+     *
+     * @param mensaje El mensaje a mostrar en el cuadro de diálogo.
+     */
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
 
+    /**
+     * Carga un icono desde el directorio de recursos.
+     * Utiliza el ClassLoader para buscar el icono en la carpeta "icons".
+     *
+     * @param nombreArchivo Nombre del archivo del icono a cargar.
+     * @return Un ImageIcon con el icono cargado, o null si no se encuentra.
+     */
     public ImageIcon cargarIcono(String nombreArchivo) {
         URL url = getClass().getClassLoader().getResource("icons/" + nombreArchivo);
         if (url != null) {
@@ -216,4 +273,9 @@ public class CrearCarrito extends JInternalFrame{
         }
     }
 
+    public void validaciones(){
+        ((AbstractDocument) txtCodigo.getDocument()).setDocumentFilter(new LimiteCaracter(4,true));
+        ((AbstractDocument) txtCantidad.getDocument()).setDocumentFilter(new LimiteCaracter(4,true));
+
+    }
 }
