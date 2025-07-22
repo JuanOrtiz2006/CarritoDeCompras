@@ -305,12 +305,14 @@ public class CarritoController {
      * @param fila Índice del ítem a eliminar.
      */
     public void eliminarItem(int fila) {
-        if (fila >= 0 && fila < carrito.getItems().size()) {
+        if (fila > 0 && fila < carrito.getItems().size()) {
             int codigoProducto = carrito.getItems().get(fila).getProducto().getCodigo();
             carrito.eliminarProducto(codigoProducto);
             cargarProductosEnTabla();
             mostrarTotalesEnTabla();
             crearCarrito.mostrarMensaje(Contexto.getHandler().get("mensaje.item.eliminar"));
+        } else {
+            crearCarrito.mostrarMensaje(Contexto.getHandler().get("mensaje.item.novalido"));
         }
     }
 
@@ -521,6 +523,8 @@ public class CarritoController {
         carritoDAO.actualizar(carrito);
         crearCarrito.mostrarMensaje(Contexto.getHandler().get("mensaje.carrito.actualizado"));
         crearCarrito.setVisible(false);
+        crearCarrito.getBtnEditar().setVisible(false);
+
     }
 
     /**

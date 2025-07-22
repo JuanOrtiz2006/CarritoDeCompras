@@ -148,11 +148,11 @@ public class UsuarioController {
         if (modo) {
             // modo edición
             registrarUsuario.getTxtUsuario().setEnabled(false);
-            registrarUsuario.getTxtPassword().setEnabled(false);
+            registrarUsuario.getPswPassword().setEnabled(false);
         } else {
             // modo registro
             registrarUsuario.getTxtUsuario().setEnabled(true);
-            registrarUsuario.getTxtPassword().setEnabled(true);
+            registrarUsuario.getPswPassword().setEnabled(true);
             registrarUsuario.ejemplos();
         }
 
@@ -168,7 +168,7 @@ public class UsuarioController {
             String correo = registrarUsuario.getTxtCorreo().getText().trim();
             String telefono = registrarUsuario.getTxtTelefono().getText().trim();
             String usuario = registrarUsuario.getTxtUsuario().getText().trim(); // cédula
-            String contrasenia = registrarUsuario.getTxtPassword().getText().trim();
+            String contrasenia = new String(registrarUsuario.getPswPassword().getPassword());
 
             //Validar campos vacíos
             if (nombre.isEmpty() || fechaTexto.isEmpty() || correo.isEmpty() || telefono.isEmpty()
@@ -296,6 +296,7 @@ public class UsuarioController {
             public void actionPerformed(ActionEvent e) {
                 if (preguntasSeguridad.getCkbTipo2().isSelected()) {
                     preguntasSeguridad.habilitarPreguntasTipo2();
+                    preguntasSeguridad.setSize(600, 600);
                 } else {
                     preguntasSeguridad.deshabilitarPreguntasTipo2();
                 }
@@ -477,7 +478,7 @@ public class UsuarioController {
                                 recuperarClave.getBtnBuscar().setEnabled(true);
                                 recuperarClave.getPanelAutenticar().setVisible(false);
                                 loginView.getTxtUsername().setText("");
-                                loginView.getTxtPassword().setText("");
+                                loginView.getPswPassword().setText("");
                                 loginView.setVisible(true);
                             } catch (Exception ex) {
                                 preguntasSeguridad.mostrarMensaje(handler.get("usuario.actualizar.error") + ex.getMessage());
@@ -487,14 +488,14 @@ public class UsuarioController {
                             recuperarClave.getBtnBuscar().setEnabled(true);
                             recuperarClave.getPanelAutenticar().setVisible(false);
                             loginView.getTxtUsername().setText("");
-                            loginView.getTxtPassword().setText("");
+                            loginView.getPswPassword().setText("");
                             recuperarClave.mostrarMensaje(handler.get("usuario.contrasenia.invalida"));
                         }
                     }
 
                     recuperarClave.setVisible(false);
                     loginView.getTxtUsername().setText("");
-                    loginView.getTxtPassword().setText("");
+                    loginView.getPswPassword().setText("");
                     loginView.setVisible(true);
 
                 } else {
@@ -529,7 +530,8 @@ public class UsuarioController {
     private void autenticar() {
         String username = loginView.getTxtUsername().getText();
 
-        String contrasenia = loginView.getTxtPassword().getText();
+        String contrasenia = new String(loginView.getPswPassword().getPassword());
+
         contrasenia = String.format("%-20s", contrasenia);
         if (username.isEmpty() || contrasenia.isEmpty()) {
             loginView.mostrarMensaje(Contexto.getHandler().get("usuario.campos.vacios"));
@@ -692,7 +694,7 @@ public class UsuarioController {
         registrarUsuario.getTxtTelefono().setText(usuarioAEditar.getTelefono());
         registrarUsuario.getTxtUsuario().setText(usuarioAEditar.getUsername());
         registrarUsuario.getTxtUsuario().setEnabled(false); // ¡Muy importante! No permitir cambiar username
-        registrarUsuario.getTxtPassword().setText(usuarioAEditar.getPassword());
+        registrarUsuario.getPswPassword().setText(usuarioAEditar.getPassword());
 
         if (usuarioAEditar.getFechanacimiento() != null) {
             String fechaStr = FormateadorUtils.formatearFecha(
@@ -713,17 +715,39 @@ public class UsuarioController {
      * @param username Nombre de usuario.
      */
     private void eliminarUsuario(String username) {
+        var handler = Contexto.getHandler();
+
+        // Validar que no se esté intentando eliminar al usuario actualmente autenticado
+        if (usuario != null && usuario.getUsername().equals(username)) {
+            JOptionPane.showMessageDialog(null,
+                    handler.get("usuario.eliminar.actual.no.permitido"), // Debes agregar esta clave en tu archivo .properties
+                    handler.get("confirmacion"),
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Validar si hay más de un usuario en total
+        List<Usuario> usuariosTotales = usuarioDAO.listarTodos();
+        if (usuariosTotales.size() <= 1) {
+            JOptionPane.showMessageDialog(null,
+                    handler.get("usuario.eliminar.unico.no.permitido"), // Otra clave a agregar
+                    handler.get("confirmacion"),
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         int confirm = JOptionPane.showConfirmDialog(null,
-                Contexto.getHandler().get("usuario.confirmar.eliminar") + " '" + username + "'?",
-                Contexto.getHandler().get("confirmacion"),
+                handler.get("usuario.confirmar.eliminar") + " '" + username + "'?",
+                handler.get("confirmacion"),
                 JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
             usuarioDAO.eliminar(username);
-            JOptionPane.showMessageDialog(null, Contexto.getHandler().get("usuario.eliminado.exito"));
+            JOptionPane.showMessageDialog(null, handler.get("usuario.eliminado.exito"));
             listar();
         }
     }
+
 
     /**
      * Crea un nuevo usuario desde la vista de gestión.

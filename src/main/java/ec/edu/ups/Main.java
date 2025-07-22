@@ -40,7 +40,7 @@ public class Main {
             GestionUsuarios gestionUsuarios = new GestionUsuarios();
 
             archivoVista.setVisible(true);
-
+            archivoVista.getBtnEleccion().setEnabled(false);
             archivoVista.getCmbArchivo().addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -48,6 +48,7 @@ public class Main {
                     // Si selecciona "MEMORIA" (índice 3), deshabilita el botón de archivo
                     boolean habilitarArchivo = seleccion != 3;
                     archivoVista.getBtnArchivo().setEnabled(habilitarArchivo);
+                    archivoVista.getBtnEleccion().setEnabled(!habilitarArchivo);
                 }
             });
 
@@ -62,6 +63,7 @@ public class Main {
                     File carpetaSeleccionada = chooser.getSelectedFile();
                     archivoVista.getTxtRuta().setText(carpetaSeleccionada.getAbsolutePath());
                     System.out.println("Carpeta seleccionada: " + carpetaSeleccionada.getAbsolutePath());
+                    archivoVista.getBtnEleccion().setEnabled(true);
                 } else {
                     System.out.println("Selección cancelada.");
                 }
@@ -119,7 +121,7 @@ public class Main {
                             @Override
                             public void windowClosed(WindowEvent e) {
                                 loginView.getTxtUsername().setText("");
-                                loginView.getTxtPassword().setText("");
+                                loginView.getPswPassword().setText("");
 
                                 Usuario usuarioAutenticado = usuarioController.getUsuarioAutenticado();
                                 if (usuarioAutenticado != null) {
@@ -204,6 +206,7 @@ public class Main {
 
                 }
             });
+
             // Mostrar selector de tipo de almacenamiento al inicio
             archivoVista.setVisible(true);
 

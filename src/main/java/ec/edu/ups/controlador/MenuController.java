@@ -376,7 +376,7 @@ public class MenuController {
             registrarUsuario.getTxtUsuario().setText(usuario.getUsername());
         }
         if (usuario.getPassword() != null) {
-            registrarUsuario.getTxtPassword().setText(usuario.getPassword());
+            registrarUsuario.getPswPassword().setText(usuario.getPassword());
         }
 
         if (usuario.getFechanacimiento() != null) {

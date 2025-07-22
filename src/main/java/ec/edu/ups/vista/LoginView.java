@@ -4,8 +4,6 @@ import ec.edu.ups.util.Contexto;
 import ec.edu.ups.util.LimiteCaracter;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.TitledBorder;
 import javax.swing.text.AbstractDocument;
 import java.awt.*;
 import java.net.URL;
@@ -29,7 +27,6 @@ public class LoginView extends JFrame{
      */
     private JPanel panelGeneral;
     private JTextField txtUsername;
-    private JTextField txtPassword;
     private JButton btnLogin;
     private JPanel panelCentro;
     private JPanel panelDatos;
@@ -38,6 +35,7 @@ public class LoginView extends JFrame{
     private JPanel panelBoton;
     private JButton btnRegistrar;
     private JButton btnRecuperar;
+    private JPasswordField pswPassword;
 
     /**
      * Constructor de la clase LoginView.
@@ -84,10 +82,6 @@ public class LoginView extends JFrame{
         return txtUsername;
     }
 
-    public JTextField getTxtPassword() {
-        return txtPassword;
-    }
-
     public JButton getBtnLogin() {
         return btnLogin;
     }
@@ -100,8 +94,16 @@ public class LoginView extends JFrame{
         return btnRecuperar;
     }
 
+    public JPasswordField getPswPassword() {
+        return pswPassword;
+    }
+
     public void setPanelGeneral(JPanel panelGeneral) {
         this.panelGeneral = panelGeneral;
+    }
+
+    public void setPswPassword(JPasswordField pswPassword) {
+        this.pswPassword = pswPassword;
     }
 
     /**
@@ -145,7 +147,6 @@ public class LoginView extends JFrame{
      */
     public void validaciones(){
         ((AbstractDocument) txtUsername.getDocument()).setDocumentFilter(new LimiteCaracter(10,true));
-        ((AbstractDocument) txtPassword.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));
     }
 
 

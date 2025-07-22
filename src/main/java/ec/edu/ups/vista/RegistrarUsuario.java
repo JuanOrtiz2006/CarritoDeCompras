@@ -43,7 +43,6 @@ public class RegistrarUsuario extends JFrame {
     private JTextField txtUsuario;
     private JPanel panelUsuario;
     private JPanel panelUserName;
-    private JTextField txtPassword;
     private JPanel panelPassword;
     private JButton btnGuardar;
     private JPanel panelBoton;
@@ -55,6 +54,7 @@ public class RegistrarUsuario extends JFrame {
     private JLabel lblTitulo2;
     private JLabel lblUsuario;
     private JLabel lblPassword;
+    private JPasswordField pswPassword;
     private boolean modoEdicion = false;
 
     /**
@@ -126,12 +126,13 @@ public class RegistrarUsuario extends JFrame {
         return txtUsuario;
     }
 
-    public JTextField getTxtPassword() {
-        return txtPassword;
-    }
 
     public JButton getBtnSiguiente() {
         return btnGuardar;
+    }
+
+    public JPasswordField getPswPassword() {
+        return pswPassword;
     }
 
     public void setTxtNombre(JTextField txtNombre) {
@@ -154,8 +155,8 @@ public class RegistrarUsuario extends JFrame {
         this.txtUsuario = txtUsuario;
     }
 
-    public void setTxtPassword(JTextField txtPassword) {
-        this.txtPassword = txtPassword;
+    public void setPswPassword(JPasswordField pswPassword) {
+        this.pswPassword = pswPassword;
     }
 
     public void activarModoEdicion() {
@@ -179,7 +180,7 @@ public class RegistrarUsuario extends JFrame {
         txtCorreo.setToolTipText("Ejemplo: juan@example.com");
         txtTelefono.setToolTipText("Ejemplo: +593 99 123 4567");
         txtUsuario.setToolTipText("Ejemplo: jperez2025");
-        txtPassword.setToolTipText("Ejemplo: ********");
+        pswPassword.setToolTipText("Ejemplo: ********");
         txtFecha.setToolTipText("Ejemplo: " + FormateadorUtils.formatearFecha(new Date(), Contexto.getLocale()));
     }
 
@@ -193,7 +194,7 @@ public class RegistrarUsuario extends JFrame {
         txtCorreo.setText("");
         txtTelefono.setText("");
         txtUsuario.setText("");
-        txtPassword.setText("");
+        pswPassword.setText("");
     }
 
     /**
@@ -234,7 +235,6 @@ public class RegistrarUsuario extends JFrame {
         ((AbstractDocument) txtCorreo.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));
         ((AbstractDocument) txtTelefono.getDocument()).setDocumentFilter(new LimiteCaracter(10,true));
         ((AbstractDocument) txtUsuario.getDocument()).setDocumentFilter(new LimiteCaracter(10,true));
-        ((AbstractDocument) txtPassword.getDocument()).setDocumentFilter(new LimiteCaracter(20,false));
     }
 
 
